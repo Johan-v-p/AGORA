@@ -11,6 +11,9 @@ import sqlite3
 import json
 import os
 import sys
+import io
+import uuid
+from PIL import Image, ImageOps
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.
@@ -21,6 +24,120 @@ socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 app.secret_key = 'agora_dev_secret_2026'   # ← cambiar en producción
 
 DB = 'agora.db'
+
+# ──────────────────────────────────────────
+# SUBIDA DE IMÁGENES
+# ──────────────────────────────────────────
+BASE_DIR         = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_DIR       = os.path.join(BASE_DIR, 'static', 'uploads')
+MAX_IMAGE_BYTES  = 2 * 1024 * 1024          # límite por imagen: 2 MB
+MAX_IMAGE_PIXELS = 25_000_000               # evita imágenes "bomba" (p. ej. 20000x20000)
+FORMATOS_OK      = {'JPEG', 'PNG', 'WEBP'}  # formato REAL detectado por Pillow
+# Algo de holgura sobre los 2 MB para el resto de campos del formulario.
+app.config['MAX_CONTENT_LENGTH'] = MAX_IMAGE_BYTES + 512 * 1024
+for _sub in ('avatars', 'posts', 'proyectos'):
+    os.makedirs(os.path.join(UPLOAD_DIR, _sub), exist_ok=True)
+
+
+def guardar_imagen(archivo, carpeta, max_lado, thumb_lado, cuadrada=False):
+    """Valida, re-codifica y guarda una imagen subida por el usuario.
+
+    - Devuelve None si no se envió archivo.
+    - Lanza ValueError (con mensaje para mostrar al usuario) si no es válida.
+    - Comprueba el formato REAL con Pillow (no confía en la extensión ni en
+      el Content-Type) y vuelve a codificar la imagen, lo que elimina EXIF y
+      cualquier contenido extra escondido en el archivo.
+    - Nunca usa el nombre original: genera un nombre aleatorio (uuid4).
+    - Guarda la imagen redimensionada y una miniatura '<nombre>_thumb.webp'.
+    - Devuelve la ruta relativa a /static, ej. 'uploads/posts/ab12....webp'.
+    """
+    if archivo is None or not archivo.filename:
+        return None
+
+    datos = archivo.read(MAX_IMAGE_BYTES + 1)
+    if not datos:
+        raise ValueError('El archivo está vacío.')
+    if len(datos) > MAX_IMAGE_BYTES:
+        raise ValueError('La imagen supera el límite de 2 MB.')
+
+    msg_tipo = 'El archivo no es una imagen válida. Usa JPG, PNG o WebP.'
+    try:
+        img = Image.open(io.BytesIO(datos))
+        formato = img.format
+        if formato not in FORMATOS_OK:
+            raise ValueError(msg_tipo)
+        if img.width * img.height > MAX_IMAGE_PIXELS:
+            raise ValueError('La imagen tiene demasiados píxeles.')
+        img.load()                       # decodifica de verdad (detecta archivos corruptos)
+        img = ImageOps.exif_transpose(img)
+        img = img.convert('RGBA' if img.mode in ('RGBA', 'LA', 'P') else 'RGB')
+    except ValueError:
+        raise
+    except Exception:
+        raise ValueError(msg_tipo)
+
+    if cuadrada:                         # recorte centrado, para avatares
+        lado = min(img.width, img.height)
+        izq  = (img.width  - lado) // 2
+        arr  = (img.height - lado) // 2
+        img  = img.crop((izq, arr, izq + lado, arr + lado))
+
+    img.thumbnail((max_lado, max_lado), Image.LANCZOS)    # solo reduce, nunca amplía
+    miniatura = img.copy()
+    miniatura.thumbnail((thumb_lado, thumb_lado), Image.LANCZOS)
+
+    nombre = uuid.uuid4().hex
+    destino = os.path.join(UPLOAD_DIR, carpeta)
+    img.save(os.path.join(destino, f'{nombre}.webp'), 'WEBP', quality=85)
+    miniatura.save(os.path.join(destino, f'{nombre}_thumb.webp'), 'WEBP', quality=80)
+    return f'uploads/{carpeta}/{nombre}.webp'
+
+
+def borrar_imagen(ruta):
+    """Borra una imagen subida (y su miniatura). Ignora URLs externas y rutas raras."""
+    if not ruta or not ruta.startswith('uploads/'):
+        return
+    for r in (ruta, ruta.rsplit('.', 1)[0] + '_thumb.webp'):
+        completa = os.path.normpath(os.path.join(BASE_DIR, 'static', r))
+        if completa.startswith(UPLOAD_DIR + os.sep) and os.path.isfile(completa):
+            try:
+                os.remove(completa)
+            except OSError:
+                pass
+
+
+@app.template_filter('media')
+def media_url(ruta, thumb=False):
+    """URL pública de una imagen. Acepta rutas subidas ('uploads/...') y URLs
+    externas antiguas (http/https). thumb=True devuelve la miniatura."""
+    if not ruta:
+        return ''
+    if ruta.startswith(('http://', 'https://')):
+        return ruta
+    if thumb:
+        ruta = ruta.rsplit('.', 1)[0] + '_thumb.webp'
+    return url_for('static', filename=ruta)
+
+
+@app.errorhandler(413)
+def archivo_muy_grande(_e):
+    flash('La imagen supera el límite de 2 MB.', 'error')
+    return redirect(request.referrer or url_for('feed'))
+
+
+@app.context_processor
+def inyectar_avatar():
+    """Pone `mi_avatar` (ruta de la foto del usuario en sesión) en todas las plantillas."""
+    uid = session.get('user_id')
+    if not uid:
+        return {'mi_avatar': None}
+    conn = get_db()
+    fila = conn.execute("SELECT avatar_url FROM usuarios WHERE id = ?", (uid,)).fetchone()
+    conn.close()
+    return {'mi_avatar': fila['avatar_url'] if fila else None}
+
+
+
 
 # ──────────────────────────────────────────
 # UTILIDADES
