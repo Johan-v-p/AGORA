@@ -49,6 +49,31 @@ def tiempo_relativo(fecha_str):
     return f'hace {delta.days} días'
 
 
+def obtener_cuenta(user_id):
+    """Devuelve el estado actual (activo, rol) de una cuenta, o None si no existe."""
+    conn = get_db()
+    cuenta = conn.execute("SELECT activo, rol FROM usuarios WHERE id = ?", (user_id,)).fetchone()
+    conn.close()
+    return cuenta
+
+
+@app.before_request
+def validar_sesion():
+    """Expulsa las sesiones de cuentas suspendidas o borradas y mantiene el rol al día."""
+    user_id = session.get('user_id')
+    if not user_id or request.endpoint == 'static':
+        return None
+
+    cuenta = obtener_cuenta(user_id)
+    if not cuenta or not cuenta['activo']:
+        session.clear()
+        flash('Tu cuenta está suspendida. Contacta a un administrador.', 'error')
+        return redirect(url_for('login'))
+
+    session['rol'] = cuenta['rol']
+    return None
+
+
 def login_required(f):
     """Decorador simple que redirige al login si no hay sesión activa."""
     from functools import wraps
@@ -92,6 +117,10 @@ def login():
         conn.close()
 
         if usuario and check_password_hash(usuario['password'], password):
+            if not usuario['activo']:
+                flash('Tu cuenta está suspendida. Contacta a un administrador.', 'error')
+                return render_template('auth/login.html')
+
             session.clear()
             session['user_id']     = usuario['id']
             session['nombre']      = usuario['nombre']
@@ -1914,6 +1943,12 @@ def archivar_conversacion(conv_id):
 
 @socketio.on('connect')
 def on_connect():
+    # before_request no se ejecuta en las conexiones de Socket.IO
+    if session.get('user_id'):
+        cuenta = obtener_cuenta(session['user_id'])
+        if not cuenta or not cuenta['activo']:
+            return False
+
     if session.get('user_id'):
         join_room(f"user_{session['user_id']}")
 
