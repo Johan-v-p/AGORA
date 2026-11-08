@@ -202,15 +202,15 @@
     <section class="ajustes-seccion">
       <div class="seccion-titulo">Información de perfil</div>
 
-      <form method="POST" action="{{ url_for('ajustes_perfil') }}">
+      <form method="POST" action="{{ url_for('ajustes_perfil') }}" enctype="multipart/form-data">
         <div class="seccion-body">
 
           <!-- Preview del avatar actual -->
           <div class="avatar-preview-wrap">
             <div class="avatar-preview" id="avatar-preview">
               {% if usuario.avatar_url %}
-                <img src="{{ usuario.avatar_url }}" alt="Avatar" id="avatar-img"
-                     onerror="this.style.display='none'; document.getElementById('avatar-inicial').style.display='flex'">
+                <img src="{{ usuario.avatar_url|media }}" alt="Avatar" id="avatar-img"
+                    onerror="this.style.display='none'; document.getElementById('avatar-inicial').style.display='flex'">
               {% endif %}
               <span id="avatar-inicial" {% if usuario.avatar_url %}style="display:none"{% endif %}>
                 {{ session.nombre[0].upper() }}
@@ -218,18 +218,23 @@
             </div>
             <div class="avatar-preview-info">
               Foto de perfil actual.<br>
-              Pega una URL de imagen para cambiarla.
+              Sube una imagen para cambiarla.
             </div>
           </div>
 
-          <!-- URL del avatar -->
+          <!-- Foto de perfil (archivo) -->
           <div class="campo">
-            <label for="avatar_url">URL de foto de perfil</label>
-            <input type="url" id="avatar_url" name="avatar_url"
-                   placeholder="https://ejemplo.com/mi-foto.jpg"
-                   value="{{ usuario.avatar_url or '' }}"
-                   oninput="previsualizarAvatar(this.value)">
-            <div class="campo-hint">Deja vacío para usar la inicial de tu nombre.</div>
+            <label for="avatar">Foto de perfil</label>
+            <input type="file" id="avatar" name="avatar"
+                  accept="image/jpeg,image/png,image/webp"
+                  onchange="if (validarImagen(this)) previsualizarArchivo(this)">
+            <div class="campo-hint">JPG, PNG o WebP · máx. 2 MB. Se recorta en cuadrado. Sin foto se usa la inicial de tu nombre.</div>
+            <div class="img-error"></div>
+            {% if usuario.avatar_url %}
+            <label class="check-quitar">
+              <input type="checkbox" name="quitar_avatar" value="1"> Quitar mi foto actual
+            </label>
+            {% endif %}
           </div>
 
           <!-- Nombre -->
@@ -355,37 +360,23 @@
 
 {% block extra_scripts %}
 <script>
-  /* ── Preview de avatar en tiempo real ─── */
-  function previsualizarAvatar(url) {
-    const wrap   = document.getElementById('avatar-preview');
-    const img    = document.getElementById('avatar-img');
+  /* ── Preview de la foto elegida (antes de guardar) ─── */
+  function previsualizarArchivo(input) {
+    const archivo = input.files && input.files[0];
+    if (!archivo) return;
+    const wrap    = document.getElementById('avatar-preview');
     const inicial = document.getElementById('avatar-inicial');
-
-    if (!url) {
-      // Sin URL → mostrar inicial
-      if (img) img.style.display = 'none';
-      inicial.style.display = 'flex';
-      return;
+    let img = document.getElementById('avatar-img');
+    if (!img) {
+      img = document.createElement('img');
+      img.id = 'avatar-img';
+      img.alt = 'Avatar';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+      wrap.prepend(img);
     }
-
-    // Si el img ya existe, actualizar src; si no, crearlo
-    if (img) {
-      img.src = url;
-      img.style.display = 'block';
-      inicial.style.display = 'none';
-    } else {
-      const newImg = document.createElement('img');
-      newImg.id  = 'avatar-img';
-      newImg.src = url;
-      newImg.alt = 'Avatar';
-      newImg.style.cssText = 'width:100%;height:100%;object-fit:cover;';
-      newImg.onerror = () => {
-        newImg.style.display = 'none';
-        inicial.style.display = 'flex';
-      };
-      newImg.onload = () => { inicial.style.display = 'none'; };
-      wrap.prepend(newImg);
-    }
+    img.src = URL.createObjectURL(archivo);
+    img.style.display = 'block';
+    inicial.style.display = 'none';
   }
 
   /* ── Validar coincidencia de passwords ── */

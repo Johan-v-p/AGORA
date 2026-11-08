@@ -1255,13 +1255,33 @@ def ajustes_perfil():
     bio         = request.form.get('bio', '').strip()
     carrera     = request.form.get('carrera', '').strip()
     universidad = request.form.get('universidad', '').strip()
-    avatar_url  = request.form.get('avatar_url', '').strip()
+    quitar_foto = request.form.get('quitar_avatar') == '1'
     if not nombre:
         flash('El nombre no puede estar vacío.', 'error')
         return redirect(url_for('ajustes'))
     conn = get_db()
+    actual = conn.execute("SELECT avatar_url FROM usuarios WHERE id = ?",
+                        (session['user_id'],)).fetchone()
+    avatar_url = actual['avatar_url'] if actual else None
+
+    # Foto nueva (opcional): se valida ANTES de tocar nada en la base
+    try:
+        nueva = guardar_imagen(request.files.get('avatar'), 'avatars',
+                            max_lado=400, thumb_lado=96, cuadrada=True)
+    except ValueError as e:
+        conn.close()
+        flash(str(e), 'error')
+        return redirect(url_for('ajustes'))
+
+    if nueva:
+        borrar_imagen(avatar_url)
+        avatar_url = nueva
+    elif quitar_foto:
+        borrar_imagen(avatar_url)
+        avatar_url = None
+
     conn.execute("UPDATE usuarios SET nombre=?, bio=?, carrera=?, universidad=?, avatar_url=? WHERE id=?",
-        (nombre, bio or None, carrera or None, universidad or None, avatar_url or None, session['user_id']))
+        (nombre, bio or None, carrera or None, universidad or None, avatar_url, session['user_id']))
     conn.commit()
     conn.close()
     session['nombre'] = nombre
