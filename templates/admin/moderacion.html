@@ -81,7 +81,7 @@
   border: 1px solid var(--borde);
   color: var(--texto-dim);
 }
-.reporte-tipo.post     { border-color: #4a7c59; color: #6fcf6f; }
+.reporte-tipo.publicacion { border-color: #4a7c59; color: #6fcf6f; }
 .reporte-tipo.comentario { border-color: #7c6a4a; color: #cfb06f; }
 .reporte-tipo.usuario  { border-color: #7c4a4a; color: #cf6f6f; }
 .reporte-meta { font-size: 10px; color: var(--texto-dim); }
@@ -173,12 +173,12 @@
             <form method="POST" action="{{ url_for('resolver_reporte', reporte_id=r.id) }}"
                   style="display:contents">
               <button class="btn-accion ignorar"   name="accion" value="ignorar">Ignorar</button>
+              {% if r.tipo != 'usuario' %}
               <button class="btn-accion eliminar"  name="accion" value="eliminar"
                 onclick="return confirm('¿Eliminar este contenido?')">Eliminar contenido</button>
-              {% if r.tipo == 'usuario' %}
-              <button class="btn-accion suspender" name="accion" value="suspender"
-                onclick="return confirm('¿Suspender este usuario?')">Suspender usuario</button>
               {% endif %}
+              <button class="btn-accion suspender" name="accion" value="suspender"
+                onclick="return confirm('¿Suspender a {{ 'este usuario' if r.tipo == 'usuario' else 'quien publicó este contenido' }}?')">{{ 'Suspender usuario' if r.tipo == 'usuario' else 'Suspender autor' }}</button>
             </form>
           </div>
 
