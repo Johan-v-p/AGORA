@@ -1109,15 +1109,23 @@ def nuevo_proyecto():
     techs_lista = [t.strip() for t in techs_raw.split(',') if t.strip()]
     tecnologias = json.dumps(techs_lista, ensure_ascii=False) if techs_lista else None
 
+    try:
+        imagen_url = guardar_imagen(request.files.get('imagen'), 'proyectos',
+                                    max_lado=1280, thumb_lado=480)
+    except ValueError as e:
+        flash(str(e), 'error')
+        return redirect(url_for('portafolio'))
+
     conn = get_db()
     try:
         conn.execute("""
-            INSERT INTO proyectos (autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url)
-            VALUES (?,?,?,?,?,?,?,?)
-        """, (session['user_id'], titulo, descripcion or None, tecnologias, materia or None, estado, repo_url, demo_url))
+            INSERT INTO proyectos (autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url, imagen_url)
+            VALUES (?,?,?,?,?,?,?,?,?)
+        """, (session['user_id'], titulo, descripcion or None, tecnologias, materia or None, estado, repo_url, demo_url, imagen_url))
         conn.commit()
         flash('¡Proyecto publicado!', 'success')
     except Exception as e:
+        borrar_imagen(imagen_url)
         flash(f'Error al crear proyecto: {e}', 'error')
     finally:
         conn.close()
