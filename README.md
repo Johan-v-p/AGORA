@@ -30,7 +30,7 @@ configura al menos `SECRET_KEY` y, opcionalmente, `DATABASE_PATH` y `FLASK_DEBUG
 Inicializar la base de datos si es necesario:
 
 ```powershell
-python crearr_db.py
+python scripts/crear_db.py
 ```
 
 Ejecutar:
@@ -68,6 +68,9 @@ raíz.
 Las rutas nuevas deben implementarse como Blueprints y registrarse desde
 `agora/aplicacion.py`. El primer Blueprint migrado es
 `agora.rutas.autenticacion`.
+
+El código operativo de inicialización de la base de datos se encuentra en
+`scripts/crear_db.py`.
 
 ## Pruebas
 
