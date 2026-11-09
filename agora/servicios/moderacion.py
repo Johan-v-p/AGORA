@@ -1,6 +1,11 @@
 """Reglas de dominio compartidas por la moderación."""
 
 
+TIPOS_REPORTE = ('publicacion', 'comentario', 'usuario')
+ACCIONES_REPORTE = ('ignorar', 'eliminar', 'suspender')
+ESTADOS_ABIERTOS = ('enviado', 'en_revision')
+SQL_REPORTE_ABIERTO = "estado IN ('enviado', 'en_revision')"
+
 CONSULTAS_USUARIO_REPORTADO = {
     'usuario': "SELECT id, rol FROM usuarios WHERE id = ?",
     'publicacion': """SELECT u.id, u.rol FROM publicaciones p

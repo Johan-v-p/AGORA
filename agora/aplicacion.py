@@ -17,7 +17,11 @@ from agora.utilidades import (
     procesar_evento,
     tiempo_relativo,
 )
-from agora.moderacion import (
+from agora.servicios.moderacion import (
+    ACCIONES_REPORTE,
+    ESTADOS_ABIERTOS,
+    SQL_REPORTE_ABIERTO,
+    TIPOS_REPORTE,
     obtener_usuario_reportado as resolver_usuario_reportado,
     motivo_para_no_suspender as evaluar_suspension,
 )
@@ -1269,10 +1273,6 @@ def notificaciones_no_leidas():
 # MODERACIÓN
 # ══════════════════════════════════════════
 
-TIPOS_REPORTE     = ('publicacion', 'comentario', 'usuario')
-ACCIONES_REPORTE  = ('ignorar', 'eliminar', 'suspender')
-ESTADOS_ABIERTOS  = ('enviado', 'en_revision')
-SQL_REPORTE_ABIERTO = "estado IN ('enviado', 'en_revision')"
 
 def obtener_usuario_reportado(conn, tipo, referencia_id):
     """Mantiene la interfaz histórica para las rutas de moderación."""
