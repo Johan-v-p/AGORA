@@ -1,0 +1,166 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Feed{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/publicaciones/feed.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="feed-layout">
+
+  <!-- ══ SIDEBAR IZQUIERDO ══ -->
+  {% set pagina_activa = 'feed' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- ══ COLUMNA CENTRAL ══ -->
+  <main class="feed-main">
+
+    <!-- Cabecera: título + filtros -->
+    <div class="feed-header">
+      <span class="feed-titulo">Feed</span>
+      <div class="filtros">
+        <button class="filtro-btn {% if not filtro or filtro == 'todo' %}active{% endif %}" data-filtrar="todo">Todo</button>
+        <button class="filtro-btn {% if filtro == 'academico' %}active{% endif %}" data-filtrar="academico">Académico</button>
+        <button class="filtro-btn {% if filtro == 'foro' %}active{% endif %}" data-filtrar="foro">Foros</button>
+      </div>
+    </div>
+
+    <!-- Caja de composición -->
+    <div class="compose-box" data-abrir-publicacion>
+      <span class="compose-placeholder">¿Qué está pasando en el campus?</span>
+    </div>
+
+    <!-- Grid de posts -->
+    <div class="posts-grid" id="posts-grid">
+
+      {% if posts %}
+        {% for post in posts %}
+        <div class="post-card">
+
+          <!-- Categoría -->
+          <div class="post-cat">
+            {% if post.categoria == 'academico' %}
+              ACADÉMICO
+            {% elif post.categoria == 'meme' %}
+              {{ post.autor_nombre.upper() if not post.es_anonimo else 'ANÓNIMO' }} · MEME
+            {% elif post.categoria == 'foro' %}
+              FORO
+            {% elif post.categoria == 'portafolio' %}
+              PORTAFOLIO
+            {% else %}
+              GENERAL
+            {% endif %}
+          </div>
+
+          <!-- Título -->
+          <div class="post-titulo">{{ post.titulo }}</div>
+
+          <!-- Autor · tiempo -->
+          <div class="post-meta">
+            {% if post.es_anonimo %}
+              ANÓNIMO
+            {% else %}
+              {% if post.autor_id %}
+                <a class="u-enlace-limpio u-peso-700" href="{{ url_for('social.ver_perfil_usuario', usuario_id=post.autor_id) }}">{{ post.autor_nombre.upper() }}</a>
+              {% else %}
+                {{ post.autor_nombre.upper() }}
+              {% endif %}
+            {% endif %}
+            · {{ post.tiempo_relativo }}
+          </div>
+
+          <div class="post-sep"></div>
+
+          <!-- Footer: reacciones + botón -->
+          <div class="post-footer">
+            <div class="post-reacciones">
+              <span>
+                {% if post.categoria == 'meme' %}💀
+                {% elif post.categoria == 'foro' %}🙌
+                {% elif post.categoria == 'portafolio' %}⭐
+                {% else %}👏
+                {% endif %}
+                {{ post.total_reacciones }}
+              </span>
+              <span>💬 {{ post.total_comentarios }}</span>
+            </div>
+            <a class="btn-ver" href="{{ url_for('publicaciones.post_detalle', post_id=post.id) }}">VER →</a>
+          </div>
+
+        </div>
+        {% endfor %}
+
+      {% else %}
+        <div class="feed-empty">
+          <strong>El feed está vacío</strong>
+          Sé el primero en publicar algo en el campus.
+        </div>
+      {% endif %}
+
+    </div><!-- /posts-grid -->
+  </main>
+
+</div><!-- /feed-layout -->
+
+<!-- ══ MODAL NUEVA PUBLICACIÓN ══ -->
+<div class="modal-overlay" id="modal-post">
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <span class="modal-titulo">Nueva publicación</span>
+      <button class="modal-cerrar" data-cerrar-publicacion aria-label="Cerrar">✕</button>
+    </div>
+
+    <form method="POST" action="{{ url_for('publicaciones.nueva_publicacion') }}">
+
+      <!-- Título -->
+      <div class="campo">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo"
+               placeholder="¿Qué está pasando?" maxlength="120" required data-contar-titulo>
+        <div class="char-count" id="cnt-titulo">0 / 120</div>
+      </div>
+
+      <!-- Categoría -->
+      <div class="campo">
+        <label for="categoria">Categoría</label>
+        <div class="select-wrap">
+          <select id="categoria" name="categoria" required>
+            <option value="" disabled selected>Elige una categoría…</option>
+            <option value="general">General</option>
+            <option value="academico">Académico</option>
+            <option value="foro">Foro / Pregunta</option>
+            <option value="meme">Meme</option>
+            <option value="portafolio">Portafolio</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="campo">
+        <label for="contenido">Contenido</label>
+        <textarea id="contenido" name="contenido"
+                  placeholder="Escribe aquí tu publicación…"
+                  maxlength="2000" required data-contar-contenido></textarea>
+        <div class="char-count" id="cnt-contenido">0 / 2000</div>
+      </div>
+
+      <!-- Footer: anónimo + enviar -->
+      <div class="modal-footer">
+        <label class="check-anonimo">
+          <input type="checkbox" name="es_anonimo" value="1">
+          Publicar como anónimo
+        </label>
+        <button type="submit" class="btn-primary">Publicar →</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/publicaciones/feed.js') }}"></script>
+{% endblock %}

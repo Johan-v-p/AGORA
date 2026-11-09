@@ -1,0 +1,130 @@
+{% extends "compartidos/base.html" %}
+{% block title %}{{ pregunta.titulo }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/foros/pregunta.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="preg-det-layout">
+
+  {% set pagina_activa = 'foros' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="preg-det-main">
+
+    <!-- Botón volver al foro -->
+    <a class="btn-back" href="{{ url_for('foros.foro_detalle', foro_id=foro.id) }}">
+      ← Volver a {{ foro.nombre }}
+    </a>
+
+    <!-- ══ CABECERA DE LA PREGUNTA ══ -->
+    <div class="preg-header">
+      <span class="preg-tipo-badge {{ pregunta.tipo }}">{{ pregunta.tipo }}</span>
+
+      <h1 class="preg-titulo-grande">{{ pregunta.titulo }}</h1>
+
+      <div class="preg-meta">
+        <div class="preg-meta-avatar">
+          {% if pregunta.es_anonimo %}?
+          {% else %}{{ pregunta.autor_nombre[0].upper() }}{% endif %}
+        </div>
+        <span>
+          {% if pregunta.es_anonimo %}ANÓNIMO
+          {% else %}
+            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('social.ver_perfil_usuario', usuario_id=pregunta.autor_id) if pregunta.autor_id else '#' }}">{{ pregunta.autor_nombre.upper() }}</a>
+          {% endif %}
+        </span>
+        <span>·</span>
+        <span>{{ pregunta.tiempo_relativo }}</span>
+        <span>·</span>
+        <span>{{ respuestas|length }} respuesta{{ 's' if respuestas|length != 1 else '' }}</span>
+      </div>
+
+      {% if pregunta.contenido %}
+        <div class="preg-cuerpo">{{ pregunta.contenido }}</div>
+      {% endif %}
+    </div>
+
+    <!-- ══ RESPUESTAS ══ -->
+    <div class="resp-header-row">
+      <span class="resp-titulo">
+        Respuestas ({{ respuestas|length }})
+      </span>
+    </div>
+
+    <!-- Lista de respuestas -->
+    {% if respuestas %}
+      <div id="lista-respuestas">
+        {% for r in respuestas %}
+        <div class="resp-card {% if r.aceptada %}aceptada{% endif %}"
+             id="resp-{{ r.id }}">
+
+          {% if r.aceptada %}
+            <div class="badge-aceptada">✓ Respuesta aceptada</div>
+          {% endif %}
+
+          <div class="resp-autor-row">
+            <div class="resp-avatar">
+              {% if r.es_anonimo %}?
+              {% else %}{{ r.autor_nombre[0].upper() }}{% endif %}
+            </div>
+            <span class="resp-autor">
+              {% if r.es_anonimo %}Anónimo
+              {% else %}
+                <a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=r.autor_id) if r.autor_id is defined and r.autor_id else '#' }}">{{ r.autor_nombre }}</a>
+              {% endif %}
+            </span>
+            <span class="resp-tiempo">{{ r.tiempo_relativo }}</span>
+          </div>
+
+          <div class="resp-texto">{{ r.contenido }}</div>
+
+          <div class="resp-acciones">
+            <!-- Votos -->
+            <div class="resp-votos">
+              <button class="voto-btn up {% if r.mi_voto == 1 %}activo{% endif %}" data-votar-respuesta="{{ r.id }}" data-voto="1">▲</button>
+              <span class="voto-total" id="votos-{{ r.id }}">{{ r.votos }}</span>
+              <button class="voto-btn down {% if r.mi_voto == -1 %}activo{% endif %}" data-votar-respuesta="{{ r.id }}" data-voto="-1">▼</button>
+            </div>
+
+            <!-- Marcar como correcta (solo el autor de la pregunta) -->
+            {% if es_autor_pregunta and not r.aceptada %}
+              <form class="u-en-linea" method="POST"
+                    action="{{ url_for('foros.aceptar_respuesta', pregunta_id=pregunta.id, respuesta_id=r.id) }}">
+                <button type="submit" class="btn-aceptar">✓ Marcar como correcta</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="sin-resp">
+        <div class="sin-resp-icon">◉</div>
+        <div class="sin-resp-txt">Sin respuestas aún. ¡Sé el primero en ayudar!</div>
+      </div>
+    {% endif %}
+
+    <!-- ══ FORMULARIO NUEVA RESPUESTA ══ -->
+    <form class="resp-form" method="POST"
+          action="{{ url_for('foros.nueva_respuesta', foro_id=foro.id, pregunta_id=pregunta.id) }}">
+      <textarea name="contenido" maxlength="2000" required
+                placeholder="Escribe tu respuesta…"></textarea>
+      <div class="resp-form-footer">
+        <label class="resp-anonimo">
+          <input type="checkbox" name="es_anonimo" value="1">
+          Responder de forma anónima
+        </label>
+        <button type="submit" class="btn-primary">Responder →</button>
+      </div>
+    </form>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/foros/pregunta.js') }}"></script>
+{% endblock %}

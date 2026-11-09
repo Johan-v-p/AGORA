@@ -1,0 +1,78 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Reportar Comentario{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/reportar_comentario.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="rp-layout">
+
+  {% set pagina_activa = 'reportes' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="rp-main">
+    <div class="rp-header">
+      <div class="rp-titulo">⚑ Reportar Comentario</div>
+      <div class="rp-sub">Tu reporte es confidencial y será revisado por el equipo de moderación.</div>
+    </div>
+
+    <!-- Referencia al comentario -->
+    {% if comentario %}
+      <div class="ref-card">
+        <strong>Comentario a reportar:</strong>
+        {{ comentario.contenido[:200] }}{% if comentario.contenido|length > 200 %}…{% endif %}
+        {% if comentario.nombre_autor %}
+          <span class="u-ayuda-campo">por {{ comentario.nombre_autor }}</span>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="ref-card u-aviso-peligro">
+        No se especificó un comentario. Regresa y usa el botón "Reportar" junto al comentario.
+      </div>
+    {% endif %}
+
+    <div class="advertencia">
+      ⚠ Los reportes falsos o abusivos pueden resultar en acciones sobre tu propia cuenta.
+    </div>
+
+    <form method="POST" action="{{ url_for('enviar_reporte') }}">
+      <input type="hidden" name="tipo" value="comentario">
+      <input type="hidden" name="referencia_id" value="{{ comentario.id if comentario else '' }}">
+
+      <div class="card">
+        <div class="campo">
+          <label>Motivo del reporte *</label>
+          <div class="motivo-grid">
+            {% for m, label in [
+              ('spam', '🚫 Spam'),
+              ('acoso', '😤 Acoso'),
+              ('contenido_inapropiado', '🔞 Contenido inapropiado'),
+              ('desinformacion', '❌ Desinformación'),
+              ('plagio', '📋 Plagio'),
+              ('otro', '❓ Otro')
+            ] %}
+              <div class="motivo-op">
+                <input type="radio" name="motivo" id="m_{{ m }}" value="{{ m }}" required>
+                <label for="m_{{ m }}">{{ label }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Descripción adicional (opcional)</label>
+          <textarea name="descripcion"
+                    placeholder="Describe brevemente por qué reportas este comentario…"
+                    maxlength="500"></textarea>
+        </div>
+
+        <div class="card-footer">
+          <a href="javascript:history.back()" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary">Enviar reporte</button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %}

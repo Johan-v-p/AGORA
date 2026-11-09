@@ -1,0 +1,73 @@
+/* Componentes reutilizados por varias páginas (formularios, tarjetas, modales...). */
+
+.stat-lbl {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--texto-dim);
+}
+
+.deco-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(var(--borde) 1px, transparent 1px),
+    linear-gradient(90deg, var(--borde) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.15;
+}
+
+.cat-btn:hover, .cat-btn.active {
+  background: var(--superficie); color: var(--texto); border-color: #444;
+}
+
+.select-wrap { position: relative; }
+
+.select-wrap::after {
+  content: '▾'; position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); color: var(--texto-dim);
+  pointer-events: none; font-size: 11px;
+}
+
+.vacio-sub { font-size: 11px; color: var(--texto-dim); line-height: 1.7; }
+
+.vp-layout { display:flex; min-height:100vh; }
+
+.btn-back:hover { color: var(--texto); }
+
+.foro-info { flex: 1; min-width: 0; }
+
+.ad-layout{display:flex;min-height:100vh}
+
+.ad-header h1{font-family:var(--fuente-display);font-size:20px;font-weight:normal;color:var(--texto)}
+
+.back-link{font-size:11px;color:var(--texto-dim);text-decoration:none;margin-bottom:16px;display:inline-block}
+
+.back-link:hover{color:var(--texto)}
+
+.rp-titulo { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--texto); }
+
+.rp-sub { font-size: 11px; color: var(--texto-dim); margin-top: 5px; }
+
+.modal-eliminar-titulo { font-size: 13px; font-weight: 700; color: var(--texto); margin-bottom: 8px; }
+
+.modal-eliminar-acciones { display: flex; gap: 10px; justify-content: flex-end; }
+
+.char-count { font-size: 9px; color: var(--texto-dim); text-align: right; margin-top: 4px; }
+
+.char-count.over { color: #cf6f6f; }
+
+.nav-item.nav-logout {
+  color: #cf6f6f;
+  border-top: 1px solid var(--borde);
+  margin-top: 4px;
+}
+
+.nav-item.nav-logout:hover { background: #2e1a1a; color: #cf6f6f; }
+
+.perfil-layout {
+  display: flex;
+  min-height: 100vh;
+}

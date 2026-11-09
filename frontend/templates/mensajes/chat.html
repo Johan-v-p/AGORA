@@ -1,0 +1,94 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Chat — {{ otro.nombre }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mensajes/chat.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+<div class="chat-layout">
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="chat-main">
+
+    <!-- ── Header ── -->
+    <div class="chat-header">
+      <a class="chat-back" href="{{ url_for('mensajes.mensajes') }}">←</a>
+
+      <div class="chat-av">{{ otro.nombre[0].upper() }}</div>
+
+      <div class="chat-info">
+        <div class="chat-nombre">{{ otro.nombre }}</div>
+        {% if otro.carrera %}
+          <div class="chat-carrera">{{ otro.carrera }}</div>
+        {% endif %}
+      </div>
+
+      <div class="chat-estado">
+        <span id="dot-conectado"></span>
+        <span id="label-estado">—</span>
+      </div>
+
+      <a class="btn-perfil-link"
+         href="{{ url_for('social.ver_perfil_usuario', usuario_id=otro.id) }}">
+        Ver perfil →
+      </a>
+    </div>
+
+    <!-- ── Mensajes ── -->
+    <div class="chat-mensajes" id="chat-mensajes">
+
+      {% if not mensajes %}
+        <div class="chat-vacio" id="chat-vacio">
+          <span>👋</span>
+          <p>Sé el primero en escribir algo.</p>
+        </div>
+      {% endif %}
+
+      {% set fecha_anterior = namespace(val='') %}
+      {% for m in mensajes %}
+
+        {# Separador de fecha #}
+        {% set fecha_actual = m.creado_en[:10] if m.creado_en else '' %}
+        {% if fecha_actual != fecha_anterior.val %}
+          <div class="msg-fecha-sep">{{ fecha_actual }}</div>
+          {% set fecha_anterior.val = fecha_actual %}
+        {% endif %}
+
+        {% set es_mio = (m.autor_id == user_id) %}
+        <div class="msg-wrap {% if es_mio %}propio{% else %}otro{% endif %}"
+             id="msg-{{ m.id }}">
+          <div class="msg-burbuja">{{ m.contenido }}</div>
+          <div class="msg-meta">
+            {{ m.creado_en[11:16] if m.creado_en else '' }}
+            {% if es_mio %}
+              · {% if m.leido %}✓✓{% else %}✓{% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+      {% endfor %}
+    </div>
+
+    <!-- ── "Escribiendo…" ── -->
+    <div class="escribiendo" id="escribiendo-label"></div>
+
+    <!-- ── Input ── -->
+    <div class="chat-input-wrap">
+      <div class="chat-input-row">
+        <input type="text" id="inp-msg"
+               placeholder="Escribe un mensaje…"
+               maxlength="1000" autocomplete="off">
+        <button class="btn-primary btn-enviar" id="btn-enviar" data-enviar-mensaje>Enviar</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/mensajes/chat.js') }}" data-usuario-id="{{ user_id }}" data-otro-id="{{ otro.id }}" data-otro-nombre="{{ otro.nombre }}" data-conv-id="{{ conv_id }}" data-url-enviar="{{ url_for('mensajes.enviar_mensaje', conv_id=conv_id) }}" data-url-mensajes="{{ url_for('mensajes.mensajes') }}"></script>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends "compartidos/base.html" %}
+
+{% block title %}Ajustes{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajustes/ajustes.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="ajustes-layout">
+
+  <!-- Sidebar global -->
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- Contenido principal -->
+  <main class="ajustes-main">
+
+    <div class="ajustes-header">
+      <h1>Ajustes</h1>
+      <p>Administra tu cuenta y personaliza tu experiencia en Ágora.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECCIÓN 1 — INFORMACIÓN DE PERFIL
+    ════════════════════════════════════════ -->
+    <section class="ajustes-seccion">
+      <div class="seccion-titulo">Información de perfil</div>
+
+      <form method="POST" action="{{ url_for('ajustes.ajustes_perfil') }}">
+        <div class="seccion-body">
+
+          <!-- Preview del avatar actual -->
+          <div class="avatar-preview-wrap">
+            <div class="avatar-preview" id="avatar-preview">
+              {% if usuario.avatar_url %}
+                <img src="{{ usuario.avatar_url }}" alt="Avatar" id="avatar-img" data-avatar-alterno="avatar-inicial">
+              {% endif %}
+              <span id="avatar-inicial" {% if usuario.avatar_url %}style="display:none"{% endif %}>
+                {{ session.nombre[0].upper() }}
+              </span>
+            </div>
+            <div class="avatar-preview-info">
+              Foto de perfil actual.<br>
+              Pega una URL de imagen para cambiarla.
+            </div>
+          </div>
+
+          <!-- URL del avatar -->
+          <div class="campo">
+            <label for="avatar_url">URL de foto de perfil</label>
+            <input type="url" id="avatar_url" name="avatar_url"
+                   placeholder="https://ejemplo.com/mi-foto.jpg"
+                   value="{{ usuario.avatar_url or '' }}" data-previsualizar-avatar>
+            <div class="campo-hint">Deja vacío para usar la inicial de tu nombre.</div>
+          </div>
+
+          <!-- Nombre -->
+          <div class="campo">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" name="nombre"
+                   value="{{ usuario.nombre }}" required maxlength="80">
+          </div>
+
+          <!-- Bio -->
+          <div class="campo">
+            <label for="bio">Biografía</label>
+            <textarea id="bio" name="bio"
+                      placeholder="Cuéntale a la comunidad quién eres…"
+                      maxlength="300">{{ usuario.bio or '' }}</textarea>
+            <div class="campo-hint">Máximo 300 caracteres.</div>
+          </div>
+
+          <!-- Carrera / Universidad en fila -->
+          <div class="campo-fila">
+            <div class="campo">
+              <label for="carrera">Carrera</label>
+              <input type="text" id="carrera" name="carrera"
+                     value="{{ usuario.carrera or '' }}" maxlength="100">
+            </div>
+            <div class="campo">
+              <label for="universidad">Universidad</label>
+              <input type="text" id="universidad" name="universidad"
+                     value="{{ usuario.universidad or '' }}" maxlength="100">
+            </div>
+          </div>
+
+        </div><!-- /seccion-body -->
+
+        <div class="seccion-footer">
+          <span>Los cambios se reflejan de inmediato en tu perfil.</span>
+          <button type="submit" class="btn-primary">Guardar perfil</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         SECCIÓN 2 — CORREO ELECTRÓNICO
+    ════════════════════════════════════════ -->
+    <section class="ajustes-seccion">
+      <div class="seccion-titulo">Correo electrónico</div>
+
+      <form method="POST" action="{{ url_for('ajustes.ajustes_correo') }}">
+        <div class="seccion-body">
+
+          <div class="campo">
+            <label for="correo">Nuevo correo</label>
+            <input type="email" id="correo" name="correo"
+                   placeholder="{{ usuario.correo }}" required>
+            <div class="campo-hint">Correo actual: {{ usuario.correo }}</div>
+          </div>
+
+          <div class="campo">
+            <label for="password_conf">Confirma tu contraseña actual</label>
+            <input type="password" id="password_conf" name="password_conf"
+                   placeholder="Tu contraseña actual" required autocomplete="current-password">
+            <div class="campo-hint">Requerida por seguridad para cambiar el correo.</div>
+          </div>
+
+        </div>
+
+        <div class="seccion-footer">
+          <span>Recibirás confirmación de cambio.</span>
+          <button type="submit" class="btn-primary">Actualizar correo</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         SECCIÓN 3 — CONTRASEÑA
+    ════════════════════════════════════════ -->
+    <section class="ajustes-seccion zona-peligrosa">
+      <div class="seccion-titulo">Cambiar contraseña</div>
+
+      <form method="POST" action="{{ url_for('ajustes.ajustes_password') }}">
+        <div class="seccion-body">
+
+          <div class="campo">
+            <label for="password_actual">Contraseña actual</label>
+            <input type="password" id="password_actual" name="password_actual"
+                   placeholder="••••••••" required autocomplete="current-password">
+          </div>
+
+          <div class="campo-fila">
+            <div class="campo">
+              <label for="password_nueva">Nueva contraseña</label>
+              <input type="password" id="password_nueva" name="password_nueva"
+                     placeholder="••••••••" required minlength="6"
+                     autocomplete="new-password" data-validar-password>
+            </div>
+            <div class="campo">
+              <label for="password_conf2">Confirmar nueva contraseña</label>
+              <input type="password" id="password_conf2" name="password_conf"
+                     placeholder="••••••••" required minlength="6"
+                     autocomplete="new-password" data-validar-password>
+            </div>
+          </div>
+
+          <!-- Indicador de coincidencia en tiempo real -->
+          <div class="mensaje-coincidencia" id="password-match-msg"></div>
+
+        </div>
+
+        <div class="seccion-footer">
+          <span>Mínimo 6 caracteres.</span>
+          <button type="submit" class="btn-primary" id="btn-cambiar-pwd">
+            Cambiar contraseña
+          </button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/ajustes/ajustes.js') }}"></script>
+{% endblock %}

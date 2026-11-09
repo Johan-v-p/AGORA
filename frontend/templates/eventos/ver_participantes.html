@@ -1,0 +1,60 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Participantes · {{ evento.titulo }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventos/ver_participantes.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="vp-layout">
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="vp-main">
+
+    <div class="vp-header">
+      <a class="vp-back" href="{{ url_for('eventos.ver_evento', evento_id=evento.id) }}">
+        ← {{ evento.titulo }}
+      </a>
+      <div class="vp-titulo">Participantes inscritos</div>
+      <div class="vp-sub">
+        {{ participantes|length }} persona{{ '' if participantes|length == 1 else 's' }} inscrita{{ '' if participantes|length == 1 else 's' }}
+        {% if evento.cupos %}· {{ evento.cupos }} cupos totales{% endif %}
+      </div>
+    </div>
+
+    {% if participantes %}
+      {% for p in participantes %}
+        <a class="part-card" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.id) }}">
+
+          <div class="part-av">
+            {% if p.avatar_url %}
+              <img src="{{ p.avatar_url }}" alt="{{ p.nombre }}" data-avatar-alterno="siguiente">
+              <span class="u-oculto">{{ p.nombre[0].upper() }}</span>
+            {% else %}
+              {{ p.nombre[0].upper() }}
+            {% endif %}
+          </div>
+
+          <div class="part-info">
+            <div class="part-nombre">{{ p.nombre }}</div>
+            {% if p.carrera %}
+              <div class="part-carrera">
+                {{ p.carrera }}{% if p.universidad %} · {{ p.universidad }}{% endif %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="part-fecha">{{ p.creado_en[:10] if p.creado_en else '' }}</div>
+
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="vp-vacio">
+        <span>👥</span>
+        Nadie se ha inscrito aún a este evento.
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}

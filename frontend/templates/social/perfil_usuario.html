@@ -1,0 +1,95 @@
+{% extends "compartidos/base.html" %}
+{% block title %}{{ usuario.nombre }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social/perfil_usuario.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="perfil-layout">
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="perfil-main">
+
+    <!-- ── Tarjeta de perfil ── -->
+    <div class="perfil-card">
+      <div class="perfil-top">
+
+        <!-- Avatar -->
+        <div class="perfil-avatar">
+          {% if usuario.avatar_url %}
+            <img src="{{ usuario.avatar_url }}" alt="{{ usuario.nombre }}" data-avatar-alterno="siguiente">
+            <span class="u-oculto">{{ usuario.nombre[0].upper() }}</span>
+          {% else %}
+            {{ usuario.nombre[0].upper() }}
+          {% endif %}
+        </div>
+
+        <!-- Info + botón -->
+        <div class="perfil-info">
+          <div class="perfil-nombre">{{ usuario.nombre }}</div>
+          <div class="perfil-carrera">
+            {{ usuario.carrera or '' }}{% if usuario.carrera and usuario.universidad %} · {% endif %}{{ usuario.universidad or '' }}
+          </div>
+
+          <!-- Botón seguir / editar perfil -->
+          {% if es_propio %}
+            <a href="{{ url_for('ajustes.ajustes') }}" class="btn-seguir">✎ Editar perfil</a>
+          {% else %}
+            <button class="btn-seguir {% if ya_sigue %}siguiendo{% endif %}"
+                    id="btn-seguir" data-alternar-seguir="{{ usuario.id }}" data-siguiendo="{{ 'true' if ya_sigue else 'false' }}">
+              <span id="btn-seguir-texto">{{ 'Siguiendo' if ya_sigue else '+ Seguir' }}</span>
+            </button>
+            <a href="{{ url_for('mensajes.ver_chat', otro_id=usuario.id) }}"
+               class="btn-seguir perfil-enlace-mensaje">
+              💬 Mensaje
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Bio -->
+      {% if usuario.bio %}
+        <div class="perfil-bio">{{ usuario.bio }}</div>
+      {% endif %}
+
+      <!-- Stats -->
+      <div class="perfil-stats">
+        <div class="stat-item">
+          <span class="stat-num">{{ stats.total_posts }}</span>
+          <span class="stat-label">Posts</span>
+        </div>
+        <a class="stat-item" href="{{ url_for('social.ver_seguidores', usuario_id=usuario.id) }}">
+          <span class="stat-num" id="contador-seguidores">{{ stats.total_seguidores }}</span>
+          <span class="stat-label">Seguidores</span>
+        </a>
+        <a class="stat-item" href="{{ url_for('social.ver_siguiendo', usuario_id=usuario.id) }}">
+          <span class="stat-num">{{ stats.total_siguiendo }}</span>
+          <span class="stat-label">Siguiendo</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Publicaciones recientes ── -->
+    <div class="perfil-posts-titulo">Publicaciones recientes</div>
+
+    {% if posts %}
+      {% for p in posts %}
+        <a class="post-fila" href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}">
+          <span class="post-fila-titulo">{{ p.titulo }}</span>
+          <span class="post-fila-meta">
+            {{ p.total_reacciones }} 👏 · {{ p.total_comentarios }} 💬 · {{ p.tiempo_relativo }}
+          </span>
+        </a>
+      {% endfor %}
+    {% else %}
+      <p class="sin-posts">Este usuario aún no ha publicado nada.</p>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/social/perfil_usuario.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/autenticacion/login.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+<div class="login-wrap">
+
+  <!-- ══ PANEL IZQUIERDO: formulario ══ -->
+  <div class="login-panel">
+
+    <div>
+      <!-- Marca -->
+      <div class="login-logo">Ágora</div>
+      <div class="login-tagline">La plaza de tu universidad</div>
+      <div class="login-divider"></div>
+
+      <!-- Formulario -->
+      <form class="login-form" method="POST" action="{{ url_for('autenticacion.login') }}">
+
+        <div class="campo">
+          <label for="correo">Correo</label>
+          <input
+            type="email"
+            id="correo"
+            name="correo"
+            placeholder="valentina@correounivalle.edu.co"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        <div class="campo-sep"></div>
+
+        <button type="submit" class="btn-login">Entrar →</button>
+
+      </form>
+
+      <p class="login-link">
+        ¿No tienes cuenta?
+        <a href="{{ url_for('autenticacion.registro') }}">Regístrate</a>
+      </p>
+    </div>
+
+    <!-- Estadísticas de la plataforma -->
+    <div class="login-stats">
+      <div class="stat-item">
+        <span class="stat-num">12k</span>
+        <span class="stat-lbl">Estudiantes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">340</span>
+        <span class="stat-lbl">Foros</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">89k</span>
+        <span class="stat-lbl">Posts</span>
+      </div>
+    </div>
+
+  </div><!-- /login-panel -->
+
+  <!-- ══ PANEL DERECHO: decorativo ══ -->
+  <div class="login-deco">
+    <div class="deco-grid"></div>
+    <p class="deco-cita">
+      El meme del parcial de cálculo<br/>está en tendencia ahora 🔥
+    </p>
+  </div>
+
+</div><!-- /login-wrap -->
+{% endblock %}

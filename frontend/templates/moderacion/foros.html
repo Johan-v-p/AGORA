@@ -1,0 +1,67 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Foros — Admin{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/foros.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="ad-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="ad-main">
+    <a href="{{ url_for('moderacion.admin_panel') }}" class="back-link">← Volver al panel</a>
+    <div class="ad-header"><h1>Gestión de foros</h1></div>
+
+    <div class="crear-card">
+      <div class="crear-titulo">Crear nuevo foro</div>
+      <form method="POST">
+        <input type="hidden" name="accion" value="crear">
+        <div class="campo-fila">
+          <div class="campo">
+            <label>Nombre *</label>
+            <input type="text" name="nombre" required maxlength="80" placeholder="Nombre del foro…">
+          </div>
+          <div class="campo">
+            <label>Categoría</label>
+            <select name="categoria">
+              <option value="campus">Campus</option>
+              <option value="matematicas">Matemáticas</option>
+              <option value="sistemas">Sistemas</option>
+              <option value="academico">Académico</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Descripción</label>
+          <input type="text" name="descripcion" maxlength="200" placeholder="Descripción breve…">
+        </div>
+        <div class="crear-footer">
+          <button type="submit" class="btn-primary">Crear foro</button>
+        </div>
+      </form>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Preguntas</th><th>Acción</th></tr>
+      </thead>
+      <tbody>
+        {% for f in foros %}
+          <tr>
+            <td class="u-texto-tenue">#{{ f.id }}</td>
+            <td><strong>{{ f.nombre }}</strong></td>
+            <td class="u-texto-tenue">{{ f.categoria or '—' }}</td>
+            <td>{{ f.total_preguntas }}</td>
+            <td>
+              <form method="POST" data-confirmar="¿Eliminar el foro «{{ f.nombre }}»? Esto eliminará todas sus preguntas y respuestas.">
+                <input type="hidden" name="accion" value="eliminar">
+                <input type="hidden" name="foro_id" value="{{ f.id }}">
+                <button type="submit" class="del-btn">✕ Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+</div>
+{% endblock %}

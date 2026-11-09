@@ -1,0 +1,55 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Administración{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/panel.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="ad-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="ad-main">
+    <div class="ad-header"><h1>Panel de Administración</h1></div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-num">{{ stats.total_usuarios }}</span>
+        <span class="stat-label">Usuarios activos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">{{ stats.total_posts }}</span>
+        <span class="stat-label">Publicaciones</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">{{ stats.total_eventos }}</span>
+        <span class="stat-label">Eventos próximos</span>
+      </div>
+      <div class="stat-card {% if stats.total_reportes > 0 %}u-borde-alerta{% endif %}">
+        <span class="stat-num {% if stats.total_reportes > 0 %}u-texto-peligro{% endif %}">{{ stats.total_reportes }}</span>
+        <span class="stat-label">Reportes nuevos</span>
+      </div>
+    </div>
+
+    <div class="menu-grid">
+      <a href="{{ url_for('admin_usuarios') }}" class="menu-card">
+        <div class="menu-card-icon">👥</div>
+        <div class="menu-card-titulo">Gestión de usuarios</div>
+        <div class="menu-card-desc">Ver, buscar, suspender y cambiar roles de usuarios.</div>
+      </a>
+      <a href="{{ url_for('moderacion.moderacion') }}" class="menu-card">
+        <div class="menu-card-icon">🛡</div>
+        <div class="menu-card-titulo">Moderación</div>
+        <div class="menu-card-desc">Revisar reportes pendientes y actuar sobre contenido.</div>
+      </a>
+      <a href="{{ url_for('admin_foros') }}" class="menu-card">
+        <div class="menu-card-icon">💬</div>
+        <div class="menu-card-titulo">Gestión de foros</div>
+        <div class="menu-card-desc">Crear y eliminar foros temáticos de la plataforma.</div>
+      </a>
+      <a href="{{ url_for('admin_estadisticas') }}" class="menu-card">
+        <div class="menu-card-icon">📊</div>
+        <div class="menu-card-titulo">Estadísticas</div>
+        <div class="menu-card-desc">Actividad de usuarios, posts por categoría y más.</div>
+      </a>
+    </div>
+  </main>
+</div>
+{% endblock %}

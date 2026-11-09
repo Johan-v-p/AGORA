@@ -12,7 +12,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import app as agora  # noqa: E402
+from backend import aplicacion as agora  # noqa: E402
 
 # Los ids coinciden a propósito: la publicación 3 y el comentario 3 son de AUTOR (id 4),
 # mientras que el usuario con id 3 es TESTIGO, que no tiene nada que ver.

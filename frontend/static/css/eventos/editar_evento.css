@@ -1,0 +1,14 @@
+.ee-layout{display:flex;min-height:100vh}
+.ee-main{flex:1;max-width:680px;padding:40px 48px 80px}
+.ee-header{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--borde)}
+.ee-header h1{font-family:var(--fuente-display);font-size:20px;font-weight:normal;color:var(--texto)}
+.card{background:var(--panel);border:1px solid var(--borde);padding:24px 28px}
+.campo{margin-bottom:18px}
+.campo:last-child{margin-bottom:0}
+.campo label{display:block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--texto-dim);margin-bottom:7px}
+.campo input,.campo textarea,.campo select{width:100%;background:var(--superficie);border:1px solid var(--borde);color:var(--texto);font-family:var(--fuente-body);font-size:13px;padding:10px 14px;outline:none;transition:border-color .15s}
+.campo input:focus,.campo textarea:focus,.campo select:focus{border-color:var(--texto)}
+.campo select option{background:var(--panel)}
+.campo textarea{resize:vertical;min-height:80px}
+.campo-fila{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card-footer{display:flex;justify-content:flex-end;gap:10px;padding-top:16px;border-top:1px solid var(--borde);margin-top:16px}

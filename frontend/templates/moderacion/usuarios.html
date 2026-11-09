@@ -1,0 +1,59 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Usuarios — Admin{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/usuarios.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="ad-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="ad-main">
+    <a href="{{ url_for('moderacion.admin_panel') }}" class="back-link">← Volver al panel</a>
+    <div class="ad-header">
+      <h1>Gestión de usuarios ({{ usuarios|length }})</h1>
+      <form class="search-form" method="GET">
+        <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nombre o correo…">
+        <button type="submit" class="btn-primary">Buscar</button>
+      </form>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Registro</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+          <tr>
+            <td class="u-texto-tenue">#{{ u.id }}</td>
+            <td><strong>{{ u.nombre }}</strong></td>
+            <td class="u-texto-tenue">{{ u.correo }}</td>
+            <td><span class="rol-badge rol-{{ u.rol }}">{{ u.rol }}</span></td>
+            <td><span class="{% if u.activo %}activo-si{% else %}activo-no{% endif %}">{{ '✓ Activo' if u.activo else '✕ Suspendido' }}</span></td>
+            <td class="u-texto-tenue">{{ u.creado_en[:10] if u.creado_en else '—' }}</td>
+            <td>
+              <div class="acc-form">
+                <!-- Cambiar rol -->
+                <form method="POST" action="{{ url_for('admin_cambiar_rol', uid=u.id) }}">
+                  <select name="rol">
+                    <option value="estudiante" {% if u.rol=='estudiante' %}selected{% endif %}>Estudiante</option>
+                    <option value="moderador" {% if u.rol=='moderador' %}selected{% endif %}>Moderador</option>
+                    <option value="admin" {% if u.rol=='admin' %}selected{% endif %}>Admin</option>
+                  </select>
+                  <button type="submit" class="acc-btn">Cambiar</button>
+                </form>
+                <!-- Toggle activo -->
+                {% if u.id != session.user_id %}
+                  <form method="POST" action="{{ url_for('admin_toggle_activo', uid=u.id) }}" data-confirmar="¿Cambiar estado de {{ u.nombre }}?">
+                    <button type="submit" class="acc-btn danger">{{ '⛔ Suspender' if u.activo else '✅ Activar' }}</button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+</div>
+{% endblock %}

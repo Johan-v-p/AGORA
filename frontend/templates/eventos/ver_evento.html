@@ -1,0 +1,72 @@
+{% extends "compartidos/base.html" %}
+{% block title %}{{ evento.titulo }}{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventos/ver_evento.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="ve-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="ve-main">
+
+    <div class="ve-card">
+      <div class="ve-head">
+        <div class="ve-fecha">
+          <span class="ve-dia">{{ evento.fecha_dia }}</span>
+          <span class="ve-mes">{{ evento.fecha_mes }}</span>
+        </div>
+        <div class="u-flex-1">
+          <div class="ve-badge">{{ evento.categoria }}</div>
+          <h1 class="ve-titulo">{{ evento.titulo }}</h1>
+          <div class="ve-meta">
+            {% if evento.hora_inicio %}<span>🕐 {{ evento.hora_inicio }}{% if evento.hora_fin %} – {{ evento.hora_fin }}{% endif %}</span>{% endif %}
+            {% if evento.lugar %}<span>📍 {{ evento.lugar }}</span>{% endif %}
+            {% if evento.organizador %}<span>🏛 {{ evento.organizador }}</span>{% endif %}
+            <span>👥 {{ participantes|length }} inscrito{% if participantes|length != 1 %}s{% endif %}{% if evento.cupos_libres and evento.cupos_libres != '∞' %} · {{ evento.cupos_libres }} cupos libres{% endif %}</span>
+          </div>
+        </div>
+      </div>
+      {% if evento.descripcion %}
+        <div class="ve-desc">{{ evento.descripcion }}</div>
+      {% endif %}
+      <div class="ve-acciones">
+        <button class="btn-inscribir {% if evento.inscrito %}cancelar{% endif %}" id="btn-ins" data-alternar-inscripcion="{{ evento.id }}" data-inscrito="{{ 'true' if evento.inscrito else 'false' }}">
+          {{ 'Cancelar inscripción' if evento.inscrito else 'Inscribirse' }}
+        </button>
+        {% if es_creador %}
+          <a href="{{ url_for('eventos.editar_evento', evento_id=evento.id) }}" class="btn-ev-editar">✎ Editar</a>
+          <form method="POST" action="{{ url_for('eventos.eliminar_evento', evento_id=evento.id) }}" data-confirmar="¿Eliminar este evento? Esta acción no se puede deshacer.">
+            <button type="submit" class="btn-ev-del">✕ Eliminar</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if evento.agenda %}
+      <div class="sec-titulo">Agenda</div>
+      <div class="ve-card evento-seccion">
+        <p class="u-texto-vacio">{{ evento.agenda }}</p>
+      </div>
+    {% endif %}
+
+    <div class="sec-titulo evento-bloque">Participantes ({{ participantes|length }})</div>
+    <div class="ve-card evento-seccion">
+      {% if participantes %}
+        <div class="partic-lista">
+          {% for p in participantes %}
+            <a href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.id) }}" class="partic-chip">
+              <div class="partic-av">{{ p.nombre[0].upper() }}</div>
+              {{ p.nombre }}
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="u-texto-vacio">Aún no hay inscritos. ¡Sé el primero!</p>
+      {% endif %}
+    </div>
+
+  </main>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/eventos/ver_evento.js') }}"></script>
+{% endblock %}

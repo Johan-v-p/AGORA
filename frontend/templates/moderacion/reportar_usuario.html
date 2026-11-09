@@ -1,0 +1,80 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Reportar Usuario{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/reportar_usuario.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="rp-layout">
+
+  {% set pagina_activa = 'reportes' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="rp-main">
+    <div class="rp-header">
+      <div class="rp-titulo">⚑ Reportar Usuario</div>
+      <div class="rp-sub">Tu reporte es confidencial y será revisado por el equipo de moderación.</div>
+    </div>
+
+    <!-- Referencia al usuario -->
+    {% if usuario_reportado %}
+      <div class="ref-card">
+        <div class="ref-avatar">{{ usuario_reportado.nombre[0].upper() }}</div>
+        <div>
+          <strong>{{ usuario_reportado.nombre }}</strong>
+          {% if usuario_reportado.carrera %}
+            <span class="u-ayuda-tenue">{{ usuario_reportado.carrera }}</span>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="ref-card u-aviso-peligro">
+        No se especificó un usuario. Regresa al perfil del usuario y usa el botón "Reportar".
+      </div>
+    {% endif %}
+
+    <div class="advertencia">
+      ⚠ Los reportes falsos o abusivos pueden resultar en acciones sobre tu propia cuenta.
+    </div>
+
+    <form method="POST" action="{{ url_for('enviar_reporte') }}">
+      <input type="hidden" name="tipo" value="usuario">
+      <input type="hidden" name="referencia_id" value="{{ usuario_reportado.id if usuario_reportado else '' }}">
+
+      <div class="card">
+        <div class="campo">
+          <label>Motivo del reporte *</label>
+          <div class="motivo-grid">
+            {% for m, label in [
+              ('spam', '🚫 Spam / Bot'),
+              ('acoso', '😤 Acoso o bullying'),
+              ('contenido_inapropiado', '🔞 Contenido inapropiado'),
+              ('desinformacion', '❌ Desinformación'),
+              ('suplantacion', '🎭 Suplantación de identidad'),
+              ('otro', '❓ Otro')
+            ] %}
+              <div class="motivo-op">
+                <input type="radio" name="motivo" id="m_{{ m }}" value="{{ m }}" required>
+                <label for="m_{{ m }}">{{ label }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Descripción adicional (opcional)</label>
+          <textarea name="descripcion"
+                    placeholder="Describe brevemente por qué reportas a este usuario…"
+                    maxlength="500"></textarea>
+        </div>
+
+        <div class="card-footer">
+          <a href="javascript:history.back()" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary">Enviar reporte</button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %}
