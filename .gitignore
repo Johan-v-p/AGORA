@@ -6,3 +6,5 @@ venv/
 *.db
 !.gitkeep
 .pytest_cache/
+# Imágenes subidas por los usuarios
+frontend/static/uploads/
