@@ -464,7 +464,7 @@
     <!-- ── COLUMNA DERECHA FIJA: tarjeta de perfil ── -->
     <aside class="perfil-aside">
       <div class="perfil-card">
-        <div class="perfil-avatar">{{ session.nombre[0].upper() }}</div>
+        <div class="perfil-avatar">{% if mi_avatar %}<img src="{{ mi_avatar|media }}" alt="{{ session.nombre }}">{% else %}{{ session.nombre[0].upper() }}{% endif %}</div>
 
         <div class="perfil-rol {% if session.rol == 'moderador' %}moderador{% endif %}">
           {{ session.rol | upper }}

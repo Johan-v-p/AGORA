@@ -187,7 +187,7 @@
         <!-- Avatar -->
         <div class="perfil-avatar">
           {% if usuario.avatar_url %}
-            <img src="{{ usuario.avatar_url }}" alt="{{ usuario.nombre }}"
+            <img src="{{ usuario.avatar_url|media }}" alt="{{ usuario.nombre }}"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <span style="display:none">{{ usuario.nombre[0].upper() }}</span>
           {% else %}

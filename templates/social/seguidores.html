@@ -199,7 +199,7 @@
           <!-- Avatar -->
           <div class="u-avatar">
             {% if u.avatar_url %}
-              <img src="{{ u.avatar_url }}" alt="{{ u.nombre }}"
+              <img src="{{ u.avatar_url|media(thumb=True) }}" alt="{{ u.nombre }}"
                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
               <span style="display:none">{{ u.nombre[0].upper() }}</span>
             {% else %}
