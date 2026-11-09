@@ -79,7 +79,14 @@
 
     <!-- Usuario al pie -->
       <div class="sidebar-user">
-      <div class="user-avatar">{{ session.nombre[0].upper() }}</div>
+      <div class="user-avatar">
+        {% if mi_avatar %}
+          <img src="{{ mi_avatar|media(true) }}" alt="" data-avatar-alterno="siguiente">
+          <span style="display:none">{{ session.nombre[0].upper() }}</span>
+        {% else %}
+          {{ session.nombre[0].upper() }}
+        {% endif %}
+      </div>
       <div class="user-info">
         <div class="user-name">{{ session.nombre.upper() }}</div>
         <div class="user-carrera">{{ session.carrera }}</div>
