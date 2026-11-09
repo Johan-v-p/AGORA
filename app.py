@@ -569,14 +569,32 @@ def editar_publicacion(post_id):
             conn.close()
             return redirect(url_for('editar_publicacion', post_id=post_id))
 
+        imagen_url = post['imagen_url']
+        try:
+            nueva = guardar_imagen(request.files.get('imagen'), 'posts',
+                                   max_lado=1280, thumb_lado=480)
+        except ValueError as e:
+            flash(str(e), 'error')
+            conn.close()
+            return redirect(url_for('editar_publicacion', post_id=post_id))
+
+        anterior = imagen_url
+        if nueva:
+            imagen_url = nueva
+        elif request.form.get('quitar_imagen') == '1':
+            imagen_url = None
+
         try:
             conn.execute(
-                "UPDATE publicaciones SET titulo = ?, contenido = ?, categoria = ? WHERE id = ?",
-                (titulo, contenido, categoria, post_id)
+                "UPDATE publicaciones SET titulo = ?, contenido = ?, categoria = ?, imagen_url = ? WHERE id = ?",
+                (titulo, contenido, categoria, imagen_url, post_id)
             )
             conn.commit()
+            if imagen_url != anterior:
+                borrar_imagen(anterior)
             flash('Publicación actualizada.', 'success')
         except Exception as e:
+            borrar_imagen(nueva)
             flash(f'Error al actualizar: {e}', 'error')
         finally:
             conn.close()
