@@ -7,10 +7,10 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_socketio import SocketIO, join_room, leave_room
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-import sqlite3
 import json
-import os
 import sys
+from base_datos import abrir_conexion
+from configuracion import obtener_configuracion
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.
@@ -18,18 +18,17 @@ sys.setrecursionlimit(5000)
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-only-change-me')
+CONFIGURACION = obtener_configuracion()
+app.config['SECRET_KEY'] = CONFIGURACION['SECRET_KEY']
 
-DB = os.environ.get('DATABASE_PATH', 'agora.db')
+DB = CONFIGURACION['DATABASE_PATH']
 
 # ──────────────────────────────────────────
 # UTILIDADES
 # ──────────────────────────────────────────
 def get_db():
     """Abre una conexión SQLite y devuelve filas como diccionarios."""
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return abrir_conexion(DB)
 
 
 def tiempo_relativo(fecha_str):
@@ -2045,5 +2044,9 @@ def on_dejo_escribir(data):
 # ARRANQUE
 # ══════════════════════════════════════════
 if __name__ == '__main__':
-    debug = os.environ.get('FLASK_DEBUG', '').lower() in {'1', 'true', 'yes'}
-    socketio.run(app, host='0.0.0.0', port=5000, debug=debug)
+    socketio.run(
+        app,
+        host='0.0.0.0',
+        port=5000,
+        debug=CONFIGURACION['FLASK_DEBUG'],
+    )
