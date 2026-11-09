@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 RAIZ_PROYECTO = Path(__file__).resolve().parents[2]
-RUTA_BASE_DATOS = RAIZ_PROYECTO / 'datos' / 'agora.db'
+RUTA_BASE_DATOS = RAIZ_PROYECTO / 'data' / 'agora.db'
 
 
 def obtener_configuracion() -> dict[str, object]:

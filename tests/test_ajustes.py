@@ -14,7 +14,7 @@ import unittest
 from werkzeug.security import check_password_hash, generate_password_hash
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import app as agora  # noqa: E402
+from backend import aplicacion as agora  # noqa: E402
 
 CORREO = 'ana@test.edu'
 PASSWORD = 'clave-de-prueba'

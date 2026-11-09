@@ -1,7 +1,7 @@
 """
 crear_db.py — Crea TODA la base de datos de ÁGORA desde cero.
 Ejecutar desde la raíz del proyecto: python scripts/crear_db.py
-La base se crea en datos/agora.db, o en la ruta indicada por DATABASE_PATH.
+La base se crea en data/agora.db, o en la ruta indicada por DATABASE_PATH.
 
 Tablas:
   usuarios, seguidores, publicaciones, reacciones_publicacion,
@@ -19,7 +19,7 @@ from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta
 import random
 
-RUTA_POR_DEFECTO = Path(__file__).resolve().parents[1] / 'datos' / 'agora.db'
+RUTA_POR_DEFECTO = Path(__file__).resolve().parents[1] / 'data' / 'agora.db'
 DB = Path(os.environ.get('DATABASE_PATH', RUTA_POR_DEFECTO))
 DB.parent.mkdir(parents=True, exist_ok=True)
 
