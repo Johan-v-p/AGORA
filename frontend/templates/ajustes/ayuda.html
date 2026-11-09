@@ -77,7 +77,5 @@
 </div>
 {% endblock %}
 {% block extra_scripts %}
-<script>
-function toggleFaq(btn){btn.closest('.faq-item').classList.toggle('open')}
-</script>
+<script src="{{ url_for('static', filename='js/ajustes/ayuda.js') }}"></script>
 {% endblock %}
