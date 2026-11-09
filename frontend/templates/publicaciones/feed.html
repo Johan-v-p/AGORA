@@ -55,6 +55,10 @@
           <!-- Título -->
           <div class="post-titulo">{{ post.titulo }}</div>
 
+          {% if post.imagen_url %}
+            <img class="post-img" src="{{ post.imagen_url|media(true) }}" alt="" loading="lazy">
+          {% endif %}
+
           <!-- Autor · tiempo -->
           <div class="post-meta">
             {% if post.es_anonimo %}
@@ -111,7 +115,7 @@
       <button class="modal-cerrar" data-cerrar-publicacion aria-label="Cerrar">✕</button>
     </div>
 
-    <form method="POST" action="{{ url_for('publicaciones.nueva_publicacion') }}">
+    <form method="POST" action="{{ url_for('publicaciones.nueva_publicacion') }}" enctype="multipart/form-data">
 
       <!-- Título -->
       <div class="campo">
@@ -143,6 +147,14 @@
                   placeholder="Escribe aquí tu publicación…"
                   maxlength="2000" required data-contar-contenido></textarea>
         <div class="char-count" id="cnt-contenido">0 / 2000</div>
+      </div>
+
+      <!-- Imagen (opcional) -->
+      <div class="campo">
+        <label for="imagen">Imagen (opcional)</label>
+        <input type="file" id="imagen" name="imagen"
+               accept="image/jpeg,image/png,image/webp" data-validar-imagen>
+        <div class="campo-hint">JPG, PNG o WebP, máximo 2 MB.</div>
       </div>
 
       <!-- Footer: anónimo + enviar -->

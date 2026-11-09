@@ -334,3 +334,15 @@ a {
   margin-top: 8px;
   cursor: pointer;
 }
+
+.img-actual {
+  margin-bottom: 8px;
+}
+
+.img-actual img {
+  display: block;
+  max-width: 220px;
+  max-height: 140px;
+  object-fit: cover;
+  border: 1px solid var(--borde);
+}

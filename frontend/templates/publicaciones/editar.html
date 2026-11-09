@@ -19,7 +19,7 @@
 
     <div class="editar-titulo">Editar publicación</div>
 
-    <form method="POST" action="{{ url_for('publicaciones.editar_publicacion', post_id=post.id) }}">
+    <form method="POST" action="{{ url_for('publicaciones.editar_publicacion', post_id=post.id) }}" enctype="multipart/form-data">
 
       <!-- Título -->
       <div class="campo">
@@ -50,6 +50,22 @@
         <textarea id="contenido" name="contenido"
                   maxlength="2000" required data-contar-contenido>{{ post.contenido }}</textarea>
         <div class="char-count" id="cnt-contenido">{{ post.contenido | length }} / 2000</div>
+      </div>
+
+      <!-- Imagen (opcional) -->
+      <div class="campo">
+        <label for="imagen">Imagen (opcional)</label>
+        {% if post.imagen_url %}
+          <div class="img-actual">
+            <img src="{{ post.imagen_url|media(true) }}" alt="Imagen actual de la publicación">
+          </div>
+          <label class="check-quitar">
+            <input type="checkbox" name="quitar_imagen" value="1"> Quitar imagen actual
+          </label>
+        {% endif %}
+        <input type="file" id="imagen" name="imagen"
+               accept="image/jpeg,image/png,image/webp" data-validar-imagen>
+        <div class="campo-hint">JPG, PNG o WebP, máximo 2 MB.{% if post.imagen_url %} Si eliges una nueva, reemplaza la actual.{% endif %}</div>
       </div>
 
       <div class="form-footer">

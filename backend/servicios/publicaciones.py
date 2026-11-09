@@ -11,6 +11,7 @@ _CONSULTA_FEED = """
         p.autor_id,
         p.titulo,
         p.contenido,
+        p.imagen_url,
         p.categoria,
         p.es_anonimo,
         p.creado_en,
@@ -38,11 +39,12 @@ def listar_feed(conn, filtro):
     return con_tiempo_relativo(filas)
 
 
-def crear(conn, autor_id, titulo, contenido, categoria, es_anonimo):
+def crear(conn, autor_id, titulo, contenido, categoria, es_anonimo, imagen_url=None):
     conn.execute(
-        """INSERT INTO publicaciones (autor_id, titulo, contenido, categoria, es_anonimo, estado)
-           VALUES (?, ?, ?, ?, ?, 'publicado')""",
-        (autor_id, titulo, contenido, categoria, es_anonimo),
+        """INSERT INTO publicaciones
+               (autor_id, titulo, contenido, categoria, es_anonimo, imagen_url, estado)
+           VALUES (?, ?, ?, ?, ?, ?, 'publicado')""",
+        (autor_id, titulo, contenido, categoria, es_anonimo, imagen_url),
     )
     conn.commit()
 
@@ -51,7 +53,7 @@ def obtener_detalle(conn, post_id):
     """Devuelve una publicación visible con sus totales, o None si no existe."""
     fila = conn.execute("""
         SELECT
-            p.id, p.autor_id, p.titulo, p.contenido, p.categoria,
+            p.id, p.autor_id, p.titulo, p.contenido, p.categoria, p.imagen_url,
             p.es_anonimo, p.creado_en,
             u.nombre AS autor_nombre,
             (SELECT COUNT(*) FROM reacciones_publicacion r WHERE r.publicacion_id = p.id) AS total_reacciones,
@@ -134,6 +136,12 @@ def actualizar(conn, post_id, titulo, contenido, categoria):
         "UPDATE publicaciones SET titulo = ?, contenido = ?, categoria = ? WHERE id = ?",
         (titulo, contenido, categoria, post_id),
     )
+    conn.commit()
+
+
+def actualizar_imagen(conn, post_id, imagen_url):
+    """Cambia o quita (None) la imagen de una publicación."""
+    conn.execute("UPDATE publicaciones SET imagen_url = ? WHERE id = ?", (imagen_url, post_id))
     conn.commit()
 
 

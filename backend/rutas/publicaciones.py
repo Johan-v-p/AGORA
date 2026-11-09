@@ -2,6 +2,7 @@
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 
+from backend.nucleo import imagenes
 from backend.rutas.decoradores import login_required
 from backend.servicios import publicaciones as servicio
 
@@ -49,11 +50,20 @@ def crear_blueprint(get_db):
             flash('El contenido no puede superar 2000 caracteres.', 'error')
             return redirect(url_for('publicaciones.feed'))
 
+        try:
+            imagen_url = imagenes.guardar_imagen(
+                request.files.get('imagen'), 'publicaciones', 1280, 480)
+        except imagenes.ImagenInvalida as error:
+            flash(str(error), 'error')
+            return redirect(url_for('publicaciones.feed'))
+
         conn = get_db()
         try:
-            servicio.crear(conn, session['user_id'], titulo, contenido, categoria, es_anonimo)
+            servicio.crear(conn, session['user_id'], titulo, contenido, categoria,
+                           es_anonimo, imagen_url)
             flash('¡Publicación creada!', 'success')
         except Exception as e:
+            imagenes.borrar_imagen(imagen_url)
             flash(f'Error al publicar: {e}', 'error')
         finally:
             conn.close()
@@ -151,9 +161,28 @@ def crear_blueprint(get_db):
                 return redirect(url_for('publicaciones.editar_publicacion', post_id=post_id))
 
             try:
+                imagen_nueva = imagenes.guardar_imagen(
+                    request.files.get('imagen'), 'publicaciones', 1280, 480)
+            except imagenes.ImagenInvalida as error:
+                flash(str(error), 'error')
+                conn.close()
+                return redirect(url_for('publicaciones.editar_publicacion', post_id=post_id))
+
+            try:
                 servicio.actualizar(conn, post_id, titulo, contenido, categoria)
+                imagen_actual = post['imagen_url']
+                if imagen_nueva:
+                    imagen_final = imagen_nueva
+                elif request.form.get('quitar_imagen'):
+                    imagen_final = None
+                else:
+                    imagen_final = imagen_actual
+                if imagen_final != imagen_actual:
+                    servicio.actualizar_imagen(conn, post_id, imagen_final)
+                    imagenes.borrar_imagen(imagen_actual)
                 flash('Publicación actualizada.', 'success')
             except Exception as e:
+                imagenes.borrar_imagen(imagen_nueva)
                 flash(f'Error al actualizar: {e}', 'error')
             finally:
                 conn.close()
