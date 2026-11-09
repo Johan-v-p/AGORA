@@ -1,0 +1,74 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Moderación{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/moderacion.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="mod-layout">
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="mod-main">
+    <div class="mod-header">
+      <h1>Panel de Moderación</h1>
+      <p>Revisa y resuelve los reportes de la comunidad.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="mod-stats">
+      <div class="stat-card {{ 'alerta' if total_pendientes > 0 }}">
+        <div class="num">{{ total_pendientes }}</div>
+        <div class="lbl">Pendientes</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ total_resueltos }}</div>
+        <div class="lbl">Resueltos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">{{ total_usuarios }}</div>
+        <div class="lbl">Usuarios activos</div>
+      </div>
+    </div>
+
+    <!-- Lista de reportes -->
+    <div class="sec-titulo">Reportes pendientes</div>
+
+    {% if reportes %}
+      {% for r in reportes %}
+        <div class="reporte-card">
+
+          <div class="reporte-head">
+            <span class="reporte-tipo {{ r.tipo }}">{{ r.tipo }}</span>
+            <span class="reporte-meta">
+              Reportado por <strong>{{ r.reportador }}</strong> · ID #{{ r.contenido_id }}
+            </span>
+          </div>
+
+          <div class="reporte-body">
+            <div class="reporte-motivo">{{ r.motivo }}</div>
+            <div class="reporte-info">{{ r.creado_en }}</div>
+          </div>
+
+          <div class="reporte-acciones">
+            <form class="u-contenido-directo" method="POST" action="{{ url_for('moderacion.resolver_reporte', reporte_id=r.id) }}">
+              <button class="btn-accion ignorar"   name="accion" value="ignorar">Ignorar</button>
+              {% if r.tipo != 'usuario' %}
+              <button class="btn-accion eliminar"  name="accion" value="eliminar" data-confirmar="¿Eliminar este contenido?">Eliminar contenido</button>
+              {% endif %}
+              <button class="btn-accion suspender" name="accion" value="suspender" data-confirmar="¿Suspender a {{ 'este usuario' if r.tipo == 'usuario' else 'quien publicó este contenido' }}?">{{ 'Suspender usuario' if r.tipo == 'usuario' else 'Suspender autor' }}</button>
+            </form>
+          </div>
+
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="sin-reportes">
+        <span>✓</span>
+        No hay reportes pendientes. La comunidad está tranquila.
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}

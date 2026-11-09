@@ -1,0 +1,185 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Eventos{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventos/lista.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+<div class="eventos-layout">
+
+  {% set pagina_activa = 'eventos' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="eventos-main">
+
+    <!-- Cabecera -->
+    <div class="eventos-header">
+      <div>
+        <div class="eventos-titulo">Eventos</div>
+        <div class="eventos-sub">{{ eventos|length }} evento{{ 's' if eventos|length != 1 else '' }} próximos</div>
+      </div>
+      <button class="btn-primary" data-abrir-modal="modal-nuevo-evento">
+        + Crear evento
+      </button>
+    </div>
+
+    <!-- Filtros por categoría -->
+    <div class="cat-filtros">
+      <a class="cat-btn {% if cat_activa == 'todos' %}active{% endif %}"
+         href="{{ url_for('eventos.eventos') }}">Todos</a>
+      {% for cat, label in [('academico','Académico'),('cultural','Cultural'),('deportivo','Deportivo'),('bienestar','Bienestar')] %}
+        <a class="cat-btn {% if cat_activa == cat %}active{% endif %}"
+           href="{{ url_for('eventos.eventos', cat=cat) }}">{{ label }}</a>
+      {% endfor %}
+    </div>
+
+    <!-- Lista de eventos -->
+    {% if eventos %}
+      {% for ev in eventos %}
+      <div class="evento-card">
+
+        <!-- Fecha -->
+        <div class="evento-fecha-bloque">
+          <div class="evento-dia">{{ ev.fecha_dia }}</div>
+          <div class="evento-mes">{{ ev.fecha_mes }}</div>
+        </div>
+
+        <!-- Info -->
+        <div class="evento-info">
+          <div class="evento-cat-badge {{ ev.categoria }}">
+            {{ ev.categoria | upper }}
+          </div>
+          <a class="evento-titulo u-enlace-limpio u-cursor-mano" href="{{ url_for('eventos.ver_evento', evento_id=ev.id) }}">{{ ev.titulo }}</a>
+          <div class="evento-meta-row">
+            {% if ev.hora_inicio %}
+              <span class="evento-meta-item">◷ {{ ev.hora_inicio }}{% if ev.hora_fin %} – {{ ev.hora_fin }}{% endif %}</span>
+            {% endif %}
+            {% if ev.lugar %}
+              <span class="evento-meta-item">◎ {{ ev.lugar }}</span>
+            {% endif %}
+            {% if ev.organizador %}
+              <span class="evento-meta-item">◈ {{ ev.organizador }}</span>
+            {% endif %}
+          </div>
+          {% if ev.descripcion %}
+            <div class="evento-desc">{{ ev.descripcion }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Cupos + acción -->
+        <div class="evento-accion">
+          {% if ev.cupos %}
+            <div class="evento-cupos">
+              <strong>{{ ev.cupos_libres }}</strong>
+              cupos libres
+            </div>
+          {% endif %}
+          <button class="btn-inscribir {% if ev.inscrito %}inscrito{% endif %}" data-inscribir-evento="{{ ev.id }}">
+            <span class="lbl-normal">
+              {% if ev.inscrito %}✓ Inscrito{% else %}Inscribirse{% endif %}
+            </span>
+            <span class="lbl-hover">Cancelar</span>
+          </button>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <div class="vacio-wrap">
+        <div class="vacio-icono">◷</div>
+        <div class="vacio-titulo">Sin eventos próximos</div>
+        <div class="vacio-sub">
+          No hay eventos en esta categoría.<br/>¡Crea el primero!
+        </div>
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<!-- ══ MODAL NUEVO EVENTO ══ -->
+<div class="modal-overlay" id="modal-nuevo-evento">
+  <div class="modal-box">
+    <div class="modal-titulo">Crear nuevo evento</div>
+
+    <form method="POST" action="{{ url_for('eventos.nuevo_evento') }}">
+
+      <div class="campo">
+        <label for="titulo">Título del evento *</label>
+        <input type="text" id="titulo" name="titulo"
+               maxlength="120" required
+               placeholder="Ej: Hackathon Univalle 2026">
+      </div>
+
+      <div class="campo">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion"
+                  maxlength="800"
+                  placeholder="¿De qué trata el evento?"></textarea>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="categoria">Categoría *</label>
+          <div class="select-wrap">
+            <select id="categoria" name="categoria" required>
+              <option value="academico">Académico</option>
+              <option value="cultural">Cultural</option>
+              <option value="deportivo">Deportivo</option>
+              <option value="bienestar">Bienestar</option>
+            </select>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="fecha">Fecha *</label>
+          <input type="date" id="fecha" name="fecha" required>
+        </div>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="hora_inicio">Hora inicio</label>
+          <input type="time" id="hora_inicio" name="hora_inicio">
+        </div>
+        <div class="campo">
+          <label for="hora_fin">Hora fin</label>
+          <input type="time" id="hora_fin" name="hora_fin">
+        </div>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="lugar">Lugar</label>
+          <input type="text" id="lugar" name="lugar"
+                 placeholder="Auditorio, sala, URL…">
+        </div>
+        <div class="campo">
+          <label for="cupos">Cupos (vacío = ilimitado)</label>
+          <input type="number" id="cupos" name="cupos"
+                 min="1" placeholder="Ej: 100">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="organizador">Organizador</label>
+        <input type="text" id="organizador" name="organizador"
+               placeholder="Semillero, facultad, grupo…">
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-cerrar-modal="modal-nuevo-evento">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primary">Publicar evento →</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/eventos/lista.js') }}"></script>
+{% endblock %}

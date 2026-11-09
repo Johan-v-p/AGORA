@@ -1,0 +1,50 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Tendencias{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social/tendencias.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="td-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="td-main">
+    <div class="td-header">
+      <h1>🔥 Tendencias</h1>
+      <p>Lo más popular de los últimos 7 días en Ágora.</p>
+    </div>
+
+    <!-- Hashtags -->
+    {% if top_tags %}
+      <div class="sec-titulo"># Hashtags populares</div>
+      <div class="tags-lista">
+        {% for tag, count in top_tags %}
+          <a href="{{ url_for('tendencia_tag', tag=tag) }}" class="tag-chip">
+            #{{ tag }}<span class="tag-count">{{ count }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Top posts -->
+    <div class="sec-titulo">📈 Posts más populares esta semana</div>
+    {% if top_posts %}
+      {% for i, p in top_posts | enumerate %}
+        <a href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}" class="post-card">
+          <div class="post-rank">#{{ loop.index }} — {{ p.categoria.upper() }}</div>
+          <div class="post-titulo">{{ p.titulo }}</div>
+          <div class="post-meta">
+            <span>{{ p.autor_nombre }}</span>
+            <span>👏 {{ p.total_reacciones }}</span>
+            <span>💬 {{ p.total_comentarios }}</span>
+            <span>{{ p.tiempo_relativo }}</span>
+            {% if p.hashtags_lista %}
+              <span>{{ p.hashtags_lista | map('regex_replace', '^', '#') | join(' ') }}</span>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="vacío">No hay tendencias esta semana. ¡Publica algo!</div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

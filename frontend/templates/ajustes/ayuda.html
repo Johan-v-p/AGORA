@@ -1,0 +1,81 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Ayuda & Soporte{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajustes/ayuda.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="ay-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="ay-main">
+    <div class="ay-header">
+      <h1>Ayuda & Soporte</h1>
+      <p>Respuestas a las preguntas más frecuentes sobre Ágora.</p>
+    </div>
+
+    <section class="faq-sec">
+      <div class="faq-sec-titulo">Cuenta y acceso</div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Cómo creo una cuenta? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Ve al inicio y haz clic en <strong>Regístrate</strong>. Completa tu nombre, correo institucional, carrera y contraseña. El acceso es inmediato.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Cómo cambio mi contraseña? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Ve a <strong>Ajustes → Cambiar contraseña</strong>. Necesitas tu contraseña actual y la nueva (mínimo 6 caracteres).</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Puedo cambiar mi correo? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Sí, desde <strong>Ajustes → Correo electrónico</strong>. Se te pedirá confirmar tu contraseña actual por seguridad.</div>
+      </div>
+    </section>
+
+    <section class="faq-sec">
+      <div class="faq-sec-titulo">Publicaciones y feed</div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Puedo publicar de forma anónima? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Sí. Al crear una publicación activa la opción <strong>"Publicar de forma anónima"</strong>. Tu nombre no se mostrará, aunque los moderadores sí pueden verlo en caso de reportes.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Puedo editar o eliminar mis publicaciones? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Sí. Desde el detalle de tu publicación verás las opciones <strong>Editar</strong> y <strong>Eliminar</strong>. La eliminación es permanente.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Qué son los hashtags? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Escribe <strong>#tema</strong> dentro del contenido de tu post (ej: <code>#cálculo</code>, <code>#python</code>). Puedes buscarlos en la sección <strong>Tendencias</strong>.</div>
+      </div>
+    </section>
+
+    <section class="faq-sec">
+      <div class="faq-sec-titulo">Foros</div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Cómo marco una respuesta como correcta? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Si eres el autor de la pregunta, verás el botón <strong>✓ Correcta</strong> junto a cada respuesta.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Puedo votar respuestas? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Sí. Usa los botones ▲ (upvote) y ▼ (downvote) en cada respuesta. Las más votadas suben al tope.</div>
+      </div>
+    </section>
+
+    <section class="faq-sec">
+      <div class="faq-sec-titulo">Reportes y moderación</div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Cómo reporto contenido o un usuario? <span class="faq-icono">+</span></button>
+        <div class="faq-r">En cada publicación y comentario hay un botón <strong>⚑ Reportar</strong>. También puedes reportar usuarios desde su perfil. El equipo de moderación revisará el reporte.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" data-faq-alternar>¿Cómo sé si mi reporte fue atendido? <span class="faq-icono">+</span></button>
+        <div class="faq-r">Ve a <strong>Perfil → Mis reportes</strong> para ver el estado: <em>enviado</em>, <em>en revisión</em>, <em>resuelto</em> o <em>descartado</em>.</div>
+      </div>
+    </section>
+
+    <div class="contacto">
+      <h3>¿No encontraste tu respuesta?</h3>
+      <p>Escríbenos directamente. Respondemos en menos de 48 horas hábiles.</p>
+      <p>📧 <a href="mailto:soporte@agora.edu.co">soporte@agora.edu.co</a></p>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/ajustes/ayuda.js') }}"></script>
+{% endblock %}

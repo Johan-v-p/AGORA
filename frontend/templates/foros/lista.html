@@ -1,0 +1,85 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Foros{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/foros/lista.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="foros-layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  {% set pagina_activa = 'foros' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- ══ ÁREA CENTRAL ══ -->
+  <main class="foros-main">
+
+    <!-- Encabezado -->
+    <div class="page-header">
+      <div>
+        <div class="page-titulo">Foros</div>
+        <div class="page-sub">{{ foros|length }} comunidades activas</div>
+      </div>
+    </div>
+
+    <!-- Filtros por categoría -->
+    <div class="cat-filtros">
+      {% set categorias = foros | map(attribute='categoria') | unique | list %}
+      <a class="cat-btn active" href="{{ url_for('foros.foros') }}">Todos</a>
+      {% for cat in categorias %}
+        {% if cat %}
+          <a class="cat-btn" href="{{ url_for('foros.foros') }}?cat={{ cat }}">
+            {{ cat | capitalize }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Lista de foros -->
+    {% if foros %}
+      {% for f in foros %}
+        <a class="foro-card" href="{{ url_for('foros.foro_detalle', foro_id=f.id) }}">
+
+          <!-- Ícono según categoría -->
+          <div class="foro-icono">
+            {% if f.categoria == 'matematicas' %}∑
+            {% elif f.categoria == 'sistemas' %}⌨
+            {% elif f.categoria == 'campus' %}◎
+            {% elif f.categoria == 'academico' %}◈
+            {% else %}◉{% endif %}
+          </div>
+
+          <!-- Info del foro -->
+          <div class="foro-info">
+            <div class="foro-nombre">{{ f.nombre }}</div>
+            {% if f.descripcion %}
+              <div class="foro-desc">{{ f.descripcion }}</div>
+            {% endif %}
+            {% if f.categoria %}
+              <span class="foro-cat-badge">{{ f.categoria }}</span>
+            {% endif %}
+          </div>
+
+          <!-- Estadísticas -->
+          <div class="foro-stats">
+            <div class="foro-stat-num">{{ f.total_preguntas }}</div>
+            <div class="foro-stat-lbl">preguntas</div>
+          </div>
+
+          <div class="foro-arrow">→</div>
+
+        </a>
+      {% endfor %}
+
+    {% else %}
+      <div class="vacio-wrap">
+        <div class="vacio-icono">◉</div>
+        <div class="vacio-titulo">Sin foros aún</div>
+        <div class="vacio-sub">Todavía no hay comunidades creadas.</div>
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}

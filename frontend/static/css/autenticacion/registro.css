@@ -1,0 +1,207 @@
+/* ════════════════════════════════════════════
+   REGISTRO — mismo layout split que login
+   Panel izq (440px): 6 campos + botón
+   Panel der (flex:1): informativo
+   ════════════════════════════════════════════ */
+
+.registro-wrap {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── PANEL IZQUIERDO ─────────────────────── */
+.registro-panel {
+  width: 440px;
+  min-width: 440px;
+  background: var(--panel);
+  border-right: 1px solid var(--borde);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 40px 36px;
+  overflow-y: auto;   /* scroll si la pantalla es baja */
+}
+
+.reg-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--texto);
+  margin-bottom: 20px;
+}
+.reg-divider {
+  height: 1px;
+  background: var(--borde);
+  margin-bottom: 24px;
+}
+
+/* Formulario */
+.reg-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Campos — idénticos al login */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.campo label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--texto-dim);
+}
+.campo input {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-bottom: 1px solid var(--texto);   /* línea blanca inferior del draw.io */
+  color: var(--texto);
+  font-family: var(--fuente-body);
+  font-size: 11px;
+  padding: 0 14px;
+  height: 38px;
+  outline: none;
+  border-radius: 0;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+}
+.campo input:focus {
+  border-color: var(--texto);
+  background: #222;
+}
+.campo input::placeholder {
+  color: var(--texto-dim);
+  font-size: 11px;
+}
+
+/* Aviso de contraseñas no coinciden */
+.campo-error {
+  font-size: 10px;
+  color: #cf6f6f;
+  display: none;
+  margin-top: -4px;
+}
+
+/* Separador antes del botón */
+.campo-sep {
+  height: 1px;
+  background: var(--borde);
+  margin: 20px 0;
+}
+
+/* Botón crear cuenta */
+.btn-crear {
+  width: 100%;
+  height: 44px;
+  background: var(--acento);
+  color: var(--acento-txt);
+  font-family: var(--fuente-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.12s;
+}
+.btn-crear:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+.btn-crear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Link a login */
+.reg-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--texto-dim);
+}
+.reg-link a {
+  color: var(--texto);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── PANEL DERECHO (informativo) ─────────── */
+.registro-deco {
+  flex: 1;
+  background: var(--fondo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grid de fondo — igual al login */
+
+.deco-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 380px;
+}
+
+/* Título decorativo grande */
+.deco-titulo {
+  font-family: var(--fuente-display);
+  font-size: 42px;
+  font-weight: bold;
+  color: var(--texto);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+/* Línea divisoria delgada */
+.deco-linea {
+  width: 40px;
+  height: 1px;
+  background: var(--borde);
+  margin: 24px auto;
+}
+
+/* Lista de pasos / propuesta de valor */
+.deco-pasos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+.paso {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.paso-num {
+  font-family: var(--fuente-display);
+  font-size: 11px;
+  color: var(--texto-dim);
+  min-width: 20px;
+  margin-top: 2px;
+}
+.paso-txt {
+  font-size: 11px;
+  color: var(--texto-dim);
+  line-height: 1.7;
+}
+.paso-txt strong {
+  color: var(--texto);
+  font-weight: 600;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 768px) {
+  .registro-deco  { display: none; }
+  .registro-panel { width: 100%; min-width: unset; border-right: none; }
+}

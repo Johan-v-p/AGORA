@@ -1,0 +1,163 @@
+{% extends "compartidos/base.html" %}
+{% block title %}{{ post.titulo }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/publicaciones/detalle.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="detalle-layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  {% set pagina_activa = 'feed' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- ══ COLUMNA CENTRAL ══ -->
+  <main class="detalle-main">
+
+    <!-- Botón volver -->
+    <a class="btn-back" href="{{ url_for('publicaciones.feed') }}">← Volver al feed</a>
+
+    <!-- Encabezado del post -->
+    <div class="post-header">
+      <div class="post-cat-badge">
+        {% if post.categoria == 'academico' %}ACADÉMICO
+        {% elif post.categoria == 'meme' %}MEME
+        {% elif post.categoria == 'foro' %}FORO
+        {% elif post.categoria == 'portafolio' %}PORTAFOLIO
+        {% else %}GENERAL{% endif %}
+      </div>
+
+      <h1 class="post-titulo-grande">{{ post.titulo }}</h1>
+
+      <div class="post-meta-row">
+        <div class="meta-avatar">
+          {% if post.es_anonimo %}?
+          {% else %}{{ post.autor_nombre[0].upper() }}{% endif %}
+        </div>
+        <span>
+          {% if post.es_anonimo %}ANÓNIMO
+          {% else %}
+            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('social.ver_perfil_usuario', usuario_id=post.autor_id) if post.autor_id else '#' }}">{{ post.autor_nombre.upper() }}</a>
+          {% endif %}
+        </span>
+        <span>·</span>
+        <span>{{ post.tiempo_relativo }}</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Cuerpo del post -->
+    <div class="post-body">{{ post.contenido }}</div>
+
+    <!-- Barra de reacciones -->
+    <div class="reacciones-bar">
+      <button class="reaccion-btn {% if ya_reaccione %}activa{% endif %}"
+              id="btn-reaccion" data-reaccionar="{{post.id}}">
+        <span class="emoji">
+          {% if post.categoria == 'meme' %}💀
+          {% elif post.categoria == 'foro' %}🙌
+          {% elif post.categoria == 'portafolio' %}⭐
+          {% else %}👏{% endif %}
+        </span>
+        <span id="total-reacciones">{{ post.total_reacciones }}</span>
+      </button>
+
+      <span class="post-nota-edicion">
+        💬 {{ comentarios | length }} comentario{{ 's' if comentarios | length != 1 else '' }}
+      </span>
+
+      <!-- FIX 1: botones de editar/eliminar solo para el autor -->
+      {% if es_propio %}
+      <div class="post-acciones-propias">
+        <a class="reaccion-btn post-boton-compacto" href="{{ url_for('publicaciones.editar_publicacion', post_id=post.id) }}">
+          ✎ Editar
+        </a>
+        <button class="reaccion-btn post-boton-eliminar" id="btn-eliminar-post" data-abrir-modal="modal-eliminar-post">
+          ✕ Eliminar
+        </button>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══ COMENTARIOS ══ -->
+    <div class="comentarios-titulo">
+      Comentarios ({{ comentarios | length }})
+    </div>
+
+    <!-- Formulario: escribir comentario -->
+    <form class="comentario-form" method="POST"
+          action="{{ url_for('publicaciones.comentar', post_id=post.id) }}">
+      <textarea
+        name="contenido"
+        placeholder="Escribe un comentario…"
+        required
+        maxlength="1000"
+      ></textarea>
+      <div class="comentario-form-footer">
+        <button type="submit" class="btn btn-primary">
+          Comentar →
+        </button>
+      </div>
+    </form>
+
+    <!-- Lista de comentarios -->
+    {% if comentarios %}
+      {% for c in comentarios %}
+      <div class="comentario-item">
+        <div class="comentario-header">
+          <div class="com-avatar">
+            {% if c.es_anonimo %}?
+            {% else %}{{ c.autor_nombre[0].upper() }}{% endif %}
+          </div>
+          <span class="com-autor">
+            {% if c.es_anonimo %}Anónimo
+            {% else %}
+              <a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=c.autor_id) if c.autor_id is defined and c.autor_id else '#' }}">{{ c.autor_nombre }}</a>
+            {% endif %}
+          </span>
+          <span class="com-tiempo">{{ c.tiempo_relativo }}</span>
+        </div>
+        <div class="com-texto">{{ c.contenido }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="sin-comentarios">
+        Sin comentarios aún. ¡Sé el primero!
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<!-- ══ MODAL CONFIRMAR ELIMINACIÓN (solo si es_propio) ══ -->
+{% if es_propio %}
+<div class="modal-overlay modal-eliminar-capa" id="modal-eliminar-post">
+  <div class="modal-box modal-eliminar-caja">
+    <div class="modal-eliminar-titulo">
+      ¿Eliminar publicación?
+    </div>
+    <p class="modal-eliminar-texto">
+      Esta acción no se puede deshacer. La publicación dejará de ser visible.
+    </p>
+    <div class="modal-eliminar-acciones">
+      <button class="btn-secondary" data-cerrar-modal="modal-eliminar-post">
+        Cancelar
+      </button>
+      <form class="u-en-linea" method="POST" action="{{ url_for('publicaciones.eliminar_publicacion', post_id=post.id) }}">
+        <button type="submit" class="btn-primary u-boton-peligro">
+          Eliminar →
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/publicaciones/detalle.js') }}"></script>
+{% endblock %}

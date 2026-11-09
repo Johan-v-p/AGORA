@@ -1,0 +1,45 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Mis reportes{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/mis_reportes.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="mr-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="mr-main">
+    <div class="mr-header">
+      <h1>Mis reportes</h1>
+      <p>Historial de reportes que has enviado.</p>
+    </div>
+
+    {% if reportes %}
+      {% set etiquetas_motivo = {
+        'spam': 'Spam',
+        'acoso': 'Acoso',
+        'contenido_inapropiado': 'Contenido inapropiado',
+        'desinformacion': 'Desinformación',
+        'plagio': 'Plagio',
+        'otro': 'Otro'
+      } %}
+      {% for r in reportes %}
+        <div class="reporte-card">
+          <div class="rep-info">
+            <div class="rep-tipo">Reporte de {{ r.tipo }}</div>
+            <div class="rep-motivo">{{ etiquetas_motivo.get(r.motivo, r.motivo) }}</div>
+            {% if r.descripcion %}
+              <div class="rep-desc">{{ r.descripcion }}</div>
+            {% endif %}
+            <div class="rep-fecha">{{ r.creado_en[:10] }}</div>
+            {% if r.resolucion %}
+              <div class="rep-desc u-nota">Resolución: {{ r.resolucion }}</div>
+            {% endif %}
+          </div>
+          <span class="estado-badge estado-{{ r.estado }}">{{ r.estado.replace('_',' ') }}</span>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="vacío">No has enviado ningún reporte aún.</div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Portafolio{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/portafolio/lista.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+<div class="port-layout">
+
+  {% set pagina_activa = 'portafolio' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="port-main">
+
+    <!-- Cabecera -->
+    <div class="port-header">
+      <div>
+        <div class="port-titulo">Portafolio</div>
+        <div class="port-sub">{{ mis_proyectos|length }} proyecto{{ 's' if mis_proyectos|length != 1 else '' }} tuyos · {{ todos_proyectos|length }} en la comunidad</div>
+      </div>
+      <button class="btn-primary" data-abrir-modal="modal-nuevo-proy">
+        + Nuevo proyecto
+      </button>
+    </div>
+
+    <!-- ══ MIS PROYECTOS ══ -->
+    {% if mis_proyectos %}
+      <div class="seccion-label">Mis proyectos</div>
+      <div class="proyectos-grid">
+        {% for p in mis_proyectos %}
+        <div class="proy-card">
+          {% if p.destacado %}
+            <span class="proy-destacado-badge">★ Destacado</span>
+          {% endif %}
+
+          <div class="proy-estado">
+            <span class="proy-estado-dot {{ p.estado }}"></span>
+            {{ p.estado | replace('_', ' ') | capitalize }}
+          </div>
+
+          <div>
+            <div class="proy-titulo">{{ p.titulo }}</div>
+            {% if p.materia %}
+              <div class="proy-materia">{{ p.materia }}</div>
+            {% endif %}
+          </div>
+
+          {% if p.descripcion %}
+            <div class="proy-desc">{{ p.descripcion }}</div>
+          {% endif %}
+
+          <!-- Tecnologías -->
+          {% if p.tecnologias_lista %}
+            <div class="proy-techs">
+              {% for t in p.tecnologias_lista %}
+                <span class="proy-tech">{{ t }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="proy-footer">
+            <div class="proy-links">
+              {% if p.repo_url %}
+                <a class="proy-link" href="{{ p.repo_url }}" target="_blank" rel="noopener">
+                  &lt;/&gt; Repo
+                </a>
+              {% endif %}
+              {% if p.demo_url %}
+                <a class="proy-link" href="{{ p.demo_url }}" target="_blank" rel="noopener">
+                  ↗ Demo
+                </a>
+              {% endif %}
+            </div>
+            <div class="proy-aplausos">
+              <button class="aplauso-btn {% if p.yo_aplaudí %}activo{% endif %}" data-aplaudir="{{ p.id }}"
+                      title="Aplaudir proyecto">
+                ★
+              </button>
+              <span id="aplausos-{{ p.id }}">{{ p.total_aplausos }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="seccion-label">Mis proyectos</div>
+      <div class="vacio-wrap">
+        <div class="vacio-icono">◫</div>
+        <div class="vacio-titulo">Aún no tienes proyectos</div>
+        <div class="vacio-sub">
+          Comparte tus trabajos académicos<br/>y proyectos personales con la comunidad.
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- ══ PROYECTOS DE LA COMUNIDAD ══ -->
+    {% if todos_proyectos %}
+      <div class="seccion-label portafolio-comunidad">Comunidad</div>
+      <div class="proyectos-grid">
+        {% for p in todos_proyectos %}
+        <div class="proy-card">
+          <div class="proy-autor">
+            <div class="proy-autor-avatar">{{ p.autor_nombre[0].upper() }}</div>
+            {{ p.autor_nombre }}
+          </div>
+
+          <div class="proy-estado">
+            <span class="proy-estado-dot {{ p.estado }}"></span>
+            {{ p.estado | replace('_', ' ') | capitalize }}
+          </div>
+
+          <div>
+            <div class="proy-titulo">{{ p.titulo }}</div>
+            {% if p.materia %}
+              <div class="proy-materia">{{ p.materia }}</div>
+            {% endif %}
+          </div>
+
+          {% if p.descripcion %}
+            <div class="proy-desc">{{ p.descripcion }}</div>
+          {% endif %}
+
+          {% if p.tecnologias_lista %}
+            <div class="proy-techs">
+              {% for t in p.tecnologias_lista %}
+                <span class="proy-tech">{{ t }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="proy-footer">
+            <div class="proy-links">
+              {% if p.repo_url %}
+                <a class="proy-link" href="{{ p.repo_url }}" target="_blank" rel="noopener">&lt;/&gt; Repo</a>
+              {% endif %}
+              {% if p.demo_url %}
+                <a class="proy-link" href="{{ p.demo_url }}" target="_blank" rel="noopener">↗ Demo</a>
+              {% endif %}
+            </div>
+            <div class="proy-aplausos">
+              <button class="aplauso-btn {% if p.yo_aplaudí %}activo{% endif %}" data-aplaudir="{{ p.id }}">★</button>
+              <span id="aplausos-{{ p.id }}">{{ p.total_aplausos }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<!-- ══ MODAL NUEVO PROYECTO ══ -->
+<div class="modal-overlay" id="modal-nuevo-proy">
+  <div class="modal-box">
+    <div class="modal-titulo">Nuevo proyecto</div>
+
+    <form method="POST" action="{{ url_for('portafolio.nuevo_proyecto') }}">
+
+      <div class="campo">
+        <label for="titulo">Título del proyecto *</label>
+        <input type="text" id="titulo" name="titulo"
+               maxlength="120" required placeholder="Ej: Sistema de gestión hospitalaria">
+      </div>
+
+      <div class="campo">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion"
+                  maxlength="600" placeholder="¿De qué trata el proyecto?"></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="tecnologias">Tecnologías (separadas por coma)</label>
+        <input type="text" id="tecnologias" name="tecnologias"
+               placeholder='Ej: Flask, Python, SQLite'>
+      </div>
+
+      <div class="campo">
+        <label for="materia">Materia o contexto</label>
+        <input type="text" id="materia" name="materia"
+               placeholder="Ej: Bases de Datos I · 2025">
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="estado">Estado</label>
+          <div class="select-wrap">
+            <select id="estado" name="estado">
+              <option value="en_desarrollo">En desarrollo</option>
+              <option value="completado">Completado</option>
+              <option value="pausado">Pausado</option>
+            </select>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="repo_url">URL Repositorio</label>
+          <input type="url" id="repo_url" name="repo_url"
+                 placeholder="https://github.com/…">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="demo_url">URL Demo (opcional)</label>
+        <input type="url" id="demo_url" name="demo_url"
+               placeholder="https://mi-proyecto.vercel.app">
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-cerrar-modal="modal-nuevo-proy">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primary">Publicar proyecto →</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/portafolio/lista.js') }}"></script>
+{% endblock %}

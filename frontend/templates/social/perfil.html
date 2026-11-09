@@ -1,0 +1,136 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Mi perfil{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social/perfil.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="perfil-layout">
+
+  <!-- ══ SIDEBAR IZQUIERDO ══ -->
+  {% set pagina_activa = 'perfil' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- ══ ÁREA CENTRAL (dos columnas) ══ -->
+  <main class="perfil-main">
+
+    <!-- ── COLUMNA IZQUIERDA: publicaciones ── -->
+    <div class="perfil-contenido">
+      <div class="seccion-titulo">Mis publicaciones</div>
+
+      <div class="mis-posts">
+        {% if mis_posts %}
+          {% for p in mis_posts %}
+          <div class="mini-card">
+            <div class="mini-card-info">
+              <div class="mini-cat">
+                {% if p.categoria == 'academico' %}ACADÉMICO
+                {% elif p.categoria == 'meme' %}MEME
+                {% elif p.categoria == 'foro' %}FORO
+                {% elif p.categoria == 'portafolio' %}PORTAFOLIO
+                {% else %}GENERAL{% endif %}
+              </div>
+              <div class="mini-titulo">{{ p.titulo }}</div>
+              <div class="mini-meta">
+                <span>👏 {{ p.total_reacciones }}</span>
+                <span>💬 {{ p.total_comentarios }}</span>
+                <span>{{ p.tiempo_relativo }}</span>
+              </div>
+            </div>
+            <div class="mini-card-acciones">
+              <a class="mini-card-btn" href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}">VER →</a>
+              <a class="mini-card-btn btn-editar" href="{{ url_for('publicaciones.editar_publicacion', post_id=p.id) }}">✎</a>
+              <!-- data-id y data-titulo evitan el problema de comillas anidadas en onclick -->
+              <button class="mini-card-btn btn-eliminar js-eliminar"
+                      data-id="{{ p.id }}"
+                      data-titulo="{{ p.titulo }}">✕</button>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="sin-posts">
+            <strong>Sin publicaciones aún</strong>
+            Ve al feed y comparte algo con tu comunidad.
+          </div>
+        {% endif %}
+      </div>
+    </div><!-- /perfil-contenido -->
+
+    <!-- ── COLUMNA DERECHA FIJA: tarjeta de perfil ── -->
+    <aside class="perfil-aside">
+      <div class="perfil-card">
+        <div class="perfil-avatar">{{ session.nombre[0].upper() }}</div>
+
+        <div class="perfil-rol {% if session.rol == 'moderador' %}moderador{% endif %}">
+          {{ session.rol | upper }}
+        </div>
+
+        <div class="perfil-nombre">{{ usuario.nombre }}</div>
+        <div class="perfil-carrera">{{ usuario.carrera }}</div>
+        <div class="perfil-uni">{{ usuario.universidad }}</div>
+        <div class="perfil-correo">{{ usuario.correo }}</div>
+
+        <div class="sep"></div>
+
+        <div class="perfil-stats">
+          <div class="stat-item">
+            <span class="stat-num">{{ stats.total_posts }}</span>
+            <span class="stat-lbl">Posts</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">{{ stats.total_reacciones }}</span>
+            <span class="stat-lbl">Reacciones</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">{{ stats.total_comentarios }}</span>
+            <span class="stat-lbl">Comentarios</span>
+          </div>
+        </div>
+
+        <div class="perfil-acciones">
+          <button class="btn-logout" data-abrir-logout>⏻ Cerrar sesión</button>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+</div>
+
+<!-- ══ MODAL: CERRAR SESIÓN ══ -->
+<div class="modal-overlay" id="modal-logout">
+  <div class="modal-box">
+    <div class="modal-titulo">¿Cerrar sesión?</div>
+    <p class="modal-sub">
+      Se cerrará tu sesión actual. Podrás volver a entrar con tu correo y contraseña.
+    </p>
+    <div class="modal-acciones">
+      <button class="btn-secondary" data-cerrar-logout>Cancelar</button>
+      <a class="btn-primary" href="{{ url_for('autenticacion.logout') }}">Sí, cerrar →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: CONFIRMAR ELIMINACIÓN ══ -->
+<div class="modal-eliminar-overlay" id="modal-eliminar">
+  <div class="modal-eliminar-box">
+    <div class="modal-eliminar-titulo">¿Eliminar publicación?</div>
+    <div class="modal-eliminar-post" id="eliminar-titulo-preview"></div>
+    <p class="modal-eliminar-aviso">
+      Esta acción no se puede deshacer. La publicación dejará de ser visible para todos.
+    </p>
+    <div class="modal-eliminar-acciones">
+      <button class="btn-secondary" data-cerrar-eliminar>Cancelar</button>
+      <form id="form-eliminar" method="POST" action="">
+        <button type="submit" class="btn-primary u-boton-peligro">
+          Eliminar →
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/social/perfil.js') }}"></script>
+{% endblock %}

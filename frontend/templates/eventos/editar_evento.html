@@ -1,0 +1,67 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Editar evento{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventos/editar_evento.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="ee-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="ee-main">
+    <div class="ee-header"><h1>Editar evento</h1></div>
+    <form method="POST">
+      <div class="card">
+        <div class="campo">
+          <label>Título *</label>
+          <input type="text" name="titulo" value="{{ evento.titulo }}" required maxlength="120">
+        </div>
+        <div class="campo">
+          <label>Descripción</label>
+          <textarea name="descripcion" maxlength="1000">{{ evento.descripcion or '' }}</textarea>
+        </div>
+        <div class="campo-fila">
+          <div class="campo">
+            <label>Categoría</label>
+            <select name="categoria">
+              {% for cat in ['academico','cultural','deportivo','bienestar'] %}
+                <option value="{{ cat }}" {% if evento.categoria==cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="campo">
+            <label>Organizador</label>
+            <input type="text" name="organizador" value="{{ evento.organizador or '' }}" maxlength="100">
+          </div>
+        </div>
+        <div class="campo-fila">
+          <div class="campo">
+            <label>Fecha *</label>
+            <input type="date" name="fecha" value="{{ evento.fecha }}" required>
+          </div>
+          <div class="campo">
+            <label>Cupos (vacío = sin límite)</label>
+            <input type="number" name="cupos" value="{{ evento.cupos or '' }}" min="1">
+          </div>
+        </div>
+        <div class="campo-fila">
+          <div class="campo">
+            <label>Hora inicio</label>
+            <input type="time" name="hora_inicio" value="{{ evento.hora_inicio or '' }}">
+          </div>
+          <div class="campo">
+            <label>Hora fin</label>
+            <input type="time" name="hora_fin" value="{{ evento.hora_fin or '' }}">
+          </div>
+        </div>
+        <div class="campo">
+          <label>Lugar</label>
+          <input type="text" name="lugar" value="{{ evento.lugar or '' }}" maxlength="120">
+        </div>
+        <div class="card-footer">
+          <a href="{{ url_for('eventos.ver_evento', evento_id=evento.id) }}" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %}

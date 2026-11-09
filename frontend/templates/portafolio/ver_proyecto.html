@@ -1,0 +1,144 @@
+{% extends "compartidos/base.html" %}
+{% block title %}{{ proyecto.titulo }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/portafolio/ver_proyecto.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="vp-layout">
+
+  <!-- Sidebar -->
+  {% set pagina_activa = 'portafolio' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="vp-main">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="{{ url_for('portafolio.portafolio') }}">Portafolio</a>
+      <span>›</span>
+      {{ proyecto.titulo[:50] }}{% if proyecto.titulo|length > 50 %}…{% endif %}
+    </div>
+
+    <!-- Cabecera -->
+    <div class="vp-header">
+      <div class="vp-titulo">{{ proyecto.titulo }}</div>
+
+      <div class="vp-meta">
+        <div class="vp-autor-chip">
+          <div class="vp-avatar">{{ proyecto.nombre_autor[0].upper() }}</div>
+          <div>
+            <div class="vp-nombre">{{ proyecto.nombre_autor }}</div>
+            {% if proyecto.carrera_autor %}
+              <div class="vp-carrera">{{ proyecto.carrera_autor }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% if proyecto.creado_en %}
+          <div class="vp-fecha">{{ proyecto.creado_en[:10] }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Tags de tecnologías -->
+      {% if proyecto.tecnologias_lista %}
+        <div class="vp-techs">
+          {% for tech in proyecto.tecnologias_lista %}
+            <span class="tech-tag">{{ tech }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Descripción -->
+    <div class="vp-descripcion">{{ proyecto.descripcion }}</div>
+
+    <!-- Info adicional -->
+    <div class="vp-info-grid">
+      {% if proyecto.repositorio %}
+        <div class="vp-info-card">
+          <div class="vp-info-label">Repositorio</div>
+          <div class="vp-info-valor">
+            <a href="{{ proyecto.repositorio }}" target="_blank" rel="noopener">
+              {{ proyecto.repositorio }}
+            </a>
+          </div>
+        </div>
+      {% endif %}
+      {% if proyecto.demo_url %}
+        <div class="vp-info-card">
+          <div class="vp-info-label">Demo / URL</div>
+          <div class="vp-info-valor">
+            <a href="{{ proyecto.demo_url }}" target="_blank" rel="noopener">
+              {{ proyecto.demo_url }}
+            </a>
+          </div>
+        </div>
+      {% endif %}
+      {% if proyecto.estado %}
+        <div class="vp-info-card">
+          <div class="vp-info-label">Estado</div>
+          <div class="vp-info-valor">{{ proyecto.estado }}</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Aplausos -->
+    <div class="vp-acciones">
+      <button class="btn-aplaudir {% if ya_aplaudi %}activo{% endif %}"
+              id="btn-aplaudir" data-aplaudir="{{ proyecto.id }}">
+        ★ Aplaudir
+      </button>
+      <span class="aplausos-count" id="aplausos-count">
+        <span id="num-aplausos">{{ proyecto.total_aplausos }}</span> aplauso{{ 's' if proyecto.total_aplausos != 1 else '' }}
+      </span>
+
+      <!-- Botón reportar (sólo si no es el propio autor) -->
+      {% if session.user_id != proyecto.autor_id %}
+        <a class="proyecto-reportar" href="{{ url_for('reportar_publicacion', post_id=proyecto.id) }}">
+          ⚑ Reportar
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Comentarios -->
+    <div class="vp-seccion-titulo">
+      Comentarios ({{ comentarios|length }})
+    </div>
+
+    {% if comentarios %}
+      {% for c in comentarios %}
+        <div class="comentario-card">
+          <div class="com-header">
+            <div class="com-avatar">{{ c.nombre_autor[0].upper() }}</div>
+            <div class="com-autor">{{ c.nombre_autor }}</div>
+            <div class="com-fecha">{{ c.creado_en[:10] if c.creado_en else '' }}</div>
+          </div>
+          <div class="com-contenido">{{ c.contenido }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="com-vacio">Sé el primero en comentar este proyecto.</div>
+    {% endif %}
+
+    <!-- Nuevo comentario -->
+    <div class="vp-nuevo-com">
+      <label>Añadir comentario</label>
+      <form method="POST" action="{{ url_for('comentar_proyecto', proy_id=proyecto.id) }}">
+        <textarea name="contenido"
+                  placeholder="¿Qué te parece este proyecto? Deja tu retroalimentación…"
+                  maxlength="1000"
+                  required></textarea>
+        <div class="vp-com-footer">
+          <button type="submit" class="btn-primary">Comentar →</button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/portafolio/ver_proyecto.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Notificaciones{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social/notificaciones.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="notif-layout">
+  {% include 'compartidos/sidebar.html' %}
+  <main class="notif-main">
+
+    <div class="notif-header">
+      <h1>Notificaciones</h1>
+      <p>Las últimas 50 notificaciones de tu actividad en Ágora.</p>
+    </div>
+
+    {% set iconos = {'seguidor': '👤', 'reaccion': '👏', 'comentario': '💬', 'respuesta': '↩️', 'mencion': '📢'} %}
+
+    {% if notificaciones %}
+      {% for n in notificaciones %}
+        <a class="notif-card {{ '' if n.leida else 'no-leida' }}" href="{{ n.url or '#' }}">
+          <div class="notif-icono">{{ iconos.get(n.tipo, '🔔') }}</div>
+          <div class="notif-contenido">
+            <div class="notif-mensaje">{{ n.mensaje }}</div>
+            <div class="notif-tiempo">{{ n.creado_en }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="notif-vacio">
+        <span>🔔</span>
+        Aún no tienes notificaciones.
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}

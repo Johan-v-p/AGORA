@@ -1,0 +1,73 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Mensajes{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mensajes/lista.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="msgs-layout">
+  {% include 'compartidos/sidebar.html' %}
+
+  <main class="msgs-main">
+
+    <div class="msgs-header">
+      <h1>Mensajes <span id="msgs-total-badge"></span></h1>
+      <p>Tus conversaciones privadas en Ágora.</p>
+    </div>
+
+    {% if conversaciones %}
+      <div class="conv-lista" id="conv-lista">
+        {% for c in conversaciones %}
+          <a class="conv-item {% if c.no_leidos > 0 %}no-leido{% endif %}"
+             href="{{ url_for('mensajes.ver_chat', otro_id=c.otro_id) }}"
+             id="conv-{{ c.id }}">
+
+            <!-- Avatar con inicial -->
+            <div class="conv-av">{{ c.otro_nombre[0].upper() }}</div>
+
+            <!-- Info -->
+            <div class="conv-info">
+              <div class="conv-nombre">
+                {{ c.otro_nombre }}
+                {% if c.no_leidos > 0 %}
+                  <span class="conv-badge" id="badge-{{ c.id }}">{{ c.no_leidos }}</span>
+                {% else %}
+                  <span class="conv-badge u-oculto" id="badge-{{ c.id }}">0</span>
+                {% endif %}
+              </div>
+              <div class="conv-preview" id="preview-{{ c.id }}">
+                {{ c.ultimo_texto or 'Sin mensajes aún' }}
+              </div>
+            </div>
+
+            <!-- Tiempo -->
+            <div class="conv-tiempo" id="tiempo-{{ c.id }}">
+              {{ c.ultimo_msg[:10] if c.ultimo_msg else '' }}
+            </div>
+
+            <!-- Archivar (detiene el click del enlace) -->
+            <form method="POST"
+                  action="{{ url_for('mensajes.archivar_conversacion', conv_id=c.id) }}" data-archivar-conversacion>
+              <button class="conv-archivar" type="submit">✕</button>
+            </form>
+
+          </a>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="msgs-vacio">
+        <span>💬</span>
+        <p>Aún no tienes conversaciones.<br>
+           Visita el perfil de alguien y escríbele desde ahí.</p>
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/mensajes/lista.js') }}" data-usuario-id="{{ session.user_id }}"></script>
+{% endblock %}

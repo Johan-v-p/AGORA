@@ -1,0 +1,94 @@
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <div class="sidebar-logo">Ágora</div>
+    <nav class="sidebar-nav">
+
+      <a class="nav-item {% if pagina_activa == 'feed' %}active{% endif %}"
+         href="{{ url_for('publicaciones.feed') }}">
+        <span class="nav-icon">◈</span> Feed
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'explorar' %}active{% endif %}"
+         href="{{ url_for('social.explorar') }}">
+        <span class="nav-icon">⊕</span> Explorar
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'foros' %}active{% endif %}"
+         href="{{ url_for('foros.foros') }}">
+        <span class="nav-icon">◉</span> Foros
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'portafolio' %}active{% endif %}"
+         href="{{ url_for('portafolio.portafolio') }}">
+        <span class="nav-icon">◫</span> Portafolio
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'eventos' %}active{% endif %}"
+         href="{{ url_for('eventos.eventos') }}">
+        <span class="nav-icon">◷</span> Eventos
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'perfil' %}active{% endif %}"
+         href="{{ url_for('social.perfil') }}">
+        <span class="nav-icon">◎</span> Perfil
+      </a>
+
+      <!-- ── Notificaciones con badge ── -->
+      <a class="nav-item {% if pagina_activa == 'notificaciones' %}active{% endif %} u-relativo"
+         href="{{ url_for('social.notificaciones') }}"
+         id="nav-notificaciones">
+        <span class="nav-icon">🔔</span> Notificaciones
+        <span class="sidebar-contador sidebar-contador--notificaciones" id="notif-badge">0</span>
+      </a>
+
+      <!-- ── Mensajería con badge ── -->
+      <a class="nav-item {% if pagina_activa == 'mensajes' %}active{% endif %} u-relativo"
+         href="{{ url_for('mensajes.mensajes') }}"
+         id="nav-mensajes">
+        <span class="nav-icon">💬</span> Mensajería
+        <span class="sidebar-contador sidebar-contador--mensajes" id="msgs-badge">0</span>
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'ajustes' %}active{% endif %}"
+         href="{{ url_for('ajustes.ajustes') }}">
+        <span class="nav-icon">◌</span> Ajustes
+      </a>
+
+      <a class="nav-item {% if pagina_activa == 'ayuda' %}active{% endif %}"
+         href="{{ url_for('ajustes.ayuda') }}">
+        <span class="nav-icon">◎</span> Ayuda
+      </a>
+
+      {% if session.rol in ('admin', 'moderador') %}
+        <a class="nav-item {% if pagina_activa == 'moderacion' %}active{% endif %} sidebar-enlace-separado"
+           href="{{ url_for('moderacion.moderacion') }}">
+          <span class="nav-icon">🛡</span> Moderación
+        </a>
+      {% endif %}
+
+    </nav>
+  </div>
+
+  <!-- ── Zona inferior: cerrar sesión + avatar ── -->
+  <div class="sidebar-bottom">
+
+    <!-- Botón Salir separado del nav -->
+    <a class="sidebar-logout" href="{{ url_for('autenticacion.logout') }}" data-confirmar="¿Cerrar sesión?">
+      <span class="nav-icon">⏻</span> Salir
+    </a>
+
+    <!-- Usuario al pie -->
+      <div class="sidebar-user">
+      <div class="user-avatar">{{ session.nombre[0].upper() }}</div>
+      <div class="user-info">
+        <div class="user-name">{{ session.nombre.upper() }}</div>
+        <div class="user-carrera">{{ session.carrera }}</div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar-bottom -->
+</aside>
+
+<!-- ══ SOCKET.IO — badges en tiempo real ══ -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/compartidos/sidebar.js') }}" data-usuario-id="{{ session.user_id }}"></script>

@@ -1,0 +1,145 @@
+{% extends "compartidos/base.html" %}
+{% block title %}{{ foro.nombre }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/foros/detalle.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+<div class="foro-det-layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  {% set pagina_activa = 'foros' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- ══ ÁREA CENTRAL ══ -->
+  <main class="foro-det-main">
+
+    <a class="btn-back" href="{{ url_for('foros.foros') }}">← Volver a foros</a>
+
+    <!-- Encabezado del foro -->
+    <div class="foro-header">
+      <div class="foro-header-info">
+        {% if foro.categoria %}
+          <div class="foro-cat-badge">{{ foro.categoria | upper }}</div>
+        {% endif %}
+        <div class="foro-titulo-grande">{{ foro.nombre }}</div>
+        {% if foro.descripcion %}
+          <div class="foro-desc-text">{{ foro.descripcion }}</div>
+        {% endif %}
+      </div>
+      <div class="foro-header-stat">
+        <div class="stat-num-grande">{{ preguntas|length }}</div>
+        <div class="stat-lbl-grande">preguntas</div>
+      </div>
+    </div>
+
+    <!-- Barra: título + botón nueva pregunta -->
+    <div class="nueva-preg-bar">
+      <span class="seccion-label">Preguntas</span>
+      <button class="btn-primary" data-abrir-modal="modal-nueva-preg">
+        + Nueva pregunta
+      </button>
+    </div>
+
+    <!-- Lista de preguntas -->
+    {% if preguntas %}
+      {% for p in preguntas %}
+        <a class="pregunta-card"
+           href="{{ url_for('foros.foro_pregunta', foro_id=foro.id, pregunta_id=p.id) }}">
+
+          <span class="tipo-badge {{ p.tipo }}">{{ p.tipo }}</span>
+
+          <div class="pregunta-info">
+            <div class="pregunta-titulo">{{ p.titulo }}</div>
+            <div class="pregunta-meta">
+              <span>
+                {% if p.es_anonimo %}Anónimo
+                {% else %}{% if p.autor_id and not p.es_anonimo %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.autor_id) }}">{{ p.autor_nombre }}</a>{% else %}{{ p.autor_nombre }}{% endif %}{% endif %}
+              </span>
+              <span>·</span>
+              <span>{{ p.tiempo_relativo }}</span>
+            </div>
+          </div>
+
+          <div class="pregunta-respuestas">
+            <div class="resp-num">{{ p.total_respuestas }}</div>
+            <div class="resp-lbl">resp.</div>
+          </div>
+
+        </a>
+      {% endfor %}
+
+    {% else %}
+      <div class="vacio-wrap">
+        <div class="vacio-icono">◉</div>
+        <div class="vacio-titulo">Sin preguntas aún</div>
+        <div class="vacio-sub">
+          Sé el primero en publicar algo<br/>en este foro.
+        </div>
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<!-- ══ MODAL NUEVA PREGUNTA ══ -->
+<div class="modal-overlay" id="modal-nueva-preg">
+  <div class="modal-box">
+    <div class="modal-titulo">Nueva pregunta en "{{ foro.nombre }}"</div>
+
+    <form method="POST"
+          action="{{ url_for('foros.foro_nueva_pregunta', foro_id=foro.id) }}">
+
+      <!-- Tipo -->
+      <div class="campo">
+        <label for="tipo">Tipo</label>
+        <div class="select-wrap">
+          <select id="tipo" name="tipo">
+            <option value="pregunta">Pregunta</option>
+            <option value="duda">Duda</option>
+            <option value="apuntes">Apuntes</option>
+            <option value="recurso">Recurso</option>
+            <option value="debate">Debate</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Título -->
+      <div class="campo">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo"
+               placeholder="¿Cuál es tu pregunta?"
+               maxlength="200" required>
+      </div>
+
+      <!-- Contenido opcional -->
+      <div class="campo">
+        <label for="contenido">Descripción (opcional)</label>
+        <textarea id="contenido" name="contenido"
+                  maxlength="2000"
+                  placeholder="Añade más contexto si lo necesitas…"></textarea>
+      </div>
+
+      <!-- Anónimo -->
+      <div class="check-row">
+        <input type="checkbox" id="es_anonimo" name="es_anonimo" value="1">
+        <label for="es_anonimo">Publicar de forma anónima</label>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-cerrar-modal="modal-nueva-preg">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primary">Publicar →</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/foros/detalle.js') }}"></script>
+{% endblock %}

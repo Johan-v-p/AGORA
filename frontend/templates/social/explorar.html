@@ -1,0 +1,215 @@
+{% extends "compartidos/base.html" %}
+{% block title %}Explorar{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social/explorar.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+<div class="explorar-layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  {% set pagina_activa = 'explorar' %}
+  {% include 'compartidos/sidebar.html' %}
+
+  <!-- ══ ÁREA CENTRAL ══ -->
+  <main class="explorar-main">
+
+    <div class="explorar-titulo">Explorar</div>
+
+    <!-- ── BARRA DE BÚSQUEDA ── -->
+    <form method="GET" action="{{ url_for('social.explorar') }}">
+      <div class="busqueda-wrap">
+        <input
+          class="busqueda-input"
+          type="text"
+          name="q"
+          value="{{ q }}"
+          placeholder="Busca posts, personas, foros…"
+          autocomplete="off"
+          autofocus
+        />
+        <!-- Preserva el filtro activo al buscar -->
+        <input type="hidden" name="tipo" value="{{ tipo }}">
+        <button type="submit" class="busqueda-btn">Buscar →</button>
+      </div>
+
+      <!-- ── TABS DE FILTRO ── -->
+      <div class="filtros-row">
+        {% for tab_id, tab_label in [('todo','Todo'), ('posts','Posts'), ('personas','Personas'), ('foros','Foros')] %}
+          <a class="filtro-tab {% if tipo == tab_id %}active{% endif %}"
+             href="{{ url_for('social.explorar', q=q, tipo=tab_id) }}">
+            {{ tab_label }}
+          </a>
+        {% endfor %}
+      </div>
+    </form>
+
+
+    <!-- ════════════════════════════════════════
+         RESULTADOS DE BÚSQUEDA
+         ════════════════════════════════════════ -->
+    {% if q %}
+
+      {# ── Calculamos el total de resultados para el estado vacío ── #}
+      {% set total = posts|length + personas|length + foros|length %}
+
+      {% if total == 0 %}
+        <!-- Estado vacío -->
+        <div class="vacio-wrap">
+          <div class="vacio-icono">⊘</div>
+          <div class="vacio-titulo">Sin resultados para "{{ q }}"</div>
+          <div class="vacio-sub">
+            Prueba con otras palabras clave<br/>
+            o cambia el filtro de búsqueda.
+          </div>
+        </div>
+
+      {% else %}
+
+        <!-- ── SECCIÓN POSTS ── -->
+        {% if posts %}
+          <div class="seccion-titulo">Posts ({{ posts|length }})</div>
+          {% for p in posts %}
+            <a class="post-card" href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}">
+              <div class="post-cat-badge">
+                {% if p.categoria == 'academico' %}ACADÉMICO
+                {% elif p.categoria == 'meme' %}MEME
+                {% elif p.categoria == 'foro' %}FORO
+                {% elif p.categoria == 'portafolio' %}PORTAFOLIO
+                {% else %}GENERAL{% endif %}
+              </div>
+              <div class="post-card-titulo">{{ p.titulo }}</div>
+              <div class="post-card-snippet">{{ p.contenido }}</div>
+              <div class="post-card-meta">
+                <span>
+                  {% if p.es_anonimo %}Anónimo
+                  {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
+                </span>
+                <span>·</span>
+                <span>{{ p.tiempo_relativo }}</span>
+                <span>·</span>
+                <span>{{ p.total_reacciones }} reacciones</span>
+                <span>·</span>
+                <span>{{ p.total_comentarios }} comentarios</span>
+              </div>
+            </a>
+          {% endfor %}
+        {% endif %}
+
+        <!-- ── SECCIÓN PERSONAS ── -->
+        {% if personas %}
+          <div class="seccion-titulo">Personas ({{ personas|length }})</div>
+          <div class="personas-grid">
+            {% for u in personas %}
+              {# Por ahora el perfil solo es del usuario en sesión,
+                 más adelante apuntará a /perfil/<id> ── Prioridad 2 #}
+              <div class="persona-card">
+                <a class="u-sin-subrayado" href="{{ url_for('social.ver_perfil_usuario', usuario_id=u.id) }}">
+                  <div class="persona-avatar u-cursor-mano">{{ u.nombre[0].upper() }}</div>
+                </a>
+                <div class="persona-info">
+                  <div class="persona-nombre">{{ u.nombre }}</div>
+                  <div class="persona-carrera">{{ u.carrera }}</div>
+                  <div class="persona-uni">{{ u.universidad }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- ── SECCIÓN FOROS ── -->
+        {% if foros %}
+          <div class="seccion-titulo">Foros ({{ foros|length }})</div>
+          {% for f in foros %}
+            {# Enlace a /foros/<id> — se activará en el módulo Foros (Prioridad 1) #}
+            <div class="foro-card">
+              <div class="foro-icono">◉</div>
+              <div class="foro-info">
+                <div class="foro-nombre">{{ f.nombre }}</div>
+                {% if f.descripcion %}
+                  <div class="foro-desc">{{ f.descripcion }}</div>
+                {% endif %}
+              </div>
+              <div class="foro-stat">{{ f.total_preguntas }} preguntas</div>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+      {% endif %} {# fin if total == 0 #}
+
+
+    <!-- ════════════════════════════════════════
+         ESTADO INICIAL (sin búsqueda activa)
+         ════════════════════════════════════════ -->
+    {% else %}
+
+      <span class="label-destacado">Destacado</span>
+
+      <!-- Posts recientes -->
+      {% if posts %}
+        <div class="seccion-titulo">Posts recientes</div>
+        {% for p in posts %}
+          <a class="post-card" href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}">
+            <div class="post-cat-badge">
+              {% if p.categoria == 'academico' %}ACADÉMICO
+              {% elif p.categoria == 'meme' %}MEME
+              {% elif p.categoria == 'foro' %}FORO
+              {% elif p.categoria == 'portafolio' %}PORTAFOLIO
+              {% else %}GENERAL{% endif %}
+            </div>
+            <div class="post-card-titulo">{{ p.titulo }}</div>
+            <div class="post-card-meta">
+              <span>
+                {% if p.es_anonimo %}Anónimo
+                {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
+              </span>
+              <span>·</span>
+              <span>{{ p.tiempo_relativo }}</span>
+              <span>·</span>
+              <span>{{ p.total_reacciones }} reacciones</span>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Personas recientes -->
+      {% if personas %}
+        <div class="seccion-titulo">Personas en Ágora</div>
+        <div class="personas-grid">
+          {% for u in personas %}
+            <div class="persona-card">
+              <div class="persona-avatar">{{ u.nombre[0].upper() }}</div>
+              <div class="persona-info">
+                <div class="persona-nombre">{{ u.nombre }}</div>
+                <div class="persona-carrera">{{ u.carrera }}</div>
+                <div class="persona-uni">{{ u.universidad }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Foros populares -->
+      {% if foros %}
+        <div class="seccion-titulo">Foros populares</div>
+        {% for f in foros %}
+          <div class="foro-card">
+            <div class="foro-icono">◉</div>
+            <div class="foro-info">
+              <div class="foro-nombre">{{ f.nombre }}</div>
+              {% if f.descripcion %}
+                <div class="foro-desc">{{ f.descripcion }}</div>
+              {% endif %}
+            </div>
+            <div class="foro-stat">{{ f.total_preguntas }} preguntas</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+    {% endif %} {# fin if q #}
+
+  </main>
+</div>
+{% endblock %}
