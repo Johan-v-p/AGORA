@@ -1,0 +1,14 @@
+.ad-layout{display:flex;min-height:100vh}
+.ad-main{flex:1;padding:32px 40px 80px;max-width:900px}
+.ad-header{margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--borde)}
+.ad-header h1{font-family:var(--fuente-display);font-size:20px;font-weight:normal;color:var(--texto)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat-card{background:var(--panel);border:1px solid var(--borde);padding:20px 24px}
+.stat-card-titulo{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-dim);margin-bottom:16px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-label{font-size:11px;color:var(--texto-dim);min-width:120px}
+.bar-wrap{flex:1;height:8px;background:var(--superficie)}
+.bar-fill{height:100%;background:var(--texto);transition:width .3s}
+.bar-num{font-size:11px;color:var(--texto);font-weight:700;min-width:28px;text-align:right}
+.back-link{font-size:11px;color:var(--texto-dim);text-decoration:none;margin-bottom:16px;display:inline-block}
+.back-link:hover{color:var(--texto)}

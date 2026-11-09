@@ -1,26 +1,7 @@
 {% extends "compartidos/base.html" %}
 {% block title %}Ayuda & Soporte{% endblock %}
 {% block extra_head %}
-<style>
-.ay-layout{display:flex;min-height:100vh}
-.ay-main{flex:1;max-width:760px;padding:40px 48px 80px}
-.ay-header{margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--borde)}
-.ay-header h1{font-family:var(--fuente-display);font-size:22px;font-weight:normal;color:var(--texto)}
-.ay-header p{font-size:12px;color:var(--texto-dim);margin-top:6px}
-.faq-sec{margin-bottom:32px}
-.faq-sec-titulo{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-dim);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--borde)}
-.faq-item{border:1px solid var(--borde);margin-bottom:6px}
-.faq-q{width:100%;background:var(--panel);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:13px 18px;font-size:13px;font-weight:600;color:var(--texto);font-family:var(--fuente-body);text-align:left;transition:background .12s}
-.faq-q:hover{background:var(--superficie)}
-.faq-icono{font-size:18px;color:var(--texto-dim);transition:transform .2s;flex-shrink:0}
-.faq-item.open .faq-icono{transform:rotate(45deg)}
-.faq-r{display:none;padding:14px 18px 18px;font-size:13px;color:var(--texto-dim);line-height:1.7;border-top:1px solid var(--borde);background:var(--superficie)}
-.faq-item.open .faq-r{display:block}
-.contacto{background:var(--panel);border:1px solid var(--borde);padding:24px 28px;margin-top:8px}
-.contacto h3{font-size:13px;font-weight:700;color:var(--texto);margin-bottom:10px}
-.contacto p{font-size:12px;color:var(--texto-dim);line-height:1.7;margin-bottom:10px}
-.contacto a{color:var(--texto);text-decoration:underline}
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajustes/ayuda.css') }}"/>
 {% endblock %}
 {% block content %}
 <div class="ay-layout">

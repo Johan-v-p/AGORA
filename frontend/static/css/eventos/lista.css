@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════
+   EVENTOS — Calendario de eventos universitarios
+   ═══════════════════════════════════════════════════════ */
+
+.eventos-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.eventos-main {
+  flex: 1; min-width: 0;
+  padding: 28px 40px 60px;
+  max-width: 900px;
+}
+
+/* ── CABECERA ── */
+.eventos-header {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px; padding-bottom: 16px;
+  border-bottom: 1px solid var(--borde);
+}
+.eventos-titulo {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--texto-dim);
+}
+.eventos-sub {
+  font-size: 9px; color: var(--texto-dim);
+  margin-top: 4px;
+}
+
+/* ── FILTROS DE CATEGORÍA ── */
+.cat-filtros {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.cat-btn {
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1px solid var(--borde);
+  background: transparent; color: var(--texto-dim);
+  cursor: pointer; text-decoration: none;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.cat-btn:hover, .cat-btn.active {
+  background: var(--superficie); color: var(--texto); border-color: #444;
+}
+
+/* ── TARJETA DE EVENTO ── */
+.evento-card {
+  border: 1px solid var(--borde);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  display: flex; gap: 24px;
+  align-items: flex-start;
+  transition: border-color 0.15s;
+  background: var(--superficie);
+}
+.evento-card:hover { border-color: #444; }
+
+/* Fecha (columna izquierda) */
+.evento-fecha-bloque {
+  text-align: center; flex-shrink: 0;
+  width: 52px;
+  border-right: 1px solid var(--borde);
+  padding-right: 20px;
+}
+.evento-dia {
+  font-family: var(--fuente-display);
+  font-size: 28px; font-weight: bold;
+  color: var(--texto); line-height: 1;
+  margin-bottom: 4px;
+}
+.evento-mes {
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--texto-dim);
+}
+
+/* Info central */
+.evento-info { flex: 1; min-width: 0; }
+
+.evento-cat-badge {
+  font-size: 7px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--texto-dim); margin-bottom: 6px;
+}
+/* Colores por categoría */
+.evento-cat-badge.academico  { color: #7ab0d0; }
+.evento-cat-badge.cultural   { color: #d0a07a; }
+.evento-cat-badge.deportivo  { color: #7ad0a0; }
+.evento-cat-badge.bienestar  { color: #a07ad0; }
+
+.evento-titulo {
+  font-size: 15px; font-weight: 700;
+  color: var(--texto); margin-bottom: 8px;
+  line-height: 1.3;
+}
+.evento-meta-row {
+  display: flex; flex-wrap: wrap;
+  gap: 6px 16px; margin-bottom: 8px;
+}
+.evento-meta-item {
+  font-size: 9px; color: var(--texto-dim);
+  display: flex; align-items: center; gap: 4px;
+}
+.evento-desc {
+  font-size: 11px; color: var(--texto-dim);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Columna derecha: cupos + botón */
+.evento-accion {
+  flex-shrink: 0; text-align: right;
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 10px;
+  min-width: 110px;
+}
+.evento-cupos {
+  font-size: 9px; color: var(--texto-dim);
+  letter-spacing: 0.5px;
+}
+.evento-cupos strong {
+  display: block;
+  font-family: var(--fuente-display);
+  font-size: 18px; font-weight: bold;
+  color: var(--texto);
+}
+.btn-inscribir {
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 8px 14px;
+  border: 1px solid var(--borde);
+  background: transparent; color: var(--texto-dim);
+  cursor: pointer; font-family: var(--fuente-body);
+  transition: all 0.15s; white-space: nowrap;
+}
+.btn-inscribir:hover {
+  background: var(--texto); color: var(--acento-txt);
+  border-color: var(--texto);
+}
+.btn-inscribir.inscrito {
+  background: #1a2e1a; border-color: #6fcf6f;
+  color: #6fcf6f;
+}
+.btn-inscribir.inscrito:hover {
+  background: #2e1a1a; border-color: #cf6f6f;
+  color: #cf6f6f;
+}
+/* Label del botón cambia al hacer hover cuando está inscrito */
+.btn-inscribir.inscrito .lbl-normal { display: none; }
+.btn-inscribir.inscrito .lbl-hover  { display: block; }
+.btn-inscribir:not(.inscrito) .lbl-hover { display: none; }
+
+/* ── MODAL NUEVO EVENTO ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 800; display: none;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.visible { display: flex; }
+.modal-box {
+  background: var(--panel); border: 1px solid var(--borde);
+  padding: 28px; width: 100%; max-width: 540px;
+  max-height: 92vh; overflow-y: auto;
+}
+.modal-titulo {
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 1px; color: var(--texto);
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--borde);
+}
+.campo { margin-bottom: 16px; }
+.campo label {
+  display: block; font-size: 8px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--texto-dim); margin-bottom: 6px;
+}
+.campo input[type="text"],
+.campo input[type="number"],
+.campo input[type="date"],
+.campo input[type="time"],
+.campo textarea,
+.campo select {
+  width: 100%;
+  background: var(--superficie); border: 1px solid var(--borde);
+  color: var(--texto); font-family: var(--fuente-body);
+  font-size: 12px; padding: 10px 12px;
+  outline: none; border-radius: 0;
+  -webkit-appearance: none;
+  transition: border-color 0.15s;
+}
+.campo input:focus, .campo textarea:focus,
+.campo select:focus { border-color: var(--texto); }
+.campo textarea { resize: vertical; min-height: 72px; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾'; position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); color: var(--texto-dim);
+  pointer-events: none; font-size: 11px;
+}
+.campo select option { background: var(--panel); color: var(--texto); }
+.campo-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-footer {
+  display: flex; justify-content: flex-end; gap: 10px;
+  margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--borde);
+}
+
+/* Estado vacío */
+.vacio-wrap {
+  text-align: center; padding: 60px 20px;
+  border: 1px dashed var(--borde);
+}
+.vacio-icono { font-size: 32px; margin-bottom: 14px; opacity: 0.4; }
+.vacio-titulo {
+  font-size: 13px; font-weight: 700;
+  color: var(--texto); margin-bottom: 8px;
+}
+.vacio-sub { font-size: 11px; color: var(--texto-dim); line-height: 1.7; }
+
+@media (max-width: 640px) {
+  .sidebar       { display: none; }
+  .eventos-main  { padding: 18px 16px 40px; }
+  .evento-card   { flex-direction: column; gap: 12px; }
+  .evento-fecha-bloque { border-right: none; border-bottom: 1px solid var(--borde); padding: 0 0 12px; width: auto; display: flex; gap: 8px; align-items: baseline; }
+  .evento-accion { flex-direction: row; text-align: left; min-width: auto; }
+}

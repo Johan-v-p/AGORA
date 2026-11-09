@@ -1,0 +1,50 @@
+.vp-layout { display:flex; min-height:100vh; }
+.vp-main   { flex:1; max-width:640px; padding:40px 32px; }
+
+.vp-header {
+  margin-bottom:28px; padding-bottom:16px;
+  border-bottom:1px solid var(--borde);
+}
+.vp-back {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:10px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; color:var(--texto-dim);
+  text-decoration:none; margin-bottom:12px; transition:color .12s;
+}
+.vp-back:hover { color:var(--texto); }
+.vp-titulo {
+  font-family:var(--fuente-display); font-size:18px;
+  font-weight:normal; color:var(--texto);
+}
+.vp-sub { font-size:11px; color:var(--texto-dim); margin-top:4px; }
+
+/* Tarjeta de participante */
+.part-card {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  background:var(--panel); border:1px solid var(--borde);
+  margin-bottom:6px; text-decoration:none; color:var(--texto);
+  transition:border-color .12s;
+}
+.part-card:hover { border-color:#444; }
+
+.part-av {
+  width:44px; height:44px; border-radius:50%;
+  background:var(--borde); display:flex; align-items:center;
+  justify-content:center; font-size:16px; font-weight:700;
+  color:var(--texto); overflow:hidden; flex-shrink:0;
+}
+.part-av img { width:100%; height:100%; object-fit:cover; }
+
+.part-info { flex:1; min-width:0; }
+.part-nombre {
+  font-size:13px; font-weight:600; color:var(--texto);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.part-carrera { font-size:10px; color:var(--texto-dim); margin-top:2px; }
+.part-fecha   { font-size:10px; color:var(--texto-dim); flex-shrink:0; }
+
+.vp-vacio {
+  text-align:center; padding:48px; color:var(--texto-dim); font-size:13px;
+}
+.vp-vacio span { display:block; font-size:32px; margin-bottom:12px; }

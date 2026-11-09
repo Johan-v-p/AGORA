@@ -1,22 +1,7 @@
 {% extends "compartidos/base.html" %}
 {% block title %}Administración{% endblock %}
 {% block extra_head %}
-<style>
-.ad-layout{display:flex;min-height:100vh}
-.ad-main{flex:1;padding:32px 40px 80px;max-width:900px}
-.ad-header{margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--borde)}
-.ad-header h1{font-family:var(--fuente-display);font-size:20px;font-weight:normal;color:var(--texto)}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
-.stat-card{background:var(--panel);border:1px solid var(--borde);padding:20px;text-align:center}
-.stat-num{font-size:32px;font-weight:700;color:var(--texto);display:block}
-.stat-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-dim);margin-top:4px}
-.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.menu-card{background:var(--panel);border:1px solid var(--borde);padding:20px 24px;text-decoration:none;display:block;transition:border-color .12s}
-.menu-card:hover{border-color:#444}
-.menu-card-icon{font-size:24px;margin-bottom:10px}
-.menu-card-titulo{font-size:13px;font-weight:700;color:var(--texto);margin-bottom:4px}
-.menu-card-desc{font-size:11px;color:var(--texto-dim);line-height:1.6}
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/moderacion/panel.css') }}"/>
 {% endblock %}
 {% block content %}
 <div class="ad-layout">
