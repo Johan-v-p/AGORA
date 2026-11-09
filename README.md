@@ -43,31 +43,43 @@ La aplicación estará disponible en `http://localhost:5000`.
 
 ## Estructura del código
 
-Los componentes reutilizables viven dentro del paquete `agora/`:
-
 ```text
-agora/
-├── base_datos.py
-├── configuracion.py
-├── moderacion.py
-├── utilidades.py
-├── aplicacion.py
-├── modelos/
-├── rutas/
-│   └── autenticacion.py
-└── servicios/
+.
+├── app.py                  # Punto de entrada
+├── backend/
+│   ├── aplicacion.py       # Crea la aplicación y registra los módulos
+│   ├── nucleo/             # Configuración, base de datos y utilidades
+│   ├── rutas/              # Un Blueprint por dominio y decoradores de acceso
+│   ├── servicios/          # Reglas de negocio
+│   └── modelos/            # Entidades
+├── frontend/
+│   ├── templates/          # HTML, una carpeta por dominio
+│   │   ├── compartidos/    # Base y barra lateral
+│   │   ├── autenticacion/
+│   │   ├── publicaciones/
+│   │   ├── social/
+│   │   ├── foros/
+│   │   ├── portafolio/
+│   │   ├── eventos/
+│   │   ├── mensajes/
+│   │   ├── moderacion/
+│   │   └── ajustes/
+│   └── static/             # CSS y recursos públicos
+├── scripts/                # Tareas operativas
+└── tests/                  # Pruebas automáticas
 ```
 
-`agora/aplicacion.py` es el núcleo de la aplicación y `app.py` se mantiene como
-punto de entrada compatible para despliegues y pruebas existentes. Las rutas se
-trasladarán progresivamente a módulos dentro de `agora/rutas/`, mientras que la
-lógica de negocio se ubicará en `agora/servicios/` y las entidades en
-`agora/modelos/`. No se deben añadir nuevos componentes de aplicación en la
-raíz.
+`app.py` se mantiene como punto de entrada compatible para despliegues y
+pruebas existentes. No se deben añadir componentes de aplicación en la raíz.
+
+Las rutas se trasladarán progresivamente desde `backend/aplicacion.py` a módulos
+dentro de `backend/rutas/`, la lógica de negocio se ubicará en
+`backend/servicios/` y las entidades en `backend/modelos/`.
 
 Las rutas nuevas deben implementarse como Blueprints y registrarse desde
-`agora/aplicacion.py`. El primer Blueprint migrado es
-`agora.rutas.autenticacion`.
+`backend/aplicacion.py`. El primer Blueprint migrado es
+`backend.rutas.autenticacion`. Las plantillas de cada Blueprint van en la carpeta
+de `frontend/templates/` que corresponde a su dominio.
 
 El código operativo de inicialización de la base de datos se encuentra en
 `scripts/crear_db.py`.
