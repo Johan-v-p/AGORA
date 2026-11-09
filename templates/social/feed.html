@@ -472,6 +472,12 @@
           <!-- Título -->
           <div class="post-titulo">{{ post.titulo }}</div>
 
+          {% if post.imagen_url %}
+          <a class="post-img-link" href="{{ url_for('post_detalle', post_id=post.id) }}">
+            <img class="post-img" src="{{ post.imagen_url|media(thumb=True) }}" alt="Imagen de la publicación" loading="lazy">
+          </a>
+          {% endif %}
+
           <!-- Autor · tiempo -->
           <div class="post-meta">
             {% if post.es_anonimo %}
@@ -530,7 +536,7 @@
       <button class="modal-cerrar" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
     </div>
 
-    <form method="POST" action="{{ url_for('nueva_publicacion') }}">
+    <form method="POST" action="{{ url_for('nueva_publicacion') }}" enctype="multipart/form-data">
 
       <!-- Título -->
       <div class="campo">
@@ -564,6 +570,14 @@
                   maxlength="2000" required
                   oninput="contarContenido(this)"></textarea>
         <div class="char-count" id="cnt-contenido">0 / 2000</div>
+      </div>
+      <!-- Imagen (opcional) -->
+      <div class="campo">
+        <label for="imagen">Imagen (opcional)</label>
+        <input type="file" id="imagen" name="imagen"
+               accept="image/jpeg,image/png,image/webp" onchange="validarImagen(this)">
+        <div class="campo-hint">JPG, PNG o WebP · máx. 2 MB</div>
+        <div class="img-error"></div>
       </div>
 
       <!-- Footer: anónimo + enviar -->

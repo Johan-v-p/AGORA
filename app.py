@@ -327,6 +327,7 @@ def feed():
             p.categoria,
             p.es_anonimo,
             p.creado_en,
+            p.imagen_url,
             u.nombre            AS autor_nombre,
             u.avatar_url        AS autor_avatar,
             (SELECT COUNT(*) FROM reacciones_publicacion r WHERE r.publicacion_id = p.id)
@@ -380,16 +381,24 @@ def nueva_publicacion():
         flash('El contenido no puede superar 2000 caracteres.', 'error')
         return redirect(url_for('feed'))
 
+    try:
+        imagen_url = guardar_imagen(request.files.get('imagen'), 'posts',
+                                    max_lado=1280, thumb_lado=480)
+    except ValueError as e:
+        flash(str(e), 'error')
+        return redirect(url_for('feed'))
+
     conn = get_db()
     try:
         conn.execute(
-            """INSERT INTO publicaciones (autor_id, titulo, contenido, categoria, es_anonimo, estado)
-               VALUES (?, ?, ?, ?, ?, 'publicado')""",
-            (session['user_id'], titulo, contenido, categoria, es_anonimo)
+            """INSERT INTO publicaciones (autor_id, titulo, contenido, categoria, es_anonimo, estado, imagen_url)
+               VALUES (?, ?, ?, ?, ?, 'publicado', ?)""",
+            (session['user_id'], titulo, contenido, categoria, es_anonimo, imagen_url)
         )
         conn.commit()
         flash('¡Publicación creada!', 'success')
     except Exception as e:
+        borrar_imagen(imagen_url)          # no dejar archivos huérfanos si falla el INSERT
         flash(f'Error al publicar: {e}', 'error')
     finally:
         conn.close()
