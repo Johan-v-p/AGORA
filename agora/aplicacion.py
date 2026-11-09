@@ -9,6 +9,7 @@ from datetime import datetime
 import json
 import sqlite3
 import sys
+from werkzeug.security import check_password_hash, generate_password_hash
 from agora.base_datos import abrir_conexion
 from agora.configuracion import obtener_configuracion
 from agora.utilidades import (
