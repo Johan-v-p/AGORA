@@ -16,6 +16,7 @@ from backend.rutas.moderacion import crear_blueprint as crear_blueprint_moderaci
 from backend.rutas.portafolio import crear_blueprint as crear_blueprint_portafolio
 from backend.rutas.publicaciones import crear_blueprint as crear_blueprint_publicaciones
 from backend.rutas.social import crear_blueprint as crear_blueprint_social
+from backend.servicios import cuentas
 from backend.tiempo_real import registrar_eventos
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
@@ -42,7 +43,7 @@ def get_db():
 def obtener_cuenta(user_id):
     """Devuelve el estado actual (activo, rol) de una cuenta, o None si no existe."""
     conn = get_db()
-    cuenta = conn.execute("SELECT activo, rol FROM usuarios WHERE id = ?", (user_id,)).fetchone()
+    cuenta = cuentas.obtener_estado(conn, user_id)
     conn.close()
     return cuenta
 

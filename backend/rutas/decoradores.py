@@ -4,6 +4,8 @@ from functools import wraps
 
 from flask import flash, redirect, session, url_for
 
+from backend.servicios import cuentas
+
 
 def login_required(vista):
     """Redirige al inicio de sesión si no hay una sesión activa."""
@@ -23,9 +25,7 @@ def crear_moderador_required(get_db):
             if not session.get('user_id'):
                 return redirect(url_for('autenticacion.login'))
             conn = get_db()
-            usuario = conn.execute(
-                "SELECT rol FROM usuarios WHERE id = ?", (session['user_id'],)
-            ).fetchone()
+            usuario = cuentas.obtener_rol(conn, session['user_id'])
             conn.close()
             if not usuario or usuario['rol'] not in ('moderador', 'admin'):
                 flash('No tienes permisos para acceder a esta sección.', 'error')

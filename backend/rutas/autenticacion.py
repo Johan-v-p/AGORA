@@ -3,7 +3,8 @@
 import sqlite3
 
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
+
+from backend.servicios import cuentas
 
 
 def crear_blueprint(get_db):
@@ -24,12 +25,10 @@ def crear_blueprint(get_db):
                 return render_template('autenticacion/login.html')
 
             conn = get_db()
-            usuario = conn.execute(
-                "SELECT * FROM usuarios WHERE correo = ?", (correo,)
-            ).fetchone()
+            usuario = cuentas.obtener_por_correo(conn, correo)
             conn.close()
 
-            if usuario and check_password_hash(usuario['password'], password):
+            if usuario and cuentas.verificar_password(usuario, password):
                 if not usuario['activo']:
                     flash(
                         'Tu cuenta está suspendida. Contacta a un administrador.',
@@ -72,19 +71,7 @@ def crear_blueprint(get_db):
             conn = None
             try:
                 conn = get_db()
-                conn.execute(
-                    """INSERT INTO usuarios
-                       (nombre, correo, password, carrera, universidad, rol)
-                       VALUES (?, ?, ?, ?, ?, 'estudiante')""",
-                    (
-                        nombre,
-                        correo,
-                        generate_password_hash(password),
-                        carrera,
-                        universidad,
-                    ),
-                )
-                conn.commit()
+                cuentas.registrar(conn, nombre, correo, carrera, universidad, password)
                 flash('¡Cuenta creada! Ya puedes entrar.', 'success')
                 return redirect(url_for('autenticacion.login'))
             except sqlite3.IntegrityError:
