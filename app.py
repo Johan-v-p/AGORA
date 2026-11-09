@@ -11,6 +11,11 @@ import json
 import sys
 from base_datos import abrir_conexion
 from configuracion import obtener_configuracion
+from utilidades import (
+    parsear_tecnologias,
+    procesar_evento,
+    tiempo_relativo,
+)
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.
@@ -29,23 +34,6 @@ DB = CONFIGURACION['DATABASE_PATH']
 def get_db():
     """Abre una conexión SQLite y devuelve filas como diccionarios."""
     return abrir_conexion(DB)
-
-
-def tiempo_relativo(fecha_str):
-    """Convierte una fecha ISO a texto legible: 'hace 2h', 'hace 45min', etc."""
-    try:
-        fecha = datetime.strptime(str(fecha_str), '%Y-%m-%d %H:%M:%S')
-    except (ValueError, TypeError):
-        return ''
-    delta = datetime.now() - fecha
-    segundos = int(delta.total_seconds())
-    if segundos < 60:
-        return 'ahora mismo'
-    if segundos < 3600:
-        return f'hace {segundos // 60}min'
-    if segundos < 86400:
-        return f'hace {segundos // 3600}h'
-    return f'hace {delta.days} días'
 
 
 def obtener_cuenta(user_id):
@@ -891,19 +879,6 @@ def votar_respuesta(respuesta_id):
 # PORTAFOLIO  ★ NUEVO
 # ══════════════════════════════════════════
 
-def _parse_techs(texto):
-    """Convierte JSON '[\"Flask\",\"Python\"]' o texto CSV a lista."""
-    if not texto:
-        return []
-    texto = texto.strip()
-    if texto.startswith('['):
-        try:
-            return json.loads(texto)
-        except Exception:
-            pass
-    return [t.strip() for t in texto.split(',') if t.strip()]
-
-
 @app.route('/portafolio')
 @login_required
 def portafolio():
@@ -922,7 +897,7 @@ def portafolio():
     """, (user_id, user_id))
     mis = []
     for f in cur.fetchall():
-        d = dict(f); d['tecnologias_lista'] = _parse_techs(d.get('tecnologias')); mis.append(d)
+        d = dict(f); d['tecnologias_lista'] = parsear_tecnologias(d.get('tecnologias')); mis.append(d)
 
     # Proyectos de la comunidad (excluye los propios)
     cur.execute("""
@@ -936,7 +911,7 @@ def portafolio():
     """, (user_id, user_id))
     todos = []
     for f in cur.fetchall():
-        d = dict(f); d['tecnologias_lista'] = _parse_techs(d.get('tecnologias')); todos.append(d)
+        d = dict(f); d['tecnologias_lista'] = parsear_tecnologias(d.get('tecnologias')); todos.append(d)
 
     conn.close()
     return render_template('portafolio/lista.html', mis_proyectos=mis, todos_proyectos=todos)
@@ -1012,23 +987,6 @@ def aplaudir_proyecto(proy_id):
 # EVENTOS  ★ NUEVO
 # ══════════════════════════════════════════
 
-_MESES_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
-
-def _procesar_evento(row, user_id):
-    """Añade campos calculados a un evento."""
-    d = dict(row)
-    try:
-        fecha_obj = datetime.strptime(str(d['fecha']), '%Y-%m-%d')
-        d['fecha_dia'] = fecha_obj.day
-        d['fecha_mes'] = _MESES_ES[fecha_obj.month - 1].upper()
-    except Exception:
-        d['fecha_dia'] = '--'
-        d['fecha_mes'] = '---'
-    d['inscrito'] = bool(d.get('inscrito'))
-    d['cupos_libres'] = d.get('cupos_libres') or '∞'
-    return d
-
-
 @app.route('/eventos')
 @login_required
 def eventos():
@@ -1055,7 +1013,7 @@ def eventos():
         ORDER BY e.fecha ASC, e.hora_inicio ASC
     """, params)
 
-    eventos_lista = [_procesar_evento(r, user_id) for r in cur.fetchall()]
+    eventos_lista = [procesar_evento(r) for r in cur.fetchall()]
     conn.close()
 
     return render_template('eventos/lista.html', eventos=eventos_lista, cat_activa=cat_activa)
@@ -1583,7 +1541,7 @@ def ver_evento(evento_id):
         flash('Evento no encontrado.', 'error')
         return redirect(url_for('eventos'))
 
-    evento = _procesar_evento(row, user_id)
+    evento = procesar_evento(row)
 
     # Lista de participantes inscritos
     cur.execute("""
