@@ -2,6 +2,7 @@
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 
+from backend.nucleo import imagenes
 from backend.rutas.decoradores import login_required
 from backend.servicios import portafolio as servicio
 
@@ -40,12 +41,20 @@ def crear_blueprint(get_db):
 
         tecnologias = servicio.serializar_tecnologias(techs_raw)
 
+        try:
+            imagen_url = imagenes.guardar_imagen(
+                request.files.get('imagen'), 'proyectos', 1280, 480)
+        except imagenes.ImagenInvalida as error:
+            flash(str(error), 'error')
+            return redirect(url_for('portafolio.portafolio'))
+
         conn = get_db()
         try:
             servicio.crear(conn, session['user_id'], titulo, descripcion or None, tecnologias,
-                           materia or None, estado, repo_url, demo_url)
+                           materia or None, estado, repo_url, demo_url, imagen_url)
             flash('¡Proyecto publicado!', 'success')
         except Exception as e:
+            imagenes.borrar_imagen(imagen_url)
             flash(f'Error al crear proyecto: {e}', 'error')
         finally:
             conn.close()

@@ -346,3 +346,9 @@ a {
   object-fit: cover;
   border: 1px solid var(--borde);
 }
+
+.campo .campo-hint {
+  font-size: 10px;
+  color: var(--texto-dim);
+  margin-top: 5px;
+}

@@ -95,12 +95,6 @@
   min-height: 80px;
 }
 
-.campo .campo-hint {
-  font-size: 10px;
-  color: var(--texto-dim);
-  margin-top: 5px;
-}
-
 /* ── Fila de dos columnas ───────────────── */
 .campo-fila {
   display: grid;

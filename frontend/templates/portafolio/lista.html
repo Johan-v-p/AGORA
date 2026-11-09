@@ -47,6 +47,10 @@
             {% endif %}
           </div>
 
+          {% if p.imagen_url %}
+            <img class="proy-img" src="{{ p.imagen_url|media(true) }}" alt="Captura de {{ p.titulo }}" loading="lazy">
+          {% endif %}
+
           {% if p.descripcion %}
             <div class="proy-desc">{{ p.descripcion }}</div>
           {% endif %}
@@ -118,6 +122,10 @@
             {% endif %}
           </div>
 
+          {% if p.imagen_url %}
+            <img class="proy-img" src="{{ p.imagen_url|media(true) }}" alt="Captura de {{ p.titulo }}" loading="lazy">
+          {% endif %}
+
           {% if p.descripcion %}
             <div class="proy-desc">{{ p.descripcion }}</div>
           {% endif %}
@@ -157,7 +165,7 @@
   <div class="modal-box">
     <div class="modal-titulo">Nuevo proyecto</div>
 
-    <form method="POST" action="{{ url_for('portafolio.nuevo_proyecto') }}">
+    <form method="POST" action="{{ url_for('portafolio.nuevo_proyecto') }}" enctype="multipart/form-data">
 
       <div class="campo">
         <label for="titulo">Título del proyecto *</label>
@@ -205,6 +213,13 @@
         <label for="demo_url">URL Demo (opcional)</label>
         <input type="url" id="demo_url" name="demo_url"
                placeholder="https://mi-proyecto.vercel.app">
+      </div>
+
+      <div class="campo">
+        <label for="imagen">Captura del proyecto (opcional)</label>
+        <input type="file" id="imagen" name="imagen"
+               accept="image/jpeg,image/png,image/webp" data-validar-imagen>
+        <div class="campo-hint">JPG, PNG o WebP, máximo 2 MB.</div>
       </div>
 
       <div class="modal-footer">

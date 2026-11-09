@@ -229,3 +229,11 @@
 
 /* Ajustes puntuales de la página */
 .portafolio-comunidad { margin-top: 40px; }
+
+.proy-img {
+  display: block;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border: 1px solid var(--borde);
+}
