@@ -313,3 +313,24 @@ a {
     display: none;
   }
 }
+
+/* ── Subida de imágenes (formularios) ── */
+.img-error {
+  font-size: 11px;
+  color: #cf6f6f;
+  margin-top: 6px;
+}
+
+.img-error:empty {
+  display: none;
+}
+
+.check-quitar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--texto-dim);
+  margin-top: 8px;
+  cursor: pointer;
+}

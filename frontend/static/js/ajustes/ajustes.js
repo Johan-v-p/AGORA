@@ -53,8 +53,12 @@ function validarPasswordsMatch() {
   }
 }
 
-delegar('input', '[data-previsualizar-avatar]', function (el) {
-  previsualizarAvatar(el.value);
+delegar('change', '[data-previsualizar-avatar]', function (el) {
+  const archivo = el.files[0];
+  const img = document.getElementById('avatar-img');
+  // Guardamos la foto actual para poder volver a ella si se cancela la selección
+  if (img && !img.dataset.original) img.dataset.original = img.getAttribute('src');
+  previsualizarAvatar(archivo ? URL.createObjectURL(archivo) : (img ? img.dataset.original : ''));
 });
 
 delegar('input', '[data-validar-password]', validarPasswordsMatch);

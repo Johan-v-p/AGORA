@@ -43,3 +43,32 @@ document.addEventListener('DOMContentLoaded', function () {
     el.style.width = el.dataset.ancho + '%';
   });
 });
+
+/* ── Imágenes: avisar de tipo o tamaño no válido antes de enviar ──
+   El servidor vuelve a validar; esto solo evita esperar a que suba un archivo inútil. */
+delegar('change', 'input[type="file"][data-validar-imagen]', function (el) {
+  const TIPOS = ['image/jpeg', 'image/png', 'image/webp'];
+  const MAX_BYTES = 2 * 1024 * 1024;
+
+  let aviso = el.parentElement.querySelector('.img-error');
+  if (!aviso) {
+    aviso = document.createElement('div');
+    aviso.className = 'img-error';
+    el.insertAdjacentElement('afterend', aviso);
+  }
+  aviso.textContent = '';
+
+  const archivo = el.files[0];
+  if (!archivo) return;
+
+  let error = '';
+  if (!TIPOS.includes(archivo.type)) {
+    error = 'Formato no permitido. Usa JPG, PNG o WebP.';
+  } else if (archivo.size > MAX_BYTES) {
+    error = 'La imagen supera los 2 MB.';
+  }
+  if (error) {
+    aviso.textContent = error;
+    el.value = '';
+  }
+});

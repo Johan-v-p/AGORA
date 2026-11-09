@@ -2,6 +2,7 @@
 
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
+from backend.nucleo import imagenes
 from backend.rutas.decoradores import login_required
 from backend.servicios import cuentas as servicio
 
@@ -25,14 +26,31 @@ def crear_blueprint(get_db):
         bio = request.form.get('bio', '').strip()
         carrera = request.form.get('carrera', '').strip()
         universidad = request.form.get('universidad', '').strip()
-        avatar_url = request.form.get('avatar_url', '').strip()
         if not nombre:
             flash('El nombre no puede estar vacío.', 'error')
             return redirect(url_for('ajustes.ajustes'))
+
+        try:
+            avatar_nuevo = imagenes.guardar_imagen(
+                request.files.get('avatar'), 'avatares', 400, 96, cuadrada=True)
+        except imagenes.ImagenInvalida as error:
+            flash(str(error), 'error')
+            return redirect(url_for('ajustes.ajustes'))
+
         conn = get_db()
+        usuario = servicio.obtener_por_id(conn, session['user_id'])
+        avatar_actual = usuario['avatar_url']
+        if avatar_nuevo:
+            avatar_url = avatar_nuevo
+        elif request.form.get('quitar_avatar'):
+            avatar_url = None
+        else:
+            avatar_url = avatar_actual
         servicio.actualizar_perfil(conn, session['user_id'], nombre, bio or None, carrera or None,
-                                   universidad or None, avatar_url or None)
+                                   universidad or None, avatar_url)
         conn.close()
+        if avatar_url != avatar_actual:
+            imagenes.borrar_imagen(avatar_actual)
         session['nombre'] = nombre
         session['carrera'] = carrera
         session['universidad'] = universidad
