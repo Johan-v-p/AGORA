@@ -233,7 +233,7 @@
     <div class="reg-titulo">Crear cuenta</div>
     <div class="reg-divider"></div>
 
-    <form class="reg-form" method="POST" action="{{ url_for('registro') }}">
+    <form class="reg-form" method="POST" action="{{ url_for('autenticacion.registro') }}">
 
       <!-- 1. Nombre -->
       <div class="campo">
@@ -323,7 +323,7 @@
 
     <p class="reg-link">
       ¿Ya tienes cuenta?
-      <a href="{{ url_for('login') }}">Iniciar sesión</a>
+      <a href="{{ url_for('autenticacion.login') }}">Iniciar sesión</a>
     </p>
 
   </div><!-- /registro-panel -->

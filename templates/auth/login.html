@@ -234,7 +234,7 @@
       <div class="login-divider"></div>
 
       <!-- Formulario -->
-      <form class="login-form" method="POST" action="{{ url_for('login') }}">
+      <form class="login-form" method="POST" action="{{ url_for('autenticacion.login') }}">
 
         <div class="campo">
           <label for="correo">Correo</label>
@@ -268,7 +268,7 @@
 
       <p class="login-link">
         ¿No tienes cuenta?
-        <a href="{{ url_for('registro') }}">Regístrate</a>
+        <a href="{{ url_for('autenticacion.registro') }}">Regístrate</a>
       </p>
     </div>
 
