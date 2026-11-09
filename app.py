@@ -16,6 +16,10 @@ from utilidades import (
     procesar_evento,
     tiempo_relativo,
 )
+from moderacion_utils import (
+    obtener_usuario_reportado as resolver_usuario_reportado,
+    motivo_para_no_suspender as evaluar_suspension,
+)
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.
@@ -1361,32 +1365,18 @@ ACCIONES_REPORTE  = ('ignorar', 'eliminar', 'suspender')
 ESTADOS_ABIERTOS  = ('enviado', 'en_revision')
 SQL_REPORTE_ABIERTO = "estado IN ('enviado', 'en_revision')"
 
-CONSULTAS_USUARIO_REPORTADO = {
-    'usuario':     "SELECT id, rol FROM usuarios WHERE id = ?",
-    'publicacion': """SELECT u.id, u.rol FROM publicaciones p
-                      JOIN usuarios u ON u.id = p.autor_id WHERE p.id = ?""",
-    'comentario':  """SELECT u.id, u.rol FROM comentarios c
-                      JOIN usuarios u ON u.id = c.autor_id WHERE c.id = ?""",
-}
-
-
 def obtener_usuario_reportado(conn, tipo, referencia_id):
-    """Devuelve el usuario responsable de lo reportado, o None si ya no existe."""
-    consulta = CONSULTAS_USUARIO_REPORTADO.get(tipo)
-    if not consulta:
-        return None
-    return conn.execute(consulta, (referencia_id,)).fetchone()
+    """Mantiene la interfaz histórica para las rutas de moderación."""
+    return resolver_usuario_reportado(conn, tipo, referencia_id)
 
 
 def motivo_para_no_suspender(objetivo):
-    """Explica por qué la sesión actual no puede suspender a `objetivo`, o None si puede."""
-    if not objetivo:
-        return 'El contenido reportado ya no existe; no se puede identificar a su autor.'
-    if objetivo['id'] == session['user_id']:
-        return 'No puedes suspender tu propia cuenta.'
-    if session.get('rol') != 'admin' and objetivo['rol'] in ('admin', 'moderador'):
-        return 'Solo un administrador puede suspender a un moderador, y un moderador no puede suspender a un administrador.'
-    return None
+    """Mantiene la interfaz histórica para las rutas de moderación."""
+    return evaluar_suspension(
+        objetivo,
+        session['user_id'],
+        session.get('rol'),
+    )
 
 
 def moderador_required(f):
