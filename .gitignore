@@ -3,3 +3,6 @@
 venv/
 .venv/
 .env
+*.db
+!.gitkeep
+.pytest_cache/

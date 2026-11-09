@@ -18,9 +18,9 @@ sys.setrecursionlimit(5000)
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
-app.secret_key = 'agora_dev_secret_2026'   # ← cambiar en producción
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-only-change-me')
 
-DB = 'agora.db'
+DB = os.environ.get('DATABASE_PATH', 'agora.db')
 
 # ──────────────────────────────────────────
 # UTILIDADES
@@ -2045,4 +2045,5 @@ def on_dejo_escribir(data):
 # ARRANQUE
 # ══════════════════════════════════════════
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    debug = os.environ.get('FLASK_DEBUG', '').lower() in {'1', 'true', 'yes'}
+    socketio.run(app, host='0.0.0.0', port=5000, debug=debug)
