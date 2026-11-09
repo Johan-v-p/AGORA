@@ -35,7 +35,7 @@ def insertar_datos_demo(conn):
         user_ids[correo] = c.fetchone()[0]
 
     conn.commit()
-    print("  → Usuarios insertados.")
+    print("  - Usuarios insertados.")
 
     # Atajos
     U_ADMIN  = user_ids['admin@agora.edu']
@@ -126,7 +126,7 @@ def insertar_datos_demo(conn):
         com_ids.append(c.lastrowid)
 
     conn.commit()
-    print("  → Publicaciones, reacciones y comentarios insertados.")
+    print("  - Publicaciones, reacciones y comentarios insertados.")
 
     # ── Foros ────────────────────────────────────────────────────
     foros_data = [
@@ -169,7 +169,7 @@ def insertar_datos_demo(conn):
         c.execute("INSERT INTO respuestas_foro (pregunta_id, autor_id, contenido) VALUES (?,?,?)", (pid, uid, texto))
 
     conn.commit()
-    print("  → Foros, preguntas y respuestas insertados.")
+    print("  - Foros, preguntas y respuestas insertados.")
 
     # ── Proyectos ────────────────────────────────────────────────
     proyectos_data = [
@@ -218,7 +218,7 @@ def insertar_datos_demo(conn):
         c.execute("INSERT OR IGNORE INTO inscripciones_evento (usuario_id, evento_id) VALUES (?,?)", (uid, eid))
 
     conn.commit()
-    print("  → Proyectos y eventos insertados.")
+    print("  - Proyectos y eventos insertados.")
 
     # ── Conversaciones y mensajes ────────────────────────────────
     c.execute("INSERT INTO conversaciones DEFAULT VALUES")
@@ -252,4 +252,4 @@ def insertar_datos_demo(conn):
                  VALUES (?,?,?,?,?)""", (U_VALE, 'comentario', com_ids[0], 'Contenido ofensivo', 'en_revision'))
 
     conn.commit()
-    print("  → Mensajes, notificaciones y reportes insertados.")
+    print("  - Mensajes, notificaciones y reportes insertados.")
