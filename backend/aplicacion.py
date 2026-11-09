@@ -139,7 +139,7 @@ def feed():
         d['tiempo_relativo'] = tiempo_relativo(d['creado_en'])
         posts.append(d)
 
-    return render_template('social/feed.html', posts=posts, filtro=filtro)
+    return render_template('publicaciones/feed.html', posts=posts, filtro=filtro)
 
 
 # ── NUEVA PUBLICACIÓN ───────────────────────
@@ -234,7 +234,7 @@ def post_detalle(post_id):
         d['tiempo_relativo'] = tiempo_relativo(d['creado_en'])
         comentarios.append(d)
 
-    return render_template('posts/detalle.html',
+    return render_template('publicaciones/detalle.html',
                            post=post,
                            comentarios=comentarios,
                            ya_reaccione=ya_reaccione,
@@ -362,7 +362,7 @@ def editar_publicacion(post_id):
         return redirect(url_for('post_detalle', post_id=post_id))
 
     conn.close()
-    return render_template('posts/editar.html', post=dict(post))
+    return render_template('publicaciones/editar.html', post=dict(post))
 
 
 # ── ELIMINAR PUBLICACIÓN ──────────────────
@@ -1315,7 +1315,7 @@ def moderacion():
     cur.execute("SELECT COUNT(*) AS n FROM usuarios WHERE activo = 1")
     total_usuarios   = cur.fetchone()['n']
     conn.close()
-    return render_template('admin/moderacion.html',
+    return render_template('moderacion/moderacion.html',
                            reportes=reportes,
                            total_pendientes=total_pendientes,
                            total_resueltos=total_resueltos,
@@ -1580,7 +1580,7 @@ def reportes():
         (session['user_id'],)
     ).fetchall()
     conn.close()
-    return render_template('admin/reportes.html', reportes=mis_reportes, pagina_activa='reportes')
+    return render_template('moderacion/reportes.html', reportes=mis_reportes, pagina_activa='reportes')
 
 
 @app.route('/tendencias')
@@ -1628,7 +1628,7 @@ def admin_panel():
     cur.execute("SELECT COUNT(*) AS n FROM eventos WHERE fecha >= date('now')")
     total_eventos = cur.fetchone()['n']
     conn.close()
-    return render_template('admin/panel.html',
+    return render_template('moderacion/panel.html',
                            total_usuarios=total_usuarios,
                            total_posts=total_posts,
                            total_reportes=total_reportes,

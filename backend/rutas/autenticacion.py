@@ -21,7 +21,7 @@ def crear_blueprint(get_db):
 
             if not correo or not password:
                 flash('Completa todos los campos.', 'error')
-                return render_template('auth/login.html')
+                return render_template('autenticacion/login.html')
 
             conn = get_db()
             usuario = conn.execute(
@@ -35,7 +35,7 @@ def crear_blueprint(get_db):
                         'Tu cuenta está suspendida. Contacta a un administrador.',
                         'error',
                     )
-                    return render_template('auth/login.html')
+                    return render_template('autenticacion/login.html')
 
                 session.clear()
                 session['user_id'] = usuario['id']
@@ -46,7 +46,7 @@ def crear_blueprint(get_db):
                 return redirect(url_for('feed'))
             flash('Correo o contraseña incorrectos.', 'error')
 
-        return render_template('auth/login.html')
+        return render_template('autenticacion/login.html')
 
     @blueprint.route('/registro', methods=['GET', 'POST'])
     def registro():
@@ -63,11 +63,11 @@ def crear_blueprint(get_db):
 
             if not all([nombre, correo, carrera, universidad, password, confirmar]):
                 flash('Completa todos los campos.', 'error')
-                return render_template('auth/registro.html')
+                return render_template('autenticacion/registro.html')
 
             if password != confirmar:
                 flash('Las contraseñas no coinciden.', 'error')
-                return render_template('auth/registro.html')
+                return render_template('autenticacion/registro.html')
 
             conn = None
             try:
@@ -89,15 +89,15 @@ def crear_blueprint(get_db):
                 return redirect(url_for('autenticacion.login'))
             except sqlite3.IntegrityError:
                 flash('Ese correo ya está registrado.', 'error')
-                return render_template('auth/registro.html')
+                return render_template('autenticacion/registro.html')
             except Exception as error:
                 flash(f'Error inesperado: {error}', 'error')
-                return render_template('auth/registro.html')
+                return render_template('autenticacion/registro.html')
             finally:
                 if conn:
                     conn.close()
 
-        return render_template('auth/registro.html')
+        return render_template('autenticacion/registro.html')
 
     @blueprint.route('/logout')
     def logout():
