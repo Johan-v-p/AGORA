@@ -10,14 +10,14 @@ import json
 import sqlite3
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
-from agora.base_datos import abrir_conexion
-from agora.configuracion import obtener_configuracion
-from agora.utilidades import (
+from backend.base_datos import abrir_conexion
+from backend.configuracion import obtener_configuracion
+from backend.utilidades import (
     parsear_tecnologias,
     procesar_evento,
     tiempo_relativo,
 )
-from agora.servicios.moderacion import (
+from backend.servicios.moderacion import (
     ACCIONES_REPORTE,
     ESTADOS_ABIERTOS,
     SQL_REPORTE_ABIERTO,
@@ -25,8 +25,8 @@ from agora.servicios.moderacion import (
     obtener_usuario_reportado as resolver_usuario_reportado,
     motivo_para_no_suspender as evaluar_suspension,
 )
-from agora.rutas.autenticacion import crear_blueprint as crear_blueprint_autenticacion
-from agora.rutas.decoradores import crear_moderador_required, login_required
+from backend.rutas.autenticacion import crear_blueprint as crear_blueprint_autenticacion
+from backend.rutas.decoradores import crear_moderador_required, login_required
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.

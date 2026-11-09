@@ -2,7 +2,7 @@
 
 import sys
 
-from agora import aplicacion
+from backend import aplicacion
 
 
 if __name__ == '__main__':
