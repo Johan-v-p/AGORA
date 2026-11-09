@@ -10,9 +10,9 @@ import json
 import sqlite3
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
-from backend.base_datos import abrir_conexion
-from backend.configuracion import obtener_configuracion
-from backend.utilidades import (
+from backend.nucleo.base_datos import abrir_conexion
+from backend.nucleo.configuracion import obtener_configuracion
+from backend.nucleo.utilidades import (
     parsear_tecnologias,
     procesar_evento,
     tiempo_relativo,
