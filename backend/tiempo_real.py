@@ -3,6 +3,8 @@
 from flask import session
 from flask_socketio import join_room, leave_room
 
+from backend.servicios import mensajes
+
 
 def registrar_eventos(socketio, get_db, obtener_cuenta):
     """Registra los manejadores de Socket.IO de la aplicación."""
@@ -31,10 +33,7 @@ def registrar_eventos(socketio, get_db, obtener_cuenta):
         if not conv_id or not autor_id:
             return
         conn = get_db()
-        otro = conn.execute("""
-            SELECT usuario_id FROM participantes_conversacion
-            WHERE conversacion_id = ? AND usuario_id != ?
-        """, (conv_id, autor_id)).fetchone()
+        otro = mensajes.obtener_otro_participante(conn, conv_id, autor_id)
         conn.close()
         if otro:
             socketio.emit('escribiendo', data, room=f"user_{otro['usuario_id']}")
@@ -47,10 +46,7 @@ def registrar_eventos(socketio, get_db, obtener_cuenta):
         if not conv_id or not autor_id:
             return
         conn = get_db()
-        otro = conn.execute("""
-            SELECT usuario_id FROM participantes_conversacion
-            WHERE conversacion_id = ? AND usuario_id != ?
-        """, (conv_id, autor_id)).fetchone()
+        otro = mensajes.obtener_otro_participante(conn, conv_id, autor_id)
         conn.close()
         if otro:
             socketio.emit('dejo_escribir', data, room=f"user_{otro['usuario_id']}")
