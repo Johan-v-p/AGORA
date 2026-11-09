@@ -34,7 +34,7 @@
 
           <!-- Botón seguir / editar perfil -->
           {% if es_propio %}
-            <a href="{{ url_for('ajustes') }}" class="btn-seguir">✎ Editar perfil</a>
+            <a href="{{ url_for('ajustes.ajustes') }}" class="btn-seguir">✎ Editar perfil</a>
           {% else %}
             <button class="btn-seguir {% if ya_sigue %}siguiendo{% endif %}"
                     id="btn-seguir" data-alternar-seguir="{{ usuario.id }}" data-siguiendo="{{ 'true' if ya_sigue else 'false' }}">

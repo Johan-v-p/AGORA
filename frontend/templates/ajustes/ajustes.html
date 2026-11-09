@@ -26,7 +26,7 @@
     <section class="ajustes-seccion">
       <div class="seccion-titulo">Información de perfil</div>
 
-      <form method="POST" action="{{ url_for('ajustes_perfil') }}">
+      <form method="POST" action="{{ url_for('ajustes.ajustes_perfil') }}">
         <div class="seccion-body">
 
           <!-- Preview del avatar actual -->
@@ -99,7 +99,7 @@
     <section class="ajustes-seccion">
       <div class="seccion-titulo">Correo electrónico</div>
 
-      <form method="POST" action="{{ url_for('ajustes_correo') }}">
+      <form method="POST" action="{{ url_for('ajustes.ajustes_correo') }}">
         <div class="seccion-body">
 
           <div class="campo">
@@ -131,7 +131,7 @@
     <section class="ajustes-seccion zona-peligrosa">
       <div class="seccion-titulo">Cambiar contraseña</div>
 
-      <form method="POST" action="{{ url_for('ajustes_password') }}">
+      <form method="POST" action="{{ url_for('ajustes.ajustes_password') }}">
         <div class="seccion-body">
 
           <div class="campo">

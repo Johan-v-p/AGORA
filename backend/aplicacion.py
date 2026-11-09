@@ -26,6 +26,7 @@ from backend.servicios.moderacion import (
     motivo_para_no_suspender as evaluar_suspension,
 )
 from backend.rutas.autenticacion import crear_blueprint as crear_blueprint_autenticacion
+from backend.rutas.ajustes import crear_blueprint as crear_blueprint_ajustes
 from backend.rutas.eventos import crear_blueprint as crear_blueprint_eventos
 from backend.rutas.portafolio import crear_blueprint as crear_blueprint_portafolio
 from backend.rutas.foros import crear_blueprint as crear_blueprint_foros
@@ -57,6 +58,7 @@ def get_db():
 
 
 app.register_blueprint(crear_blueprint_autenticacion(get_db))
+app.register_blueprint(crear_blueprint_ajustes(get_db))
 app.register_blueprint(crear_blueprint_eventos(get_db))
 app.register_blueprint(crear_blueprint_portafolio(get_db))
 app.register_blueprint(crear_blueprint_foros(get_db))
@@ -182,89 +184,9 @@ def validar_sesion():
 # AJUSTES DE CUENTA
 # ══════════════════════════════════════════
 
-@app.route('/ajustes')
-@login_required
-def ajustes():
-    conn = get_db()
-    usuario = conn.execute("SELECT * FROM usuarios WHERE id = ?", (session['user_id'],)).fetchone()
-    conn.close()
-    return render_template('ajustes/ajustes.html', usuario=usuario, pagina_activa='ajustes')
 
-@app.route('/ajustes/perfil', methods=['POST'])
-@login_required
-def ajustes_perfil():
-    nombre      = request.form.get('nombre', '').strip()
-    bio         = request.form.get('bio', '').strip()
-    carrera     = request.form.get('carrera', '').strip()
-    universidad = request.form.get('universidad', '').strip()
-    avatar_url  = request.form.get('avatar_url', '').strip()
-    if not nombre:
-        flash('El nombre no puede estar vacío.', 'error')
-        return redirect(url_for('ajustes'))
-    conn = get_db()
-    conn.execute("UPDATE usuarios SET nombre=?, bio=?, carrera=?, universidad=?, avatar_url=? WHERE id=?",
-        (nombre, bio or None, carrera or None, universidad or None, avatar_url or None, session['user_id']))
-    conn.commit()
-    conn.close()
-    session['nombre'] = nombre
-    session['carrera'] = carrera
-    session['universidad'] = universidad
-    flash('Perfil actualizado correctamente.', 'success')
-    return redirect(url_for('ajustes'))
 
-@app.route('/ajustes/correo', methods=['POST'])
-@login_required
-def ajustes_correo():
-    nuevo_correo  = request.form.get('correo', '').strip().lower()
-    password_conf = request.form.get('password_conf', '')
-    if not nuevo_correo or not password_conf:
-        flash('Completa todos los campos.', 'error')
-        return redirect(url_for('ajustes'))
-    conn    = get_db()
-    usuario = conn.execute("SELECT * FROM usuarios WHERE id = ?", (session['user_id'],)).fetchone()
-    if not check_password_hash(usuario['password'], password_conf):
-        conn.close()
-        flash('Contraseña incorrecta.', 'error')
-        return redirect(url_for('ajustes'))
-    existente = conn.execute("SELECT id FROM usuarios WHERE correo = ? AND id != ?",
-        (nuevo_correo, session['user_id'])).fetchone()
-    if existente:
-        conn.close()
-        flash('Ese correo ya está en uso.', 'error')
-        return redirect(url_for('ajustes'))
-    conn.execute("UPDATE usuarios SET correo = ? WHERE id = ?", (nuevo_correo, session['user_id']))
-    conn.commit()
-    conn.close()
-    flash('Correo actualizado correctamente.', 'success')
-    return redirect(url_for('ajustes'))
 
-@app.route('/ajustes/password', methods=['POST'])
-@login_required
-def ajustes_password():
-    password_actual = request.form.get('password_actual', '')
-    password_nueva  = request.form.get('password_nueva', '')
-    password_conf   = request.form.get('password_conf', '')
-    if not password_actual or not password_nueva or not password_conf:
-        flash('Completa todos los campos.', 'error')
-        return redirect(url_for('ajustes'))
-    if password_nueva != password_conf:
-        flash('Las contraseñas no coinciden.', 'error')
-        return redirect(url_for('ajustes'))
-    if len(password_nueva) < 6:
-        flash('Mínimo 6 caracteres.', 'error')
-        return redirect(url_for('ajustes'))
-    conn    = get_db()
-    usuario = conn.execute("SELECT * FROM usuarios WHERE id = ?", (session['user_id'],)).fetchone()
-    if not check_password_hash(usuario['password'], password_actual):
-        conn.close()
-        flash('Contraseña actual incorrecta.', 'error')
-        return redirect(url_for('ajustes'))
-    conn.execute("UPDATE usuarios SET password = ? WHERE id = ?",
-        (generate_password_hash(password_nueva), session['user_id']))
-    conn.commit()
-    conn.close()
-    flash('Contraseña actualizada.', 'success')
-    return redirect(url_for('ajustes'))
 
 
 # ══════════════════════════════════════════
@@ -428,10 +350,6 @@ def resolver_reporte(reporte_id):
 # (stubs funcionales para que no explote el sidebar)
 # ══════════════════════════════════════════
 
-@app.route('/ayuda')
-@login_required
-def ayuda():
-    return render_template('ajustes/ayuda.html', pagina_activa='ayuda')
 
 
 @app.route('/reportes')
