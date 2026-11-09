@@ -50,12 +50,19 @@ agora/
 ├── base_datos.py
 ├── configuracion.py
 ├── moderacion.py
-└── utilidades.py
+├── utilidades.py
+├── aplicacion.py
+├── modelos/
+├── rutas/
+└── servicios/
 ```
 
-`app.py` se mantiene temporalmente como punto de entrada compatible. Las rutas
-se trasladarán progresivamente a módulos organizados dentro de `agora/`, sin
-añadir nuevos componentes de aplicación en la raíz.
+`agora/aplicacion.py` es el núcleo de la aplicación y `app.py` se mantiene como
+punto de entrada compatible para despliegues y pruebas existentes. Las rutas se
+trasladarán progresivamente a módulos dentro de `agora/rutas/`, mientras que la
+lógica de negocio se ubicará en `agora/servicios/` y las entidades en
+`agora/modelos/`. No se deben añadir nuevos componentes de aplicación en la
+raíz.
 
 ## Pruebas
 
