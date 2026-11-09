@@ -51,7 +51,7 @@
           </div>
 
           <div class="reporte-acciones">
-            <form class="u-contenido-directo" method="POST" action="{{ url_for('resolver_reporte', reporte_id=r.id) }}">
+            <form class="u-contenido-directo" method="POST" action="{{ url_for('moderacion.resolver_reporte', reporte_id=r.id) }}">
               <button class="btn-accion ignorar"   name="accion" value="ignorar">Ignorar</button>
               {% if r.tipo != 'usuario' %}
               <button class="btn-accion eliminar"  name="accion" value="eliminar" data-confirmar="¿Eliminar este contenido?">Eliminar contenido</button>

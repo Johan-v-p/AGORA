@@ -7,7 +7,7 @@
 <div class="ad-layout">
   {% include 'compartidos/sidebar.html' %}
   <main class="ad-main">
-    <a href="{{ url_for('admin_panel') }}" class="back-link">← Volver al panel</a>
+    <a href="{{ url_for('moderacion.admin_panel') }}" class="back-link">← Volver al panel</a>
     <div class="ad-header">
       <h1>Gestión de usuarios ({{ usuarios|length }})</h1>
       <form class="search-form" method="GET">

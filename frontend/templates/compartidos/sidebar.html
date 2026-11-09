@@ -61,7 +61,7 @@
 
       {% if session.rol in ('admin', 'moderador') %}
         <a class="nav-item {% if pagina_activa == 'moderacion' %}active{% endif %} sidebar-enlace-separado"
-           href="{{ url_for('moderacion') }}">
+           href="{{ url_for('moderacion.moderacion') }}">
           <span class="nav-icon">🛡</span> Moderación
         </a>
       {% endif %}
