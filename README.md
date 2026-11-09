@@ -41,6 +41,22 @@ python app.py
 
 La aplicación estará disponible en `http://localhost:5000`.
 
+## Estructura del código
+
+Los componentes reutilizables viven dentro del paquete `agora/`:
+
+```text
+agora/
+├── base_datos.py
+├── configuracion.py
+├── moderacion.py
+└── utilidades.py
+```
+
+`app.py` se mantiene temporalmente como punto de entrada compatible. Las rutas
+se trasladarán progresivamente a módulos organizados dentro de `agora/`, sin
+añadir nuevos componentes de aplicación en la raíz.
+
 ## Pruebas
 
 ```powershell

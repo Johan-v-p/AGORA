@@ -9,14 +9,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import json
 import sys
-from base_datos import abrir_conexion
-from configuracion import obtener_configuracion
-from utilidades import (
+from agora.base_datos import abrir_conexion
+from agora.configuracion import obtener_configuracion
+from agora.utilidades import (
     parsear_tecnologias,
     procesar_evento,
     tiempo_relativo,
 )
-from moderacion_utils import (
+from agora.moderacion import (
     obtener_usuario_reportado as resolver_usuario_reportado,
     motivo_para_no_suspender as evaluar_suspension,
 )
