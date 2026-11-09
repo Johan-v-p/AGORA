@@ -166,6 +166,31 @@ def tiempo_relativo(fecha_str):
     return f'hace {delta.days} días'
 
 
+def obtener_cuenta(user_id):
+    """Devuelve el estado actual (activo, rol) de una cuenta, o None si no existe."""
+    conn = get_db()
+    cuenta = conn.execute("SELECT activo, rol FROM usuarios WHERE id = ?", (user_id,)).fetchone()
+    conn.close()
+    return cuenta
+
+
+@app.before_request
+def validar_sesion():
+    """Expulsa las sesiones de cuentas suspendidas o borradas y mantiene el rol al día."""
+    user_id = session.get('user_id')
+    if not user_id or request.endpoint == 'static':
+        return None
+
+    cuenta = obtener_cuenta(user_id)
+    if not cuenta or not cuenta['activo']:
+        session.clear()
+        flash('Tu cuenta está suspendida. Contacta a un administrador.', 'error')
+        return redirect(url_for('login'))
+
+    session['rol'] = cuenta['rol']
+    return None
+
+
 def login_required(f):
     """Decorador simple que redirige al login si no hay sesión activa."""
     from functools import wraps
@@ -209,6 +234,10 @@ def login():
         conn.close()
 
         if usuario and check_password_hash(usuario['password'], password):
+            if not usuario['activo']:
+                flash('Tu cuenta está suspendida. Contacta a un administrador.', 'error')
+                return render_template('auth/login.html')
+
             session.clear()
             session['user_id']     = usuario['id']
             session['nombre']      = usuario['nombre']
@@ -1507,6 +1536,39 @@ def notificaciones_no_leidas():
 # MODERACIÓN
 # ══════════════════════════════════════════
 
+TIPOS_REPORTE     = ('publicacion', 'comentario', 'usuario')
+ACCIONES_REPORTE  = ('ignorar', 'eliminar', 'suspender')
+ESTADOS_ABIERTOS  = ('enviado', 'en_revision')
+SQL_REPORTE_ABIERTO = "estado IN ('enviado', 'en_revision')"
+
+CONSULTAS_USUARIO_REPORTADO = {
+    'usuario':     "SELECT id, rol FROM usuarios WHERE id = ?",
+    'publicacion': """SELECT u.id, u.rol FROM publicaciones p
+                      JOIN usuarios u ON u.id = p.autor_id WHERE p.id = ?""",
+    'comentario':  """SELECT u.id, u.rol FROM comentarios c
+                      JOIN usuarios u ON u.id = c.autor_id WHERE c.id = ?""",
+}
+
+
+def obtener_usuario_reportado(conn, tipo, referencia_id):
+    """Devuelve el usuario responsable de lo reportado, o None si ya no existe."""
+    consulta = CONSULTAS_USUARIO_REPORTADO.get(tipo)
+    if not consulta:
+        return None
+    return conn.execute(consulta, (referencia_id,)).fetchone()
+
+
+def motivo_para_no_suspender(objetivo):
+    """Explica por qué la sesión actual no puede suspender a `objetivo`, o None si puede."""
+    if not objetivo:
+        return 'El contenido reportado ya no existe; no se puede identificar a su autor.'
+    if objetivo['id'] == session['user_id']:
+        return 'No puedes suspender tu propia cuenta.'
+    if session.get('rol') != 'admin' and objetivo['rol'] in ('admin', 'moderador'):
+        return 'Solo un administrador puede suspender a un moderador, y un moderador no puede suspender a un administrador.'
+    return None
+
+
 def moderador_required(f):
     """Decorador: solo usuarios con rol moderador o admin pueden acceder."""
     from functools import wraps
@@ -1530,19 +1592,19 @@ def moderacion():
     conn = get_db()
     cur  = conn.cursor()
     # Reportes pendientes de revisión
-    cur.execute("""
+    cur.execute(f"""
         SELECT r.id, r.tipo, r.motivo, r.creado_en, r.estado,
                u.nombre AS reportador,
                r.referencia_id AS contenido_id
         FROM reportes r
         JOIN usuarios u ON u.id = r.reportado_por
-        WHERE r.estado = 'pendiente'
+        WHERE r.{SQL_REPORTE_ABIERTO}
         ORDER BY r.creado_en DESC
         LIMIT 50
     """)
     reportes = cur.fetchall()
     # Estadísticas rápidas
-    cur.execute("SELECT COUNT(*) AS n FROM reportes WHERE estado = 'pendiente'")
+    cur.execute(f"SELECT COUNT(*) AS n FROM reportes WHERE {SQL_REPORTE_ABIERTO}")
     total_pendientes = cur.fetchone()['n']
     cur.execute("SELECT COUNT(*) AS n FROM reportes WHERE estado = 'resuelto'")
     total_resueltos  = cur.fetchone()['n']
@@ -1560,16 +1622,20 @@ def moderacion():
 @login_required
 def crear_reporte():
     """Cualquier usuario puede reportar contenido."""
-    tipo         = request.form.get('tipo', '')        # post, comentario, usuario
+    tipo         = request.form.get('tipo', '')        # publicacion, comentario, usuario
     contenido_id = request.form.get('contenido_id', 0, type=int)
     motivo       = request.form.get('motivo', '').strip()
-    if not tipo or not contenido_id or not motivo:
+    if tipo not in TIPOS_REPORTE:
+        return jsonify({'ok': False, 'error': 'Tipo de reporte no válido'}), 400
+    if not contenido_id or not motivo:
         return jsonify({'ok': False, 'error': 'Datos incompletos'}), 400
     conn = get_db()
     try:
+        if not obtener_usuario_reportado(conn, tipo, contenido_id):
+            return jsonify({'ok': False, 'error': 'El contenido reportado no existe.'}), 404
         # Evitar reportes duplicados del mismo usuario
         existe = conn.execute(
-            "SELECT 1 FROM reportes WHERE reportado_por = ? AND tipo = ? AND referencia_id = ? AND estado = 'pendiente'",
+            f"SELECT 1 FROM reportes WHERE reportado_por = ? AND tipo = ? AND referencia_id = ? AND {SQL_REPORTE_ABIERTO}",
             (session['user_id'], tipo, contenido_id)).fetchone()
         if existe:
             return jsonify({'ok': False, 'error': 'Ya reportaste este contenido.'})
@@ -1586,19 +1652,33 @@ def crear_reporte():
 @moderador_required
 def resolver_reporte(reporte_id):
     accion = request.form.get('accion', 'ignorar')  # ignorar | eliminar | suspender
+    if accion not in ACCIONES_REPORTE:
+        flash('Acción no válida.', 'error')
+        return redirect(url_for('moderacion'))
     conn   = get_db()
     try:
         reporte = conn.execute("SELECT * FROM reportes WHERE id = ?", (reporte_id,)).fetchone()
         if not reporte:
             flash('Reporte no encontrado.', 'error')
             return redirect(url_for('moderacion'))
+        if reporte['estado'] not in ESTADOS_ABIERTOS:
+            flash('Este reporte ya estaba cerrado.', 'error')
+            return redirect(url_for('moderacion'))
+        if accion == 'eliminar' and reporte['tipo'] == 'usuario':
+            flash('Un reporte de usuario no tiene contenido que eliminar.', 'error')
+            return redirect(url_for('moderacion'))
         if accion == 'eliminar':
-            if reporte['tipo'] == 'post':
+            if reporte['tipo'] == 'publicacion':
                 conn.execute("UPDATE publicaciones SET estado = 'eliminado' WHERE id = ?", (reporte['referencia_id'],))
             elif reporte['tipo'] == 'comentario':
                 conn.execute("DELETE FROM comentarios WHERE id = ?", (reporte['referencia_id'],))
         elif accion == 'suspender':
-            conn.execute("UPDATE usuarios SET activo = 0 WHERE id = ?", (reporte['referencia_id'],))
+            objetivo = obtener_usuario_reportado(conn, reporte['tipo'], reporte['referencia_id'])
+            error = motivo_para_no_suspender(objetivo)
+            if error:
+                flash(error, 'error')
+                return redirect(url_for('moderacion'))
+            conn.execute("UPDATE usuarios SET activo = 0 WHERE id = ?", (objetivo['id'],))
         conn.execute("UPDATE reportes SET estado = 'resuelto', revisado_por = ? WHERE id = ?",
             (session['user_id'], reporte_id))
         conn.commit()
@@ -1839,7 +1919,7 @@ def admin_panel():
     total_usuarios = cur.fetchone()['n']
     cur.execute("SELECT COUNT(*) AS n FROM publicaciones WHERE estado = 'publicado'")
     total_posts = cur.fetchone()['n']
-    cur.execute("SELECT COUNT(*) AS n FROM reportes WHERE estado = 'pendiente'")
+    cur.execute(f"SELECT COUNT(*) AS n FROM reportes WHERE {SQL_REPORTE_ABIERTO}")
     total_reportes = cur.fetchone()['n']
     cur.execute("SELECT COUNT(*) AS n FROM eventos WHERE fecha >= date('now')")
     total_eventos = cur.fetchone()['n']
@@ -2051,6 +2131,12 @@ def archivar_conversacion(conv_id):
 
 @socketio.on('connect')
 def on_connect():
+    # before_request no se ejecuta en las conexiones de Socket.IO
+    if session.get('user_id'):
+        cuenta = obtener_cuenta(session['user_id'])
+        if not cuenta or not cuenta['activo']:
+            return False
+
     if session.get('user_id'):
         join_room(f"user_{session['user_id']}")
 
