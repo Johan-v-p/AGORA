@@ -166,3 +166,6 @@
   color: var(--texto-dim);
   padding: 20px 0;
 }
+
+/* Ajustes puntuales de la página */
+.perfil-enlace-mensaje { margin-left: 8px; text-decoration: none; }

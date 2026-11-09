@@ -20,8 +20,7 @@
         <div class="eventos-titulo">Eventos</div>
         <div class="eventos-sub">{{ eventos|length }} evento{{ 's' if eventos|length != 1 else '' }} próximos</div>
       </div>
-      <button class="btn-primary"
-              onclick="document.getElementById('modal-nuevo-evento').classList.add('visible')">
+      <button class="btn-primary" data-abrir-modal="modal-nuevo-evento">
         + Crear evento
       </button>
     </div>
@@ -52,7 +51,7 @@
           <div class="evento-cat-badge {{ ev.categoria }}">
             {{ ev.categoria | upper }}
           </div>
-          <a class="evento-titulo" href="{{ url_for('ver_evento', evento_id=ev.id) }}" style="text-decoration:none;color:inherit;cursor:pointer;">{{ ev.titulo }}</a>
+          <a class="evento-titulo u-enlace-limpio u-cursor-mano" href="{{ url_for('ver_evento', evento_id=ev.id) }}">{{ ev.titulo }}</a>
           <div class="evento-meta-row">
             {% if ev.hora_inicio %}
               <span class="evento-meta-item">◷ {{ ev.hora_inicio }}{% if ev.hora_fin %} – {{ ev.hora_fin }}{% endif %}</span>
@@ -77,8 +76,7 @@
               cupos libres
             </div>
           {% endif %}
-          <button class="btn-inscribir {% if ev.inscrito %}inscrito{% endif %}"
-                  onclick="inscribirse({{ ev.id }}, this)">
+          <button class="btn-inscribir {% if ev.inscrito %}inscrito{% endif %}" data-inscribir-evento="{{ ev.id }}">
             <span class="lbl-normal">
               {% if ev.inscrito %}✓ Inscrito{% else %}Inscribirse{% endif %}
             </span>
@@ -172,8 +170,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-secondary"
-                onclick="document.getElementById('modal-nuevo-evento').classList.remove('visible')">
+        <button type="button" class="btn-secondary" data-cerrar-modal="modal-nuevo-evento">
           Cancelar
         </button>
         <button type="submit" class="btn-primary">Publicar evento →</button>

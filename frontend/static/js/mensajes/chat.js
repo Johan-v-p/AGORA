@@ -153,3 +153,5 @@ socket.on('dejo_escribir', function (data) {
   if (data.conv_id !== CONV_ID || data.autor_id === ME) return;
   labelEscrib.textContent = '';
 });
+
+delegar('click', '[data-enviar-mensaje]', enviarMensaje);

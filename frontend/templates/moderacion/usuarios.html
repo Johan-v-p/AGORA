@@ -25,12 +25,12 @@
       <tbody>
         {% for u in usuarios %}
           <tr>
-            <td style="color:var(--texto-dim)">#{{ u.id }}</td>
+            <td class="u-texto-tenue">#{{ u.id }}</td>
             <td><strong>{{ u.nombre }}</strong></td>
-            <td style="color:var(--texto-dim)">{{ u.correo }}</td>
+            <td class="u-texto-tenue">{{ u.correo }}</td>
             <td><span class="rol-badge rol-{{ u.rol }}">{{ u.rol }}</span></td>
             <td><span class="{% if u.activo %}activo-si{% else %}activo-no{% endif %}">{{ '✓ Activo' if u.activo else '✕ Suspendido' }}</span></td>
-            <td style="color:var(--texto-dim)">{{ u.creado_en[:10] if u.creado_en else '—' }}</td>
+            <td class="u-texto-tenue">{{ u.creado_en[:10] if u.creado_en else '—' }}</td>
             <td>
               <div class="acc-form">
                 <!-- Cambiar rol -->
@@ -44,8 +44,7 @@
                 </form>
                 <!-- Toggle activo -->
                 {% if u.id != session.user_id %}
-                  <form method="POST" action="{{ url_for('admin_toggle_activo', uid=u.id) }}"
-                        onsubmit="return confirm('¿Cambiar estado de {{ u.nombre }}?')">
+                  <form method="POST" action="{{ url_for('admin_toggle_activo', uid=u.id) }}" data-confirmar="¿Cambiar estado de {{ u.nombre }}?">
                     <button type="submit" class="acc-btn danger">{{ '⛔ Suspender' if u.activo else '✅ Activar' }}</button>
                   </form>
                 {% endif %}

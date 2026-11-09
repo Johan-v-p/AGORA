@@ -31,7 +31,7 @@
             {% endif %}
             <div class="rep-fecha">{{ r.creado_en[:10] }}</div>
             {% if r.resolucion %}
-              <div class="rep-desc" style="margin-top:6px;color:#888">Resolución: {{ r.resolucion }}</div>
+              <div class="rep-desc u-nota">Resolución: {{ r.resolucion }}</div>
             {% endif %}
           </div>
           <span class="estado-badge estado-{{ r.estado }}">{{ r.estado.replace('_',' ') }}</span>

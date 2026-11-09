@@ -18,9 +18,8 @@
         <!-- Avatar -->
         <div class="perfil-avatar">
           {% if usuario.avatar_url %}
-            <img src="{{ usuario.avatar_url }}" alt="{{ usuario.nombre }}"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-            <span style="display:none">{{ usuario.nombre[0].upper() }}</span>
+            <img src="{{ usuario.avatar_url }}" alt="{{ usuario.nombre }}" data-avatar-alterno="siguiente">
+            <span class="u-oculto">{{ usuario.nombre[0].upper() }}</span>
           {% else %}
             {{ usuario.nombre[0].upper() }}
           {% endif %}
@@ -38,13 +37,11 @@
             <a href="{{ url_for('ajustes') }}" class="btn-seguir">✎ Editar perfil</a>
           {% else %}
             <button class="btn-seguir {% if ya_sigue %}siguiendo{% endif %}"
-                    id="btn-seguir"
-                    onclick="toggleSeguir({{ usuario.id }}, {{ 'true' if ya_sigue else 'false' }})">
+                    id="btn-seguir" data-alternar-seguir="{{ usuario.id }}" data-siguiendo="{{ 'true' if ya_sigue else 'false' }}">
               <span id="btn-seguir-texto">{{ 'Siguiendo' if ya_sigue else '+ Seguir' }}</span>
             </button>
             <a href="{{ url_for('ver_chat', otro_id=usuario.id) }}"
-               class="btn-seguir"
-               style="margin-left:8px; text-decoration:none;">
+               class="btn-seguir perfil-enlace-mensaje">
               💬 Mensaje
             </a>
           {% endif %}

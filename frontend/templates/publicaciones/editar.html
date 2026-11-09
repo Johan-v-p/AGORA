@@ -26,8 +26,7 @@
         <label for="titulo">Título</label>
         <input type="text" id="titulo" name="titulo"
                value="{{ post.titulo }}"
-               maxlength="120" required
-               oninput="contarTitulo(this)">
+               maxlength="120" required data-contar-titulo>
         <div class="char-count" id="cnt-titulo">{{ post.titulo | length }} / 120</div>
       </div>
 
@@ -49,8 +48,7 @@
       <div class="campo">
         <label for="contenido">Contenido</label>
         <textarea id="contenido" name="contenido"
-                  maxlength="2000" required
-                  oninput="contarContenido(this)">{{ post.contenido }}</textarea>
+                  maxlength="2000" required data-contar-contenido>{{ post.contenido }}</textarea>
         <div class="char-count" id="cnt-contenido">{{ post.contenido | length }} / 2000</div>
       </div>
 

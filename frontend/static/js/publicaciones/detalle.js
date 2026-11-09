@@ -34,3 +34,7 @@ document.addEventListener('keydown', function(e) {
     modalEliminar.classList.remove('visible');
   }
 });
+
+delegar('click', '[data-reaccionar]', function (el) {
+  reaccionar(Number(el.dataset.reaccionar));
+});

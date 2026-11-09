@@ -51,15 +51,12 @@
           </div>
 
           <div class="reporte-acciones">
-            <form method="POST" action="{{ url_for('resolver_reporte', reporte_id=r.id) }}"
-                  style="display:contents">
+            <form class="u-contenido-directo" method="POST" action="{{ url_for('resolver_reporte', reporte_id=r.id) }}">
               <button class="btn-accion ignorar"   name="accion" value="ignorar">Ignorar</button>
               {% if r.tipo != 'usuario' %}
-              <button class="btn-accion eliminar"  name="accion" value="eliminar"
-                onclick="return confirm('¿Eliminar este contenido?')">Eliminar contenido</button>
+              <button class="btn-accion eliminar"  name="accion" value="eliminar" data-confirmar="¿Eliminar este contenido?">Eliminar contenido</button>
               {% endif %}
-              <button class="btn-accion suspender" name="accion" value="suspender"
-                onclick="return confirm('¿Suspender a {{ 'este usuario' if r.tipo == 'usuario' else 'quien publicó este contenido' }}?')">{{ 'Suspender usuario' if r.tipo == 'usuario' else 'Suspender autor' }}</button>
+              <button class="btn-accion suspender" name="accion" value="suspender" data-confirmar="¿Suspender a {{ 'este usuario' if r.tipo == 'usuario' else 'quien publicó este contenido' }}?">{{ 'Suspender usuario' if r.tipo == 'usuario' else 'Suspender autor' }}</button>
             </form>
           </div>
 

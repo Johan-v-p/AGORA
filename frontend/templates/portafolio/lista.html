@@ -20,8 +20,7 @@
         <div class="port-titulo">Portafolio</div>
         <div class="port-sub">{{ mis_proyectos|length }} proyecto{{ 's' if mis_proyectos|length != 1 else '' }} tuyos · {{ todos_proyectos|length }} en la comunidad</div>
       </div>
-      <button class="btn-primary"
-              onclick="document.getElementById('modal-nuevo-proy').classList.add('visible')">
+      <button class="btn-primary" data-abrir-modal="modal-nuevo-proy">
         + Nuevo proyecto
       </button>
     </div>
@@ -75,8 +74,7 @@
               {% endif %}
             </div>
             <div class="proy-aplausos">
-              <button class="aplauso-btn {% if p.yo_aplaudí %}activo{% endif %}"
-                      onclick="aplaudir({{ p.id }}, this)"
+              <button class="aplauso-btn {% if p.yo_aplaudí %}activo{% endif %}" data-aplaudir="{{ p.id }}"
                       title="Aplaudir proyecto">
                 ★
               </button>
@@ -99,7 +97,7 @@
 
     <!-- ══ PROYECTOS DE LA COMUNIDAD ══ -->
     {% if todos_proyectos %}
-      <div class="seccion-label" style="margin-top:40px;">Comunidad</div>
+      <div class="seccion-label portafolio-comunidad">Comunidad</div>
       <div class="proyectos-grid">
         {% for p in todos_proyectos %}
         <div class="proy-card">
@@ -142,8 +140,7 @@
               {% endif %}
             </div>
             <div class="proy-aplausos">
-              <button class="aplauso-btn {% if p.yo_aplaudí %}activo{% endif %}"
-                      onclick="aplaudir({{ p.id }}, this)">★</button>
+              <button class="aplauso-btn {% if p.yo_aplaudí %}activo{% endif %}" data-aplaudir="{{ p.id }}">★</button>
               <span id="aplausos-{{ p.id }}">{{ p.total_aplausos }}</span>
             </div>
           </div>
@@ -211,8 +208,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-secondary"
-                onclick="document.getElementById('modal-nuevo-proy').classList.remove('visible')">
+        <button type="button" class="btn-secondary" data-cerrar-modal="modal-nuevo-proy">
           Cancelar
         </button>
         <button type="submit" class="btn-primary">Publicar proyecto →</button>

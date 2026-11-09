@@ -28,9 +28,8 @@
 
           <div class="part-av">
             {% if p.avatar_url %}
-              <img src="{{ p.avatar_url }}" alt="{{ p.nombre }}"
-                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <span style="display:none">{{ p.nombre[0].upper() }}</span>
+              <img src="{{ p.avatar_url }}" alt="{{ p.nombre }}" data-avatar-alterno="siguiente">
+              <span class="u-oculto">{{ p.nombre[0].upper() }}</span>
             {% else %}
               {{ p.nombre[0].upper() }}
             {% endif %}

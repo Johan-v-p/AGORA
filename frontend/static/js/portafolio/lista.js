@@ -18,8 +18,12 @@ async function aplaudir(proyId, btn) {
     if (!data.ok) return;
     document.getElementById(`aplausos-${proyId}`).textContent = data.total;
     /* Actualiza todos los botones de ese proyecto (puede aparecer 2 veces) */
-    document.querySelectorAll(`[onclick="aplaudir(${proyId}, this)"]`).forEach(b => {
+    document.querySelectorAll(`[data-aplaudir="${proyId}"]`).forEach(b => {
       b.classList.toggle('activo', data.activo);
     });
   } catch(e) { console.error('Error al aplaudir:', e); }
 }
+
+delegar('click', '[data-aplaudir]', function (el) {
+  aplaudir(Number(el.dataset.aplaudir), el);
+});

@@ -17,3 +17,7 @@ async function aplaudir(proyId) {
     console.error('Error al aplaudir:', e);
   }
 }
+
+delegar('click', '[data-aplaudir]', function (el) {
+  aplaudir(Number(el.dataset.aplaudir));
+});

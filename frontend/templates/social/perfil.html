@@ -89,7 +89,7 @@
         </div>
 
         <div class="perfil-acciones">
-          <button class="btn-logout" onclick="abrirLogout()">⏻ Cerrar sesión</button>
+          <button class="btn-logout" data-abrir-logout>⏻ Cerrar sesión</button>
         </div>
       </div>
     </aside>
@@ -105,7 +105,7 @@
       Se cerrará tu sesión actual. Podrás volver a entrar con tu correo y contraseña.
     </p>
     <div class="modal-acciones">
-      <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn-secondary" data-cerrar-logout>Cancelar</button>
       <a class="btn-primary" href="{{ url_for('autenticacion.logout') }}">Sí, cerrar →</a>
     </div>
   </div>
@@ -120,9 +120,9 @@
       Esta acción no se puede deshacer. La publicación dejará de ser visible para todos.
     </p>
     <div class="modal-eliminar-acciones">
-      <button class="btn-secondary" onclick="cerrarEliminar()">Cancelar</button>
+      <button class="btn-secondary" data-cerrar-eliminar>Cancelar</button>
       <form id="form-eliminar" method="POST" action="">
-        <button type="submit" class="btn-primary" style="background:#8b2020;color:#fff;border:none;">
+        <button type="submit" class="btn-primary u-boton-peligro">
           Eliminar →
         </button>
       </form>

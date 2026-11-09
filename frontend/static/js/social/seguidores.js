@@ -11,7 +11,11 @@ function toggleSeguir(usuarioId, yaSiguiendo, btn) {
       btn.textContent   = data.siguiendo ? 'Siguiendo' : '+ Seguir';
       btn.className     = 'btn-seg' + (data.siguiendo ? ' siguiendo' : '');
       btn.disabled      = false;
-      btn.onclick       = () => toggleSeguir(usuarioId, yaSiguiendo, btn);
+      btn.dataset.siguiendo = yaSiguiendo;
     })
     .catch(() => { btn.disabled = false; });
 }
+
+delegar('click', '[data-alternar-seguir]', function (el) {
+  toggleSeguir(Number(el.dataset.alternarSeguir), el.dataset.siguiendo === 'true', el);
+});

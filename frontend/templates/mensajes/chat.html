@@ -80,8 +80,7 @@
         <input type="text" id="inp-msg"
                placeholder="Escribe un mensaje…"
                maxlength="1000" autocomplete="off">
-        <button class="btn-primary btn-enviar" id="btn-enviar"
-                onclick="enviarMensaje()">Enviar</button>
+        <button class="btn-primary btn-enviar" id="btn-enviar" data-enviar-mensaje>Enviar</button>
       </div>
     </div>
 
@@ -91,6 +90,5 @@
 
 
 {% block extra_scripts %}
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="{{ url_for('static', filename='js/mensajes/chat.js') }}" data-usuario-id="{{ user_id }}" data-otro-id="{{ otro.id }}" data-otro-nombre="{{ otro.nombre }}" data-conv-id="{{ conv_id }}" data-url-enviar="{{ url_for('enviar_mensaje', conv_id=conv_id) }}" data-url-mensajes="{{ url_for('mensajes') }}"></script>
 {% endblock %}

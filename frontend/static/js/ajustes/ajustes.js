@@ -21,7 +21,7 @@ function previsualizarAvatar(url) {
     newImg.id  = 'avatar-img';
     newImg.src = url;
     newImg.alt = 'Avatar';
-    newImg.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+    newImg.className = 'avatar-img-previa';
     newImg.onerror = () => {
       newImg.style.display = 'none';
       inicial.style.display = 'flex';
@@ -52,3 +52,9 @@ function validarPasswordsMatch() {
     btn.disabled     = true;
   }
 }
+
+delegar('input', '[data-previsualizar-avatar]', function (el) {
+  previsualizarAvatar(el.value);
+});
+
+delegar('input', '[data-validar-password]', validarPasswordsMatch);

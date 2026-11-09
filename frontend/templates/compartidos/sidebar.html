@@ -34,29 +34,19 @@
       </a>
 
       <!-- ── Notificaciones con badge ── -->
-      <a class="nav-item {% if pagina_activa == 'notificaciones' %}active{% endif %}"
+      <a class="nav-item {% if pagina_activa == 'notificaciones' %}active{% endif %} u-relativo"
          href="{{ url_for('notificaciones') }}"
-         id="nav-notificaciones" style="position:relative;">
+         id="nav-notificaciones">
         <span class="nav-icon">🔔</span> Notificaciones
-        <span id="notif-badge" style="
-          display:none; position:absolute; right:12px; top:50%;
-          transform:translateY(-50%); background:#cf6f6f; color:#fff;
-          font-size:9px; font-weight:700; min-width:16px; height:16px;
-          border-radius:8px; align-items:center; justify-content:center;
-          padding:0 4px; line-height:1;">0</span>
+        <span class="sidebar-contador sidebar-contador--notificaciones" id="notif-badge">0</span>
       </a>
 
       <!-- ── Mensajería con badge ── -->
-      <a class="nav-item {% if pagina_activa == 'mensajes' %}active{% endif %}"
+      <a class="nav-item {% if pagina_activa == 'mensajes' %}active{% endif %} u-relativo"
          href="{{ url_for('mensajes') }}"
-         id="nav-mensajes" style="position:relative;">
+         id="nav-mensajes">
         <span class="nav-icon">💬</span> Mensajería
-        <span id="msgs-badge" style="
-          display:none; position:absolute; right:12px; top:50%;
-          transform:translateY(-50%); background:#6f9fcf; color:#fff;
-          font-size:9px; font-weight:700; min-width:16px; height:16px;
-          border-radius:8px; align-items:center; justify-content:center;
-          padding:0 4px; line-height:1;">0</span>
+        <span class="sidebar-contador sidebar-contador--mensajes" id="msgs-badge">0</span>
       </a>
 
       <a class="nav-item {% if pagina_activa == 'ajustes' %}active{% endif %}"
@@ -70,9 +60,8 @@
       </a>
 
       {% if session.rol in ('admin', 'moderador') %}
-        <a class="nav-item {% if pagina_activa == 'moderacion' %}active{% endif %}"
-           href="{{ url_for('moderacion') }}"
-           style="margin-top:4px; border-top:1px solid var(--borde);">
+        <a class="nav-item {% if pagina_activa == 'moderacion' %}active{% endif %} sidebar-enlace-separado"
+           href="{{ url_for('moderacion') }}">
           <span class="nav-icon">🛡</span> Moderación
         </a>
       {% endif %}
@@ -84,8 +73,7 @@
   <div class="sidebar-bottom">
 
     <!-- Botón Salir separado del nav -->
-    <a class="sidebar-logout" href="{{ url_for('autenticacion.logout') }}"
-       onclick="return confirm('¿Cerrar sesión?')">
+    <a class="sidebar-logout" href="{{ url_for('autenticacion.logout') }}" data-confirmar="¿Cerrar sesión?">
       <span class="nav-icon">⏻</span> Salir
     </a>
 

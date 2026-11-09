@@ -232,3 +232,6 @@
   .port-main      { padding: 18px 16px 40px; }
   .proyectos-grid { grid-template-columns: 1fr; }
 }
+
+/* Ajustes puntuales de la página */
+.portafolio-comunidad { margin-top: 40px; }

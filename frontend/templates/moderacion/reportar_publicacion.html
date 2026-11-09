@@ -23,11 +23,11 @@
         <strong>Publicación a reportar:</strong>
         {{ post.titulo }}
         {% if post.nombre_autor %}
-          <span style="font-size:10px;margin-top:4px;display:block;">por {{ post.nombre_autor }}</span>
+          <span class="u-ayuda-campo">por {{ post.nombre_autor }}</span>
         {% endif %}
       </div>
     {% else %}
-      <div class="ref-card" style="color: #cf6f6f; border-left-color: #cf6f6f;">
+      <div class="ref-card u-aviso-peligro">
         No se especificó una publicación. Ingresa el ID manualmente o regresa y usa el botón "Reportar" en la publicación.
       </div>
     {% endif %}

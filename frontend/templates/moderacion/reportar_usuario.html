@@ -24,12 +24,12 @@
         <div>
           <strong>{{ usuario_reportado.nombre }}</strong>
           {% if usuario_reportado.carrera %}
-            <span style="font-size:10px;color:var(--texto-dim);">{{ usuario_reportado.carrera }}</span>
+            <span class="u-ayuda-tenue">{{ usuario_reportado.carrera }}</span>
           {% endif %}
         </div>
       </div>
     {% else %}
-      <div class="ref-card" style="color: #cf6f6f; border-left-color: #cf6f6f;">
+      <div class="ref-card u-aviso-peligro">
         No se especificó un usuario. Regresa al perfil del usuario y usa el botón "Reportar".
       </div>
     {% endif %}

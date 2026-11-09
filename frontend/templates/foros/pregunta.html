@@ -32,8 +32,7 @@
         <span>
           {% if pregunta.es_anonimo %}ANÓNIMO
           {% else %}
-            <a href="{{ url_for('ver_perfil_usuario', usuario_id=pregunta.autor_id) if pregunta.autor_id else '#' }}"
-               style="color:inherit;text-decoration:none;font-weight:700;">{{ pregunta.autor_nombre.upper() }}</a>
+            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('ver_perfil_usuario', usuario_id=pregunta.autor_id) if pregunta.autor_id else '#' }}">{{ pregunta.autor_nombre.upper() }}</a>
           {% endif %}
         </span>
         <span>·</span>
@@ -73,8 +72,7 @@
             <span class="resp-autor">
               {% if r.es_anonimo %}Anónimo
               {% else %}
-                <a href="{{ url_for('ver_perfil_usuario', usuario_id=r.autor_id) if r.autor_id is defined and r.autor_id else '#' }}"
-                   style="color:inherit;text-decoration:none;font-weight:600;">{{ r.autor_nombre }}</a>
+                <a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=r.autor_id) if r.autor_id is defined and r.autor_id else '#' }}">{{ r.autor_nombre }}</a>
               {% endif %}
             </span>
             <span class="resp-tiempo">{{ r.tiempo_relativo }}</span>
@@ -85,18 +83,15 @@
           <div class="resp-acciones">
             <!-- Votos -->
             <div class="resp-votos">
-              <button class="voto-btn up {% if r.mi_voto == 1 %}activo{% endif %}"
-                      onclick="votar({{ r.id }}, 1, this)">▲</button>
+              <button class="voto-btn up {% if r.mi_voto == 1 %}activo{% endif %}" data-votar-respuesta="{{ r.id }}" data-voto="1">▲</button>
               <span class="voto-total" id="votos-{{ r.id }}">{{ r.votos }}</span>
-              <button class="voto-btn down {% if r.mi_voto == -1 %}activo{% endif %}"
-                      onclick="votar({{ r.id }}, -1, this)">▼</button>
+              <button class="voto-btn down {% if r.mi_voto == -1 %}activo{% endif %}" data-votar-respuesta="{{ r.id }}" data-voto="-1">▼</button>
             </div>
 
             <!-- Marcar como correcta (solo el autor de la pregunta) -->
             {% if es_autor_pregunta and not r.aceptada %}
-              <form method="POST"
-                    action="{{ url_for('aceptar_respuesta', pregunta_id=pregunta.id, respuesta_id=r.id) }}"
-                    style="display:inline;">
+              <form class="u-en-linea" method="POST"
+                    action="{{ url_for('aceptar_respuesta', pregunta_id=pregunta.id, respuesta_id=r.id) }}">
                 <button type="submit" class="btn-aceptar">✓ Marcar como correcta</button>
               </form>
             {% endif %}

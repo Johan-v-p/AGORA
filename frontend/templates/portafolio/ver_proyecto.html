@@ -86,8 +86,7 @@
     <!-- Aplausos -->
     <div class="vp-acciones">
       <button class="btn-aplaudir {% if ya_aplaudi %}activo{% endif %}"
-              id="btn-aplaudir"
-              onclick="aplaudir({{ proyecto.id }})">
+              id="btn-aplaudir" data-aplaudir="{{ proyecto.id }}">
         ★ Aplaudir
       </button>
       <span class="aplausos-count" id="aplausos-count">
@@ -96,8 +95,7 @@
 
       <!-- Botón reportar (sólo si no es el propio autor) -->
       {% if session.user_id != proyecto.autor_id %}
-        <a href="{{ url_for('reportar_publicacion', post_id=proyecto.id) }}"
-           style="margin-left:auto; font-size:9px; color:var(--texto-dim); text-decoration:none; letter-spacing:1px;">
+        <a class="proyecto-reportar" href="{{ url_for('reportar_publicacion', post_id=proyecto.id) }}">
           ⚑ Reportar
         </a>
       {% endif %}

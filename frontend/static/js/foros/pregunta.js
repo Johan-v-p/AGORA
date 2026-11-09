@@ -22,3 +22,7 @@ async function votar(respId, valor, btnClicado) {
     console.error('Error al votar:', e);
   }
 }
+
+delegar('click', '[data-votar-respuesta]', function (el) {
+  votar(Number(el.dataset.votarRespuesta), Number(el.dataset.voto), el);
+});

@@ -37,3 +37,13 @@ function contarContenido(el) {
   cnt.textContent = n + ' / 2000';
   cnt.classList.toggle('over', n >= 1900);
 }
+
+delegar('input', '[data-contar-titulo]', contarTitulo);
+delegar('input', '[data-contar-contenido]', contarContenido);
+
+delegar('click', '[data-filtrar]', function (el) {
+  filtrar(el.dataset.filtrar);
+});
+
+delegar('click', '[data-abrir-publicacion]', abrirModal);
+delegar('click', '[data-cerrar-publicacion]', cerrarModal);

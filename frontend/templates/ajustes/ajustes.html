@@ -33,8 +33,7 @@
           <div class="avatar-preview-wrap">
             <div class="avatar-preview" id="avatar-preview">
               {% if usuario.avatar_url %}
-                <img src="{{ usuario.avatar_url }}" alt="Avatar" id="avatar-img"
-                     onerror="this.style.display='none'; document.getElementById('avatar-inicial').style.display='flex'">
+                <img src="{{ usuario.avatar_url }}" alt="Avatar" id="avatar-img" data-avatar-alterno="avatar-inicial">
               {% endif %}
               <span id="avatar-inicial" {% if usuario.avatar_url %}style="display:none"{% endif %}>
                 {{ session.nombre[0].upper() }}
@@ -51,8 +50,7 @@
             <label for="avatar_url">URL de foto de perfil</label>
             <input type="url" id="avatar_url" name="avatar_url"
                    placeholder="https://ejemplo.com/mi-foto.jpg"
-                   value="{{ usuario.avatar_url or '' }}"
-                   oninput="previsualizarAvatar(this.value)">
+                   value="{{ usuario.avatar_url or '' }}" data-previsualizar-avatar>
             <div class="campo-hint">Deja vacío para usar la inicial de tu nombre.</div>
           </div>
 
@@ -147,20 +145,18 @@
               <label for="password_nueva">Nueva contraseña</label>
               <input type="password" id="password_nueva" name="password_nueva"
                      placeholder="••••••••" required minlength="6"
-                     autocomplete="new-password"
-                     oninput="validarPasswordsMatch()">
+                     autocomplete="new-password" data-validar-password>
             </div>
             <div class="campo">
               <label for="password_conf2">Confirmar nueva contraseña</label>
               <input type="password" id="password_conf2" name="password_conf"
                      placeholder="••••••••" required minlength="6"
-                     autocomplete="new-password"
-                     oninput="validarPasswordsMatch()">
+                     autocomplete="new-password" data-validar-password>
             </div>
           </div>
 
           <!-- Indicador de coincidencia en tiempo real -->
-          <div id="password-match-msg" style="font-size:10px; margin-top:-10px; display:none;"></div>
+          <div class="mensaje-coincidencia" id="password-match-msg"></div>
 
         </div>
 

@@ -28,3 +28,7 @@ async function inscribirse(eventoId, btn) {
     }
   } catch(e) { console.error('Error al inscribirse:', e); }
 }
+
+delegar('click', '[data-inscribir-evento]', function (el) {
+  inscribirse(Number(el.dataset.inscribirEvento), el);
+});

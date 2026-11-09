@@ -32,3 +32,7 @@ document.getElementById('modal-eliminar').addEventListener('click', function(e) 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { cerrarModal(); cerrarEliminar(); }
 });
+
+delegar('click', '[data-abrir-logout]', abrirLogout);
+delegar('click', '[data-cerrar-logout]', cerrarModal);
+delegar('click', '[data-cerrar-eliminar]', cerrarEliminar);

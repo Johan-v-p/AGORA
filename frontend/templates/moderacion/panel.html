@@ -22,8 +22,8 @@
         <span class="stat-num">{{ stats.total_eventos }}</span>
         <span class="stat-label">Eventos próximos</span>
       </div>
-      <div class="stat-card" style="{% if stats.total_reportes > 0 %}border-color:#3a1a1a{% endif %}">
-        <span class="stat-num" style="{% if stats.total_reportes > 0 %}color:#cf6f6f{% endif %}">{{ stats.total_reportes }}</span>
+      <div class="stat-card {% if stats.total_reportes > 0 %}u-borde-alerta{% endif %}">
+        <span class="stat-num {% if stats.total_reportes > 0 %}u-texto-peligro{% endif %}">{{ stats.total_reportes }}</span>
         <span class="stat-label">Reportes nuevos</span>
       </div>
     </div>

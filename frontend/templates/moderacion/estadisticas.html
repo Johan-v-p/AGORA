@@ -20,12 +20,12 @@
           <div class="bar-row">
             <span class="bar-label">{{ c.categoria }}</span>
             <div class="bar-wrap">
-              <div class="bar-fill" style="width:{{ (c.n / max_cat * 100)|int }}%"></div>
+              <div class="bar-fill" data-ancho="{{ (c.n / max_cat * 100)|int }}"></div>
             </div>
             <span class="bar-num">{{ c.n }}</span>
           </div>
         {% else %}
-          <p style="font-size:12px;color:var(--texto-dim)">Sin datos aún.</p>
+          <p class="u-texto-vacio">Sin datos aún.</p>
         {% endfor %}
       </div>
 
@@ -37,17 +37,17 @@
           <div class="bar-row">
             <span class="bar-label">{{ u.nombre[:18] }}</span>
             <div class="bar-wrap">
-              <div class="bar-fill" style="width:{{ (u.n / max_u * 100)|int }}%"></div>
+              <div class="bar-fill" data-ancho="{{ (u.n / max_u * 100)|int }}"></div>
             </div>
             <span class="bar-num">{{ u.n }}</span>
           </div>
         {% else %}
-          <p style="font-size:12px;color:var(--texto-dim)">Sin datos aún.</p>
+          <p class="u-texto-vacio">Sin datos aún.</p>
         {% endfor %}
       </div>
 
       <!-- Registros últimos 7 días -->
-      <div class="stat-card" style="grid-column:1/-1">
+      <div class="stat-card estadistica-fila-completa">
         <div class="stat-card-titulo">Nuevos usuarios — últimos 7 días</div>
         {% if usuarios_dia %}
           {% set max_d = usuarios_dia | map(attribute='n') | max %}
@@ -55,13 +55,13 @@
             <div class="bar-row">
               <span class="bar-label">{{ d.dia }}</span>
               <div class="bar-wrap">
-                <div class="bar-fill" style="width:{{ (d.n / max_d * 100)|int }}%"></div>
+                <div class="bar-fill" data-ancho="{{ (d.n / max_d * 100)|int }}"></div>
               </div>
               <span class="bar-num">{{ d.n }}</span>
             </div>
           {% endfor %}
         {% else %}
-          <p style="font-size:12px;color:var(--texto-dim)">No hubo registros en los últimos 7 días.</p>
+          <p class="u-texto-vacio">No hubo registros en los últimos 7 días.</p>
         {% endif %}
       </div>
     </div>

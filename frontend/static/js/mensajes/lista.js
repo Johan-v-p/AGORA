@@ -38,7 +38,7 @@
   function actualizarBadgeTotal() {
     const todos = document.querySelectorAll('.conv-badge');
     let total = 0;
-    todos.forEach(b => { if (b.style.display !== 'none') total += parseInt(b.textContent) || 0; });
+    todos.forEach(b => { if (getComputedStyle(b).display !== 'none') total += parseInt(b.textContent) || 0; });
     const gb = document.getElementById('msgs-total-badge');
     if (gb) {
       gb.textContent = total;
@@ -49,3 +49,8 @@
   // Inicializar badge total al cargar
   actualizarBadgeTotal();
 })();
+
+delegar('click', '[data-archivar-conversacion]', function (form, e) {
+  e.preventDefault();
+  if (confirm('¿Archivar esta conversación?')) form.submit();
+});

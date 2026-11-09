@@ -42,9 +42,8 @@
           <!-- Avatar -->
           <div class="u-avatar">
             {% if u.avatar_url %}
-              <img src="{{ u.avatar_url }}" alt="{{ u.nombre }}"
-                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <span style="display:none">{{ u.nombre[0].upper() }}</span>
+              <img src="{{ u.avatar_url }}" alt="{{ u.nombre }}" data-avatar-alterno="siguiente">
+              <span class="u-oculto">{{ u.nombre[0].upper() }}</span>
             {% else %}
               {{ u.nombre[0].upper() }}
             {% endif %}
@@ -66,8 +65,7 @@
           <!-- Botón seguir (no se muestra para uno mismo) -->
           {% if u.id != session.user_id %}
             <button class="btn-seg {{ 'siguiendo' if u.id in viewer_siguiendo }}"
-                    id="btn-{{ u.id }}"
-                    onclick="toggleSeguir({{ u.id }}, {{ 'true' if u.id in viewer_siguiendo else 'false' }}, this)">
+                    id="btn-{{ u.id }}" data-alternar-seguir="{{ u.id }}" data-siguiendo="{{ 'true' if u.id in viewer_siguiendo else 'false' }}">
               {{ 'Siguiendo' if u.id in viewer_siguiendo else '+ Seguir' }}
             </button>
           {% endif %}

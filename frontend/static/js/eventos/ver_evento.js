@@ -9,7 +9,11 @@ function toggleIns(id, inscrito) {
       btn.textContent = inscrito ? 'Cancelar inscripción' : 'Inscribirse';
       btn.className = 'btn-inscribir' + (inscrito ? ' cancelar' : '');
       btn.disabled = false;
-      btn.onclick = () => toggleIns(id, inscrito);
+      btn.dataset.inscrito = inscrito;
     })
     .catch(() => { btn.disabled=false; });
 }
+
+delegar('click', '[data-alternar-inscripcion]', function (el) {
+  toggleIns(Number(el.dataset.alternarInscripcion), el.dataset.inscrito === 'true');
+});

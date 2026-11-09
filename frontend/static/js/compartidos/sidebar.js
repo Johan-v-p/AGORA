@@ -55,13 +55,7 @@
   function mostrarToast(texto, url) {
     const t = document.createElement('a');
     t.href  = url || '#';
-    t.style.cssText = [
-      'position:fixed', 'bottom:80px', 'right:24px', 'z-index:9999',
-      'background:var(--panel)', 'border:1px solid var(--borde)',
-      'border-left:3px solid #6fcf6f', 'padding:12px 16px',
-      'font-size:11px', 'color:var(--texto)', 'text-decoration:none',
-      'max-width:280px', 'line-height:1.4', 'cursor:pointer'
-    ].join(';');
+    t.className = 'sidebar-toast';
     t.textContent = texto;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 4000);

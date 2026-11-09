@@ -38,8 +38,7 @@
     <!-- Barra: título + botón nueva pregunta -->
     <div class="nueva-preg-bar">
       <span class="seccion-label">Preguntas</span>
-      <button class="btn-primary"
-              onclick="document.getElementById('modal-nueva-preg').classList.add('visible')">
+      <button class="btn-primary" data-abrir-modal="modal-nueva-preg">
         + Nueva pregunta
       </button>
     </div>
@@ -57,7 +56,7 @@
             <div class="pregunta-meta">
               <span>
                 {% if p.es_anonimo %}Anónimo
-                {% else %}{% if p.autor_id and not p.es_anonimo %}<a href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) }}" style="color:inherit;text-decoration:none;font-weight:600;">{{ p.autor_nombre }}</a>{% else %}{{ p.autor_nombre }}{% endif %}{% endif %}
+                {% else %}{% if p.autor_id and not p.es_anonimo %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) }}">{{ p.autor_nombre }}</a>{% else %}{{ p.autor_nombre }}{% endif %}{% endif %}
               </span>
               <span>·</span>
               <span>{{ p.tiempo_relativo }}</span>
@@ -130,8 +129,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-secondary"
-                onclick="document.getElementById('modal-nueva-preg').classList.remove('visible')">
+        <button type="button" class="btn-secondary" data-cerrar-modal="modal-nueva-preg">
           Cancelar
         </button>
         <button type="submit" class="btn-primary">Publicar →</button>

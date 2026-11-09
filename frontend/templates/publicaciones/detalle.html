@@ -38,8 +38,7 @@
         <span>
           {% if post.es_anonimo %}ANÓNIMO
           {% else %}
-            <a href="{{ url_for('ver_perfil_usuario', usuario_id=post.autor_id) if post.autor_id else '#' }}"
-               style="color:inherit;text-decoration:none;font-weight:700;">{{ post.autor_nombre.upper() }}</a>
+            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('ver_perfil_usuario', usuario_id=post.autor_id) if post.autor_id else '#' }}">{{ post.autor_nombre.upper() }}</a>
           {% endif %}
         </span>
         <span>·</span>
@@ -55,8 +54,7 @@
     <!-- Barra de reacciones -->
     <div class="reacciones-bar">
       <button class="reaccion-btn {% if ya_reaccione %}activa{% endif %}"
-              id="btn-reaccion"
-              onclick="reaccionar({{post.id}})">
+              id="btn-reaccion" data-reaccionar="{{post.id}}">
         <span class="emoji">
           {% if post.categoria == 'meme' %}💀
           {% elif post.categoria == 'foro' %}🙌
@@ -66,20 +64,17 @@
         <span id="total-reacciones">{{ post.total_reacciones }}</span>
       </button>
 
-      <span style="font-size:10px;color:var(--texto-dim);margin-left:4px;">
+      <span class="post-nota-edicion">
         💬 {{ comentarios | length }} comentario{{ 's' if comentarios | length != 1 else '' }}
       </span>
 
       <!-- FIX 1: botones de editar/eliminar solo para el autor -->
       {% if es_propio %}
-      <div style="margin-left:auto;display:flex;gap:8px;">
-        <a class="reaccion-btn" href="{{ url_for('editar_publicacion', post_id=post.id) }}"
-           style="font-size:10px;padding:8px 14px;">
+      <div class="post-acciones-propias">
+        <a class="reaccion-btn post-boton-compacto" href="{{ url_for('editar_publicacion', post_id=post.id) }}">
           ✎ Editar
         </a>
-        <button class="reaccion-btn" id="btn-eliminar-post"
-                onclick="document.getElementById('modal-eliminar-post').classList.add('visible')"
-                style="font-size:10px;padding:8px 14px;color:#cf6f6f;border-color:#5a2a2a;">
+        <button class="reaccion-btn post-boton-eliminar" id="btn-eliminar-post" data-abrir-modal="modal-eliminar-post">
           ✕ Eliminar
         </button>
       </div>
@@ -121,8 +116,7 @@
           <span class="com-autor">
             {% if c.es_anonimo %}Anónimo
             {% else %}
-              <a href="{{ url_for('ver_perfil_usuario', usuario_id=c.autor_id) if c.autor_id is defined and c.autor_id else '#' }}"
-                 style="color:inherit;text-decoration:none;font-weight:600;">{{ c.autor_nombre }}</a>
+              <a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=c.autor_id) if c.autor_id is defined and c.autor_id else '#' }}">{{ c.autor_nombre }}</a>
             {% endif %}
           </span>
           <span class="com-tiempo">{{ c.tiempo_relativo }}</span>
@@ -141,23 +135,20 @@
 
 <!-- ══ MODAL CONFIRMAR ELIMINACIÓN (solo si es_propio) ══ -->
 {% if es_propio %}
-<div class="modal-overlay" id="modal-eliminar-post" style="z-index:900;">
-  <div class="modal-box" style="max-width:380px;">
-    <div style="font-size:13px;font-weight:700;color:var(--texto);margin-bottom:8px;">
+<div class="modal-overlay modal-eliminar-capa" id="modal-eliminar-post">
+  <div class="modal-box modal-eliminar-caja">
+    <div class="modal-eliminar-titulo">
       ¿Eliminar publicación?
     </div>
-    <p style="font-size:11px;color:var(--texto-dim);line-height:1.6;margin-bottom:24px;">
+    <p class="modal-eliminar-texto">
       Esta acción no se puede deshacer. La publicación dejará de ser visible.
     </p>
-    <div style="display:flex;gap:10px;justify-content:flex-end;">
-      <button class="btn-secondary"
-              onclick="document.getElementById('modal-eliminar-post').classList.remove('visible')">
+    <div class="modal-eliminar-acciones">
+      <button class="btn-secondary" data-cerrar-modal="modal-eliminar-post">
         Cancelar
       </button>
-      <form method="POST" action="{{ url_for('eliminar_publicacion', post_id=post.id) }}"
-            style="display:inline;">
-        <button type="submit" class="btn-primary"
-                style="background:#8b2020;color:#fff;border:none;">
+      <form class="u-en-linea" method="POST" action="{{ url_for('eliminar_publicacion', post_id=post.id) }}">
+        <button type="submit" class="btn-primary u-boton-peligro">
           Eliminar →
         </button>
       </form>

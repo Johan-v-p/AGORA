@@ -12,3 +12,6 @@
 .bar-num{font-size:11px;color:var(--texto);font-weight:700;min-width:28px;text-align:right}
 .back-link{font-size:11px;color:var(--texto-dim);text-decoration:none;margin-bottom:16px;display:inline-block}
 .back-link:hover{color:var(--texto)}
+
+/* Ajustes puntuales de la página */
+.estadistica-fila-completa { grid-column: 1 / -1; }

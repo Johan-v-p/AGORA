@@ -85,7 +85,7 @@
               <div class="post-card-meta">
                 <span>
                   {% if p.es_anonimo %}Anónimo
-                  {% else %}<a href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}" style="color:inherit;text-decoration:none;font-weight:600;">{{ p.autor_nombre }}</a>{% endif %}
+                  {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
                 </span>
                 <span>·</span>
                 <span>{{ p.tiempo_relativo }}</span>
@@ -106,8 +106,8 @@
               {# Por ahora el perfil solo es del usuario en sesión,
                  más adelante apuntará a /perfil/<id> ── Prioridad 2 #}
               <div class="persona-card">
-                <a href="{{ url_for('ver_perfil_usuario', usuario_id=u.id) }}" style="text-decoration:none;">
-                  <div class="persona-avatar" style="cursor:pointer;">{{ u.nombre[0].upper() }}</div>
+                <a class="u-sin-subrayado" href="{{ url_for('ver_perfil_usuario', usuario_id=u.id) }}">
+                  <div class="persona-avatar u-cursor-mano">{{ u.nombre[0].upper() }}</div>
                 </a>
                 <div class="persona-info">
                   <div class="persona-nombre">{{ u.nombre }}</div>
@@ -163,7 +163,7 @@
             <div class="post-card-meta">
               <span>
                 {% if p.es_anonimo %}Anónimo
-                {% else %}<a href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}" style="color:inherit;text-decoration:none;font-weight:600;">{{ p.autor_nombre }}</a>{% endif %}
+                {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
               </span>
               <span>·</span>
               <span>{{ p.tiempo_relativo }}</span>

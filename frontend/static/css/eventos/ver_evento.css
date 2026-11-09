@@ -26,3 +26,7 @@
 .partic-chip{display:flex;align-items:center;gap:8px;background:var(--superficie);border:1px solid var(--borde);padding:6px 12px;font-size:11px;color:var(--texto);text-decoration:none}
 .partic-chip:hover{border-color:#444}
 .partic-av{width:22px;height:22px;border-radius:50%;background:var(--borde);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+
+/* Ajustes puntuales de la página */
+.evento-seccion { padding: 20px 28px; }
+.evento-bloque { margin-top: 24px; }

@@ -33,7 +33,7 @@
                 {% if c.no_leidos > 0 %}
                   <span class="conv-badge" id="badge-{{ c.id }}">{{ c.no_leidos }}</span>
                 {% else %}
-                  <span class="conv-badge" id="badge-{{ c.id }}" style="display:none">0</span>
+                  <span class="conv-badge u-oculto" id="badge-{{ c.id }}">0</span>
                 {% endif %}
               </div>
               <div class="conv-preview" id="preview-{{ c.id }}">
@@ -48,9 +48,7 @@
 
             <!-- Archivar (detiene el click del enlace) -->
             <form method="POST"
-                  action="{{ url_for('archivar_conversacion', conv_id=c.id) }}"
-                  onclick="event.stopPropagation(); event.preventDefault();
-                           if(confirm('¿Archivar esta conversación?')) this.submit();">
+                  action="{{ url_for('archivar_conversacion', conv_id=c.id) }}" data-archivar-conversacion>
               <button class="conv-archivar" type="submit">✕</button>
             </form>
 
@@ -71,6 +69,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="{{ url_for('static', filename='js/mensajes/lista.js') }}" data-usuario-id="{{ session.user_id }}"></script>
 {% endblock %}

@@ -47,12 +47,12 @@
       <tbody>
         {% for f in foros %}
           <tr>
-            <td style="color:var(--texto-dim)">#{{ f.id }}</td>
+            <td class="u-texto-tenue">#{{ f.id }}</td>
             <td><strong>{{ f.nombre }}</strong></td>
-            <td style="color:var(--texto-dim)">{{ f.categoria or '—' }}</td>
+            <td class="u-texto-tenue">{{ f.categoria or '—' }}</td>
             <td>{{ f.total_preguntas }}</td>
             <td>
-              <form method="POST" onsubmit="return confirm('¿Eliminar el foro «{{ f.nombre }}»? Esto eliminará todas sus preguntas y respuestas.')">
+              <form method="POST" data-confirmar="¿Eliminar el foro «{{ f.nombre }}»? Esto eliminará todas sus preguntas y respuestas.">
                 <input type="hidden" name="accion" value="eliminar">
                 <input type="hidden" name="foro_id" value="{{ f.id }}">
                 <button type="submit" class="del-btn">✕ Eliminar</button>

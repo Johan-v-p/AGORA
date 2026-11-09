@@ -279,3 +279,6 @@
   border: 1px dashed var(--borde);
   margin-bottom: 16px;
 }
+
+/* Ajustes puntuales de la página */
+.proyecto-reportar { margin-left: auto; font-size: 9px; color: var(--texto-dim); text-decoration: none; letter-spacing: 1px; }

@@ -19,8 +19,11 @@ function toggleSeguir(usuarioId, yaSigniendo) {
       btn.className          = 'btn-seguir' + (data.siguiendo ? ' siguiendo' : '');
       btn.disabled           = false;
 
-      // Re-bind para el próximo click
-      btn.onclick = () => toggleSeguir(usuarioId, yaSigniendo);
+      btn.dataset.siguiendo = yaSigniendo;
     })
     .catch(() => { btn.disabled = false; });
 }
+
+delegar('click', '[data-alternar-seguir]', function (el) {
+  toggleSeguir(Number(el.dataset.alternarSeguir), el.dataset.siguiendo === 'true');
+});
