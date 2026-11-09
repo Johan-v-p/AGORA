@@ -52,3 +52,13 @@ def procesar_evento(row):
     evento['inscrito'] = bool(evento.get('inscrito'))
     evento['cupos_libres'] = evento.get('cupos_libres') or '∞'
     return evento
+
+
+def con_tiempo_relativo(filas):
+    """Convierte filas en diccionarios con el campo tiempo_relativo calculado."""
+    resultado = []
+    for fila in filas:
+        item = dict(fila)
+        item['tiempo_relativo'] = tiempo_relativo(item['creado_en'])
+        resultado.append(item)
+    return resultado
