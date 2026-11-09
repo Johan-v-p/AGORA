@@ -39,8 +39,8 @@
               </div>
             </div>
             <div class="mini-card-acciones">
-              <a class="mini-card-btn" href="{{ url_for('post_detalle', post_id=p.id) }}">VER →</a>
-              <a class="mini-card-btn btn-editar" href="{{ url_for('editar_publicacion', post_id=p.id) }}">✎</a>
+              <a class="mini-card-btn" href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}">VER →</a>
+              <a class="mini-card-btn btn-editar" href="{{ url_for('publicaciones.editar_publicacion', post_id=p.id) }}">✎</a>
               <!-- data-id y data-titulo evitan el problema de comillas anidadas en onclick -->
               <button class="mini-card-btn btn-eliminar js-eliminar"
                       data-id="{{ p.id }}"

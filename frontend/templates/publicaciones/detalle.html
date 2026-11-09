@@ -16,7 +16,7 @@
   <main class="detalle-main">
 
     <!-- Botón volver -->
-    <a class="btn-back" href="{{ url_for('feed') }}">← Volver al feed</a>
+    <a class="btn-back" href="{{ url_for('publicaciones.feed') }}">← Volver al feed</a>
 
     <!-- Encabezado del post -->
     <div class="post-header">
@@ -71,7 +71,7 @@
       <!-- FIX 1: botones de editar/eliminar solo para el autor -->
       {% if es_propio %}
       <div class="post-acciones-propias">
-        <a class="reaccion-btn post-boton-compacto" href="{{ url_for('editar_publicacion', post_id=post.id) }}">
+        <a class="reaccion-btn post-boton-compacto" href="{{ url_for('publicaciones.editar_publicacion', post_id=post.id) }}">
           ✎ Editar
         </a>
         <button class="reaccion-btn post-boton-eliminar" id="btn-eliminar-post" data-abrir-modal="modal-eliminar-post">
@@ -90,7 +90,7 @@
 
     <!-- Formulario: escribir comentario -->
     <form class="comentario-form" method="POST"
-          action="{{ url_for('comentar', post_id=post.id) }}">
+          action="{{ url_for('publicaciones.comentar', post_id=post.id) }}">
       <textarea
         name="contenido"
         placeholder="Escribe un comentario…"
@@ -147,7 +147,7 @@
       <button class="btn-secondary" data-cerrar-modal="modal-eliminar-post">
         Cancelar
       </button>
-      <form class="u-en-linea" method="POST" action="{{ url_for('eliminar_publicacion', post_id=post.id) }}">
+      <form class="u-en-linea" method="POST" action="{{ url_for('publicaciones.eliminar_publicacion', post_id=post.id) }}">
         <button type="submit" class="btn-primary u-boton-peligro">
           Eliminar →
         </button>

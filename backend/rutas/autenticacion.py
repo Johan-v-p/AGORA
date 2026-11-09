@@ -13,7 +13,7 @@ def crear_blueprint(get_db):
     @blueprint.route('/login', methods=['GET', 'POST'])
     def login():
         if session.get('user_id'):
-            return redirect(url_for('feed'))
+            return redirect(url_for('publicaciones.feed'))
 
         if request.method == 'POST':
             correo = request.form.get('correo', '').strip().lower()
@@ -43,7 +43,7 @@ def crear_blueprint(get_db):
                 session['carrera'] = usuario['carrera']
                 session['universidad'] = usuario['universidad']
                 session['rol'] = usuario['rol']
-                return redirect(url_for('feed'))
+                return redirect(url_for('publicaciones.feed'))
             flash('Correo o contraseña incorrectos.', 'error')
 
         return render_template('autenticacion/login.html')
@@ -51,7 +51,7 @@ def crear_blueprint(get_db):
     @blueprint.route('/registro', methods=['GET', 'POST'])
     def registro():
         if session.get('user_id'):
-            return redirect(url_for('feed'))
+            return redirect(url_for('publicaciones.feed'))
 
         if request.method == 'POST':
             nombre = request.form.get('nombre', '').strip()

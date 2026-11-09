@@ -75,7 +75,7 @@
 
     {% if posts %}
       {% for p in posts %}
-        <a class="post-fila" href="{{ url_for('post_detalle', post_id=p.id) }}">
+        <a class="post-fila" href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}">
           <span class="post-fila-titulo">{{ p.titulo }}</span>
           <span class="post-fila-meta">
             {{ p.total_reacciones }} 👏 · {{ p.total_comentarios }} 💬 · {{ p.tiempo_relativo }}

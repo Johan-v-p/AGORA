@@ -15,11 +15,11 @@
   <!-- ══ ÁREA CENTRAL ══ -->
   <main class="editar-main">
 
-    <a class="btn-back" href="{{ url_for('post_detalle', post_id=post.id) }}">← Volver al post</a>
+    <a class="btn-back" href="{{ url_for('publicaciones.post_detalle', post_id=post.id) }}">← Volver al post</a>
 
     <div class="editar-titulo">Editar publicación</div>
 
-    <form method="POST" action="{{ url_for('editar_publicacion', post_id=post.id) }}">
+    <form method="POST" action="{{ url_for('publicaciones.editar_publicacion', post_id=post.id) }}">
 
       <!-- Título -->
       <div class="campo">
@@ -53,7 +53,7 @@
       </div>
 
       <div class="form-footer">
-        <a class="btn-secondary" href="{{ url_for('post_detalle', post_id=post.id) }}">
+        <a class="btn-secondary" href="{{ url_for('publicaciones.post_detalle', post_id=post.id) }}">
           Cancelar
         </a>
         <button type="submit" class="btn-primary">Guardar cambios →</button>

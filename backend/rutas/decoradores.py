@@ -29,7 +29,7 @@ def crear_moderador_required(get_db):
             conn.close()
             if not usuario or usuario['rol'] not in ('moderador', 'admin'):
                 flash('No tienes permisos para acceder a esta sección.', 'error')
-                return redirect(url_for('feed'))
+                return redirect(url_for('publicaciones.feed'))
             return vista(*args, **kwargs)
         return decorada
     return moderador_required

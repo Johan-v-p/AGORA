@@ -84,7 +84,7 @@
               </span>
               <span>💬 {{ post.total_comentarios }}</span>
             </div>
-            <a class="btn-ver" href="{{ url_for('post_detalle', post_id=post.id) }}">VER →</a>
+            <a class="btn-ver" href="{{ url_for('publicaciones.post_detalle', post_id=post.id) }}">VER →</a>
           </div>
 
         </div>
@@ -111,7 +111,7 @@
       <button class="modal-cerrar" data-cerrar-publicacion aria-label="Cerrar">✕</button>
     </div>
 
-    <form method="POST" action="{{ url_for('nueva_publicacion') }}">
+    <form method="POST" action="{{ url_for('publicaciones.nueva_publicacion') }}">
 
       <!-- Título -->
       <div class="campo">

@@ -28,7 +28,7 @@
     <div class="sec-titulo">📈 Posts más populares esta semana</div>
     {% if top_posts %}
       {% for i, p in top_posts | enumerate %}
-        <a href="{{ url_for('post_detalle', post_id=p.id) }}" class="post-card">
+        <a href="{{ url_for('publicaciones.post_detalle', post_id=p.id) }}" class="post-card">
           <div class="post-rank">#{{ loop.index }} — {{ p.categoria.upper() }}</div>
           <div class="post-titulo">{{ p.titulo }}</div>
           <div class="post-meta">
