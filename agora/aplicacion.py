@@ -22,6 +22,7 @@ from agora.moderacion import (
     motivo_para_no_suspender as evaluar_suspension,
 )
 from agora.rutas.autenticacion import crear_blueprint as crear_blueprint_autenticacion
+from agora.rutas.decoradores import crear_moderador_required, login_required
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.
@@ -47,6 +48,7 @@ def get_db():
 
 
 app.register_blueprint(crear_blueprint_autenticacion(get_db))
+moderador_required = crear_moderador_required(get_db)
 
 
 def obtener_cuenta(user_id):
@@ -74,15 +76,6 @@ def validar_sesion():
     return None
 
 
-def login_required(f):
-    """Decorador simple que redirige al login si no hay sesión activa."""
-    from functools import wraps
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not session.get('user_id'):
-            return redirect(url_for('autenticacion.login'))
-        return f(*args, **kwargs)
-    return decorated
 
 
 # ══════════════════════════════════════════
@@ -1295,21 +1288,6 @@ def motivo_para_no_suspender(objetivo):
     )
 
 
-def moderador_required(f):
-    """Decorador: solo usuarios con rol moderador o admin pueden acceder."""
-    from functools import wraps
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not session.get('user_id'):
-            return redirect(url_for('autenticacion.login'))
-        conn = get_db()
-        usuario = conn.execute("SELECT rol FROM usuarios WHERE id = ?", (session['user_id'],)).fetchone()
-        conn.close()
-        if not usuario or usuario['rol'] not in ('moderador', 'admin'):
-            flash('No tienes permisos para acceder a esta sección.', 'error')
-            return redirect(url_for('feed'))
-        return f(*args, **kwargs)
-    return decorated
 
 @app.route('/moderacion')
 @login_required
