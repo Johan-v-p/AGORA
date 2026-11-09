@@ -68,8 +68,8 @@ Nombres recomendados:
 Flujo:
 
 ```text
-git fetch upstream
-git switch -c tipo/descripcion upstream/main
+git fetch origin
+git switch -c tipo/descripcion origin/main
 git push -u origin tipo/descripcion
 ```
 
