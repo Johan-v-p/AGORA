@@ -34,8 +34,8 @@ sys.setrecursionlimit(5000)
 
 app = Flask(
     __name__,
-    template_folder='../templates',
-    static_folder='../static',
+    template_folder='../frontend/templates',
+    static_folder='../frontend/static',
 )
 socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 CONFIGURACION = obtener_configuracion()
