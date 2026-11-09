@@ -5,9 +5,9 @@ Corre en LAN: python app.py  →  http://0.0.0.0:5000
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_socketio import SocketIO, join_room, leave_room
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import json
+import sqlite3
 import sys
 from agora.base_datos import abrir_conexion
 from agora.configuracion import obtener_configuracion
@@ -20,6 +20,7 @@ from agora.moderacion import (
     obtener_usuario_reportado as resolver_usuario_reportado,
     motivo_para_no_suspender as evaluar_suspension,
 )
+from agora.rutas.autenticacion import crear_blueprint as crear_blueprint_autenticacion
 
 # ── FIX: Python 3.14 redujo el límite de recursión por defecto.
 # Jinja2 usa recursión interna al procesar extends + include anidados.
@@ -44,6 +45,9 @@ def get_db():
     return abrir_conexion(DB)
 
 
+app.register_blueprint(crear_blueprint_autenticacion(get_db))
+
+
 def obtener_cuenta(user_id):
     """Devuelve el estado actual (activo, rol) de una cuenta, o None si no existe."""
     conn = get_db()
@@ -63,7 +67,7 @@ def validar_sesion():
     if not cuenta or not cuenta['activo']:
         session.clear()
         flash('Tu cuenta está suspendida. Contacta a un administrador.', 'error')
-        return redirect(url_for('login'))
+        return redirect(url_for('autenticacion.login'))
 
     session['rol'] = cuenta['rol']
     return None
@@ -75,7 +79,7 @@ def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if not session.get('user_id'):
-            return redirect(url_for('login'))
+            return redirect(url_for('autenticacion.login'))
         return f(*args, **kwargs)
     return decorated
 
@@ -88,100 +92,7 @@ def login_required(f):
 def index():
     if session.get('user_id'):
         return redirect(url_for('feed'))
-    return redirect(url_for('login'))
-
-
-# ── LOGIN ──────────────────────────────────
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if session.get('user_id'):
-        return redirect(url_for('feed'))
-
-    if request.method == 'POST':
-        correo   = request.form.get('correo', '').strip().lower()
-        password = request.form.get('password', '')
-
-        if not correo or not password:
-            flash('Completa todos los campos.', 'error')
-            return render_template('auth/login.html')
-
-        conn   = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM usuarios WHERE correo = ?", (correo,))
-        usuario = cursor.fetchone()
-        conn.close()
-
-        if usuario and check_password_hash(usuario['password'], password):
-            if not usuario['activo']:
-                flash('Tu cuenta está suspendida. Contacta a un administrador.', 'error')
-                return render_template('auth/login.html')
-
-            session.clear()
-            session['user_id']     = usuario['id']
-            session['nombre']      = usuario['nombre']
-            session['carrera']     = usuario['carrera']
-            session['universidad'] = usuario['universidad']
-            session['rol']         = usuario['rol']
-            return redirect(url_for('feed'))
-        else:
-            flash('Correo o contraseña incorrectos.', 'error')
-
-    return render_template('auth/login.html')
-
-
-# ── REGISTRO ───────────────────────────────
-@app.route('/registro', methods=['GET', 'POST'])
-def registro():
-    if session.get('user_id'):
-        return redirect(url_for('feed'))
-
-    if request.method == 'POST':
-        nombre      = request.form.get('nombre', '').strip()
-        correo      = request.form.get('correo', '').strip().lower()
-        carrera     = request.form.get('carrera', '').strip()
-        universidad = request.form.get('universidad', '').strip()
-        password    = request.form.get('password', '')
-        confirmar   = request.form.get('confirmar', '')
-
-        if not all([nombre, correo, carrera, universidad, password, confirmar]):
-            flash('Completa todos los campos.', 'error')
-            return render_template('auth/registro.html')
-
-        if password != confirmar:
-            flash('Las contraseñas no coinciden.', 'error')
-            return render_template('auth/registro.html')
-
-        password_hash = generate_password_hash(password)
-        conn = None
-        try:
-            conn = get_db()
-            conn.execute(
-                """INSERT INTO usuarios (nombre, correo, password, carrera, universidad, rol)
-                   VALUES (?, ?, ?, ?, ?, 'estudiante')""",
-                (nombre, correo, password_hash, carrera, universidad)
-            )
-            conn.commit()
-            flash('¡Cuenta creada! Ya puedes entrar.', 'success')
-            return redirect(url_for('login'))
-        except sqlite3.IntegrityError:
-            flash('Ese correo ya está registrado.', 'error')
-            return render_template('auth/registro.html')
-        except Exception as e:
-            flash(f'Error inesperado: {e}', 'error')
-            return render_template('auth/registro.html')
-        finally:
-            if conn:
-                conn.close()
-
-    return render_template('auth/registro.html')
-
-
-# ── LOGOUT ─────────────────────────────────
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash('Sesión cerrada.', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('autenticacion.login'))
 
 
 # ══════════════════════════════════════════
@@ -1389,7 +1300,7 @@ def moderador_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if not session.get('user_id'):
-            return redirect(url_for('login'))
+            return redirect(url_for('autenticacion.login'))
         conn = get_db()
         usuario = conn.execute("SELECT rol FROM usuarios WHERE id = ?", (session['user_id'],)).fetchone()
         conn.close()

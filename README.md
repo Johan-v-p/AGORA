@@ -54,6 +54,7 @@ agora/
 ├── aplicacion.py
 ├── modelos/
 ├── rutas/
+│   └── autenticacion.py
 └── servicios/
 ```
 
@@ -63,6 +64,10 @@ trasladarán progresivamente a módulos dentro de `agora/rutas/`, mientras que l
 lógica de negocio se ubicará en `agora/servicios/` y las entidades en
 `agora/modelos/`. No se deben añadir nuevos componentes de aplicación en la
 raíz.
+
+Las rutas nuevas deben implementarse como Blueprints y registrarse desde
+`agora/aplicacion.py`. El primer Blueprint migrado es
+`agora.rutas.autenticacion`.
 
 ## Pruebas
 
