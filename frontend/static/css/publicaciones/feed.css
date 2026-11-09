@@ -67,12 +67,7 @@
   color: var(--texto);
   border-left: 2px solid var(--texto);
 }
-.nav-item.nav-logout {
-  color: #cf6f6f;
-  border-top: 1px solid var(--borde);
-  margin-top: 4px;
-}
-.nav-item.nav-logout:hover { background: #2e1a1a; color: #cf6f6f; }
+
 .nav-icon {
   font-size: 14px;
   width: 18px;
@@ -367,16 +362,7 @@
   min-height: 110px;
 }
 /* Select con flecha custom */
-.select-wrap { position: relative; }
-.select-wrap::after {
-  content: '▾';
-  position: absolute;
-  right: 12px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--texto-dim);
-  pointer-events: none;
-  font-size: 11px;
-}
+
 .campo select option {
   background: var(--panel);
   color: var(--texto);
@@ -401,12 +387,3 @@
   user-select: none;
 }
 .check-anonimo input { accent-color: var(--texto); cursor: pointer; }
-
-/* Contador de caracteres */
-.char-count {
-  font-size: 9px;
-  color: var(--texto-dim);
-  text-align: right;
-  margin-top: 4px;
-}
-.char-count.over { color: #cf6f6f; }

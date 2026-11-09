@@ -78,7 +78,6 @@
   margin-bottom: 24px; text-decoration: none;
   transition: color 0.12s;
 }
-.btn-back:hover { color: var(--texto); }
 
 .editar-titulo {
   font-size: 13px; font-weight: 700;
@@ -111,16 +110,7 @@
 .campo select:focus { border-color: var(--texto); }
 .campo textarea { resize: vertical; min-height: 140px; }
 
-.select-wrap { position: relative; }
-.select-wrap::after {
-  content: '▾'; position: absolute; right: 12px; top: 50%;
-  transform: translateY(-50%); color: var(--texto-dim);
-  pointer-events: none; font-size: 11px;
-}
 .campo select option { background: var(--panel); color: var(--texto); }
-
-.char-count { font-size: 9px; color: var(--texto-dim); text-align: right; margin-top: 4px; }
-.char-count.over { color: #cf6f6f; }
 
 /* Fila de acciones al pie del formulario */
 .form-footer {

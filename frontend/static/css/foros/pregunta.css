@@ -21,7 +21,6 @@
   color: var(--texto-dim); margin-bottom: 20px;
   text-decoration: none; transition: color 0.12s;
 }
-.btn-back:hover { color: var(--texto); }
 
 /* ── CABECERA DE LA PREGUNTA ── */
 .preg-header {

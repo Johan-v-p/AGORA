@@ -232,7 +232,7 @@
   font-size: 14px;
   flex-shrink: 0;
 }
-.foro-info { flex: 1; min-width: 0; }
+
 .foro-nombre {
   font-size: 12px;
   font-weight: 700;
@@ -271,11 +271,6 @@
   font-weight: 700;
   color: var(--texto);
   margin-bottom: 8px;
-}
-.vacio-sub {
-  font-size: 11px;
-  color: var(--texto-dim);
-  line-height: 1.7;
 }
 
 /* ── LABEL DESTACADO (cuando no hay búsqueda) ──────── */

@@ -79,7 +79,6 @@
   color: var(--texto-dim); margin-bottom: 20px;
   text-decoration: none; transition: color 0.12s;
 }
-.btn-back:hover { color: var(--texto); }
 
 /* Encabezado del foro */
 .foro-header {
@@ -178,12 +177,7 @@
 .campo textarea:focus,
 .campo select:focus { border-color: var(--texto); }
 .campo textarea { resize: vertical; min-height: 100px; }
-.select-wrap { position: relative; }
-.select-wrap::after {
-  content: '▾'; position: absolute; right: 12px; top: 50%;
-  transform: translateY(-50%); color: var(--texto-dim);
-  pointer-events: none; font-size: 11px;
-}
+
 .campo select option { background: var(--panel); color: var(--texto); }
 
 /* Checkbox anónimo */
@@ -266,7 +260,6 @@
   font-size: 13px; font-weight: 700;
   color: var(--texto); margin-bottom: 8px;
 }
-.vacio-sub { font-size: 11px; color: var(--texto-dim); line-height: 1.7; }
 
 /* ── RESPONSIVE ─────────────────────────────────────── */
 @media (max-width: 640px) {

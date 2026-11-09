@@ -150,13 +150,6 @@
   font-weight: bold;
   color: var(--texto);
 }
-.stat-lbl {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--texto-dim);
-}
 
 /* ── PANEL DERECHO (decorativo) ──────────── */
 .login-deco {
@@ -168,18 +161,6 @@
   padding: 60px;
   position: relative;
   overflow: hidden;
-}
-
-/* Grid de fondo — detalle sutil del draw.io */
-.deco-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image:
-    linear-gradient(var(--borde) 1px, transparent 1px),
-    linear-gradient(90deg, var(--borde) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: 0.15;
 }
 
 /* Cita flotante */

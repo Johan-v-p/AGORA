@@ -1,8 +1,7 @@
 .rp-layout { display: flex; min-height: 100vh; }
 .rp-main { flex: 1; max-width: 620px; padding: 36px 48px 80px; }
 .rp-header { margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--borde); }
-.rp-titulo { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--texto); }
-.rp-sub { font-size: 11px; color: var(--texto-dim); margin-top: 5px; }
+
 .ref-card { background: var(--superficie); border: 1px solid var(--borde); border-left: 3px solid var(--borde); padding: 14px 18px; margin-bottom: 24px; font-size: 12px; color: var(--texto-dim); line-height: 1.6; }
 .ref-card strong { color: var(--texto); display: block; margin-bottom: 4px; }
 .advertencia { font-size: 11px; color: var(--texto-dim); padding: 10px 14px; border: 1px solid var(--borde); margin-bottom: 20px; line-height: 1.6; }

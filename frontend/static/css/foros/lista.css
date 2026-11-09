@@ -108,11 +108,6 @@
   text-decoration: none;
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
-.cat-btn:hover, .cat-btn.active {
-  background: var(--superficie);
-  color: var(--texto);
-  border-color: #444;
-}
 
 /* ── TARJETA DE FORO ────────────────────────────────── */
 .foro-card {
@@ -137,7 +132,6 @@
   flex-shrink: 0;
 }
 
-.foro-info { flex: 1; min-width: 0; }
 .foro-nombre {
   font-size: 13px; font-weight: 700;
   color: var(--texto);
@@ -193,7 +187,6 @@
   font-size: 13px; font-weight: 700;
   color: var(--texto); margin-bottom: 8px;
 }
-.vacio-sub { font-size: 11px; color: var(--texto-dim); line-height: 1.7; }
 
 /* ── RESPONSIVE ─────────────────────────────────────── */
 @media (max-width: 640px) {

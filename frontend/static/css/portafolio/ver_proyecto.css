@@ -2,11 +2,6 @@
    VER PROYECTO — Detalle completo de un proyecto
    ═══════════════════════════════════════════════════ */
 
-.vp-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
 .vp-main {
   flex: 1;
   min-width: 0;

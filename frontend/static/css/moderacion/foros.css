@@ -1,7 +1,6 @@
-.ad-layout{display:flex;min-height:100vh}
 .ad-main{flex:1;padding:32px 40px 80px;max-width:900px}
 .ad-header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--borde)}
-.ad-header h1{font-family:var(--fuente-display);font-size:20px;font-weight:normal;color:var(--texto)}
+
 .crear-card{background:var(--panel);border:1px solid var(--borde);padding:24px 28px;margin-bottom:28px}
 .crear-titulo{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-dim);margin-bottom:16px}
 .campo{margin-bottom:14px}
@@ -15,5 +14,3 @@ th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--borde);fon
 th{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--texto-dim);background:var(--superficie)}
 tr:hover td{background:var(--panel)}
 .del-btn{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;background:transparent;color:#cf6f6f;border:1px solid #3a1a1a;cursor:pointer;font-family:var(--fuente-body)}
-.back-link{font-size:11px;color:var(--texto-dim);text-decoration:none;margin-bottom:16px;display:inline-block}
-.back-link:hover{color:var(--texto)}

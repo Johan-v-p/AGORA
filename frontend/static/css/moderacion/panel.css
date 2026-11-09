@@ -1,7 +1,6 @@
-.ad-layout{display:flex;min-height:100vh}
 .ad-main{flex:1;padding:32px 40px 80px;max-width:900px}
 .ad-header{margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--borde)}
-.ad-header h1{font-family:var(--fuente-display);font-size:20px;font-weight:normal;color:var(--texto)}
+
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
 .stat-card{background:var(--panel);border:1px solid var(--borde);padding:20px;text-align:center}
 .stat-num{font-size:32px;font-weight:700;color:var(--texto);display:block}

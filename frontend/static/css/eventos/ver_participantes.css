@@ -1,4 +1,3 @@
-.vp-layout { display:flex; min-height:100vh; }
 .vp-main   { flex:1; max-width:640px; padding:40px 32px; }
 
 .vp-header {

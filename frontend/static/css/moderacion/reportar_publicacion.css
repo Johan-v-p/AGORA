@@ -1,8 +1,6 @@
 .rp-layout { display: flex; min-height: 100vh; }
 .rp-main { flex: 1; max-width: 620px; padding: 36px 48px 80px; }
 .rp-header { margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--borde); }
-.rp-titulo { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--texto); }
-.rp-sub { font-size: 11px; color: var(--texto-dim); margin-top: 5px; }
 
 /* Tarjeta de referencia */
 .ref-card {
