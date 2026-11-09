@@ -52,10 +52,11 @@ desarrollo.
 
 ## Flujo de contribución
 
-Este repositorio es un fork de
-[`divis-smith/AGORA`](https://github.com/divis-smith/AGORA). Los cambios deben
-trabajarse en una rama y proponerse mediante Pull Request al repositorio
-original, usando `main` como rama base.
+Este fork (`mihzuk/AGORA-modularizado`) es el repositorio principal de trabajo
+para la modularización. Los cambios deben trabajarse en ramas y proponerse
+mediante Pull Request hacia el `main` de este fork. El repositorio original
+[`divis-smith/AGORA`](https://github.com/divis-smith/AGORA) solo será el destino
+de una Pull Request cuando la modularización esté terminada y revisada.
 
 Nombres recomendados:
 
@@ -72,9 +73,11 @@ git switch -c tipo/descripcion upstream/main
 git push -u origin tipo/descripcion
 ```
 
-Después, abre un Pull Request desde
+Para el trabajo diario, abre un Pull Request desde
 `mihzuk/AGORA-modularizado:tipo/descripcion` hacia
-`divis-smith/AGORA:main`.
+`mihzuk/AGORA-modularizado:main`.
 
-Antes de fusionar, el Pull Request debe tener pruebas exitosas y al menos una
-revisión de otro integrante.
+Antes de fusionar al fork, el Pull Request debe tener pruebas exitosas y al
+menos una revisión de otro integrante. Cuando el proyecto esté completamente
+modularizado, se preparará una Pull Request final hacia
+`divis-smith/AGORA:main`.
