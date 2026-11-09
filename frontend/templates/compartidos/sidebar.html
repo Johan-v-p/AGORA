@@ -43,7 +43,7 @@
 
       <!-- ── Mensajería con badge ── -->
       <a class="nav-item {% if pagina_activa == 'mensajes' %}active{% endif %} u-relativo"
-         href="{{ url_for('mensajes') }}"
+         href="{{ url_for('mensajes.mensajes') }}"
          id="nav-mensajes">
         <span class="nav-icon">💬</span> Mensajería
         <span class="sidebar-contador sidebar-contador--mensajes" id="msgs-badge">0</span>

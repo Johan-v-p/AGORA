@@ -20,7 +20,7 @@
       <div class="conv-lista" id="conv-lista">
         {% for c in conversaciones %}
           <a class="conv-item {% if c.no_leidos > 0 %}no-leido{% endif %}"
-             href="{{ url_for('ver_chat', otro_id=c.otro_id) }}"
+             href="{{ url_for('mensajes.ver_chat', otro_id=c.otro_id) }}"
              id="conv-{{ c.id }}">
 
             <!-- Avatar con inicial -->
@@ -48,7 +48,7 @@
 
             <!-- Archivar (detiene el click del enlace) -->
             <form method="POST"
-                  action="{{ url_for('archivar_conversacion', conv_id=c.id) }}" data-archivar-conversacion>
+                  action="{{ url_for('mensajes.archivar_conversacion', conv_id=c.id) }}" data-archivar-conversacion>
               <button class="conv-archivar" type="submit">✕</button>
             </form>
 

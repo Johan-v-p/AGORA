@@ -40,7 +40,7 @@
                     id="btn-seguir" data-alternar-seguir="{{ usuario.id }}" data-siguiendo="{{ 'true' if ya_sigue else 'false' }}">
               <span id="btn-seguir-texto">{{ 'Siguiendo' if ya_sigue else '+ Seguir' }}</span>
             </button>
-            <a href="{{ url_for('ver_chat', otro_id=usuario.id) }}"
+            <a href="{{ url_for('mensajes.ver_chat', otro_id=usuario.id) }}"
                class="btn-seguir perfil-enlace-mensaje">
               💬 Mensaje
             </a>

@@ -14,7 +14,7 @@
 
     <!-- ── Header ── -->
     <div class="chat-header">
-      <a class="chat-back" href="{{ url_for('mensajes') }}">←</a>
+      <a class="chat-back" href="{{ url_for('mensajes.mensajes') }}">←</a>
 
       <div class="chat-av">{{ otro.nombre[0].upper() }}</div>
 
@@ -90,5 +90,5 @@
 
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/mensajes/chat.js') }}" data-usuario-id="{{ user_id }}" data-otro-id="{{ otro.id }}" data-otro-nombre="{{ otro.nombre }}" data-conv-id="{{ conv_id }}" data-url-enviar="{{ url_for('enviar_mensaje', conv_id=conv_id) }}" data-url-mensajes="{{ url_for('mensajes') }}"></script>
+<script src="{{ url_for('static', filename='js/mensajes/chat.js') }}" data-usuario-id="{{ user_id }}" data-otro-id="{{ otro.id }}" data-otro-nombre="{{ otro.nombre }}" data-conv-id="{{ conv_id }}" data-url-enviar="{{ url_for('mensajes.enviar_mensaje', conv_id=conv_id) }}" data-url-mensajes="{{ url_for('mensajes.mensajes') }}"></script>
 {% endblock %}
