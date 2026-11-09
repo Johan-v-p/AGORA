@@ -234,7 +234,7 @@ def crear_blueprint(get_db):
         if not post:
             conn.close()
             flash('Publicación no encontrada o sin permiso.', 'error')
-            return redirect(url_for('perfil'))
+            return redirect(url_for('social.perfil'))
 
         if request.method == 'POST':
             titulo    = request.form.get('titulo', '').strip()
@@ -285,7 +285,7 @@ def crear_blueprint(get_db):
             )
             if not cur.fetchone():
                 flash('Publicación no encontrada o sin permiso.', 'error')
-                return redirect(url_for('perfil'))
+                return redirect(url_for('social.perfil'))
 
             conn.execute("UPDATE publicaciones SET estado = 'eliminado' WHERE id = ?", (post_id,))
             conn.commit()
@@ -295,6 +295,6 @@ def crear_blueprint(get_db):
         finally:
             conn.close()
 
-        return redirect(url_for('perfil'))
+        return redirect(url_for('social.perfil'))
 
     return blueprint

@@ -38,7 +38,7 @@
         <span>
           {% if post.es_anonimo %}ANÓNIMO
           {% else %}
-            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('ver_perfil_usuario', usuario_id=post.autor_id) if post.autor_id else '#' }}">{{ post.autor_nombre.upper() }}</a>
+            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('social.ver_perfil_usuario', usuario_id=post.autor_id) if post.autor_id else '#' }}">{{ post.autor_nombre.upper() }}</a>
           {% endif %}
         </span>
         <span>·</span>
@@ -116,7 +116,7 @@
           <span class="com-autor">
             {% if c.es_anonimo %}Anónimo
             {% else %}
-              <a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=c.autor_id) if c.autor_id is defined and c.autor_id else '#' }}">{{ c.autor_nombre }}</a>
+              <a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=c.autor_id) if c.autor_id is defined and c.autor_id else '#' }}">{{ c.autor_nombre }}</a>
             {% endif %}
           </span>
           <span class="com-tiempo">{{ c.tiempo_relativo }}</span>

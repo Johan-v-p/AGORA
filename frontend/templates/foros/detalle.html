@@ -56,7 +56,7 @@
             <div class="pregunta-meta">
               <span>
                 {% if p.es_anonimo %}Anónimo
-                {% else %}{% if p.autor_id and not p.es_anonimo %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) }}">{{ p.autor_nombre }}</a>{% else %}{{ p.autor_nombre }}{% endif %}{% endif %}
+                {% else %}{% if p.autor_id and not p.es_anonimo %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.autor_id) }}">{{ p.autor_nombre }}</a>{% else %}{{ p.autor_nombre }}{% endif %}{% endif %}
               </span>
               <span>·</span>
               <span>{{ p.tiempo_relativo }}</span>

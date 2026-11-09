@@ -19,7 +19,7 @@
     <div class="explorar-titulo">Explorar</div>
 
     <!-- ── BARRA DE BÚSQUEDA ── -->
-    <form method="GET" action="{{ url_for('explorar') }}">
+    <form method="GET" action="{{ url_for('social.explorar') }}">
       <div class="busqueda-wrap">
         <input
           class="busqueda-input"
@@ -39,7 +39,7 @@
       <div class="filtros-row">
         {% for tab_id, tab_label in [('todo','Todo'), ('posts','Posts'), ('personas','Personas'), ('foros','Foros')] %}
           <a class="filtro-tab {% if tipo == tab_id %}active{% endif %}"
-             href="{{ url_for('explorar', q=q, tipo=tab_id) }}">
+             href="{{ url_for('social.explorar', q=q, tipo=tab_id) }}">
             {{ tab_label }}
           </a>
         {% endfor %}
@@ -85,7 +85,7 @@
               <div class="post-card-meta">
                 <span>
                   {% if p.es_anonimo %}Anónimo
-                  {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
+                  {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
                 </span>
                 <span>·</span>
                 <span>{{ p.tiempo_relativo }}</span>
@@ -106,7 +106,7 @@
               {# Por ahora el perfil solo es del usuario en sesión,
                  más adelante apuntará a /perfil/<id> ── Prioridad 2 #}
               <div class="persona-card">
-                <a class="u-sin-subrayado" href="{{ url_for('ver_perfil_usuario', usuario_id=u.id) }}">
+                <a class="u-sin-subrayado" href="{{ url_for('social.ver_perfil_usuario', usuario_id=u.id) }}">
                   <div class="persona-avatar u-cursor-mano">{{ u.nombre[0].upper() }}</div>
                 </a>
                 <div class="persona-info">
@@ -163,7 +163,7 @@
             <div class="post-card-meta">
               <span>
                 {% if p.es_anonimo %}Anónimo
-                {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
+                {% else %}<a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.autor_id) if p.autor_id else '#' }}">{{ p.autor_nombre }}</a>{% endif %}
               </span>
               <span>·</span>
               <span>{{ p.tiempo_relativo }}</span>

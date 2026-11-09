@@ -9,7 +9,7 @@
       </a>
 
       <a class="nav-item {% if pagina_activa == 'explorar' %}active{% endif %}"
-         href="{{ url_for('explorar') }}">
+         href="{{ url_for('social.explorar') }}">
         <span class="nav-icon">⊕</span> Explorar
       </a>
 
@@ -29,13 +29,13 @@
       </a>
 
       <a class="nav-item {% if pagina_activa == 'perfil' %}active{% endif %}"
-         href="{{ url_for('perfil') }}">
+         href="{{ url_for('social.perfil') }}">
         <span class="nav-icon">◎</span> Perfil
       </a>
 
       <!-- ── Notificaciones con badge ── -->
       <a class="nav-item {% if pagina_activa == 'notificaciones' %}active{% endif %} u-relativo"
-         href="{{ url_for('notificaciones') }}"
+         href="{{ url_for('social.notificaciones') }}"
          id="nav-notificaciones">
         <span class="nav-icon">🔔</span> Notificaciones
         <span class="sidebar-contador sidebar-contador--notificaciones" id="notif-badge">0</span>

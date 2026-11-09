@@ -13,7 +13,7 @@
 
     <!-- Encabezado -->
     <div class="seg-header">
-      <a class="seg-back" href="{{ url_for('ver_perfil_usuario', usuario_id=usuario.id) }}">
+      <a class="seg-back" href="{{ url_for('social.ver_perfil_usuario', usuario_id=usuario.id) }}">
         ← {{ usuario.nombre }}
       </a>
       <div class="seg-titulo">
@@ -25,11 +25,11 @@
     <!-- Pestañas seguidores / siguiendo -->
     <div class="seg-tabs">
       <a class="seg-tab {{ 'active' if modo == 'seguidores' }}"
-         href="{{ url_for('ver_seguidores', usuario_id=usuario.id) }}">
+         href="{{ url_for('social.ver_seguidores', usuario_id=usuario.id) }}">
         Seguidores
       </a>
       <a class="seg-tab {{ 'active' if modo == 'siguiendo' }}"
-         href="{{ url_for('ver_siguiendo', usuario_id=usuario.id) }}">
+         href="{{ url_for('social.ver_siguiendo', usuario_id=usuario.id) }}">
         Siguiendo
       </a>
     </div>
@@ -51,7 +51,7 @@
 
           <!-- Info -->
           <div class="u-info">
-            <a class="u-nombre" href="{{ url_for('ver_perfil_usuario', usuario_id=u.id) }}">
+            <a class="u-nombre" href="{{ url_for('social.ver_perfil_usuario', usuario_id=u.id) }}">
               {{ u.nombre }}
             </a>
             {% if u.carrera %}

@@ -59,11 +59,11 @@
           <span class="stat-num">{{ stats.total_posts }}</span>
           <span class="stat-label">Posts</span>
         </div>
-        <a class="stat-item" href="{{ url_for('ver_seguidores', usuario_id=usuario.id) }}">
+        <a class="stat-item" href="{{ url_for('social.ver_seguidores', usuario_id=usuario.id) }}">
           <span class="stat-num" id="contador-seguidores">{{ stats.total_seguidores }}</span>
           <span class="stat-label">Seguidores</span>
         </a>
-        <a class="stat-item" href="{{ url_for('ver_siguiendo', usuario_id=usuario.id) }}">
+        <a class="stat-item" href="{{ url_for('social.ver_siguiendo', usuario_id=usuario.id) }}">
           <span class="stat-num">{{ stats.total_siguiendo }}</span>
           <span class="stat-label">Siguiendo</span>
         </a>

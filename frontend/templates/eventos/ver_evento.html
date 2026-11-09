@@ -53,7 +53,7 @@
       {% if participantes %}
         <div class="partic-lista">
           {% for p in participantes %}
-            <a href="{{ url_for('ver_perfil_usuario', usuario_id=p.id) }}" class="partic-chip">
+            <a href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.id) }}" class="partic-chip">
               <div class="partic-av">{{ p.nombre[0].upper() }}</div>
               {{ p.nombre }}
             </a>

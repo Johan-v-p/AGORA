@@ -61,7 +61,7 @@
               ANÓNIMO
             {% else %}
               {% if post.autor_id %}
-                <a class="u-enlace-limpio u-peso-700" href="{{ url_for('ver_perfil_usuario', usuario_id=post.autor_id) }}">{{ post.autor_nombre.upper() }}</a>
+                <a class="u-enlace-limpio u-peso-700" href="{{ url_for('social.ver_perfil_usuario', usuario_id=post.autor_id) }}">{{ post.autor_nombre.upper() }}</a>
               {% else %}
                 {{ post.autor_nombre.upper() }}
               {% endif %}

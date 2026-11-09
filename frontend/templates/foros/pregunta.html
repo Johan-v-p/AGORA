@@ -32,7 +32,7 @@
         <span>
           {% if pregunta.es_anonimo %}ANÓNIMO
           {% else %}
-            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('ver_perfil_usuario', usuario_id=pregunta.autor_id) if pregunta.autor_id else '#' }}">{{ pregunta.autor_nombre.upper() }}</a>
+            <a class="u-enlace-limpio u-peso-700" href="{{ url_for('social.ver_perfil_usuario', usuario_id=pregunta.autor_id) if pregunta.autor_id else '#' }}">{{ pregunta.autor_nombre.upper() }}</a>
           {% endif %}
         </span>
         <span>·</span>
@@ -72,7 +72,7 @@
             <span class="resp-autor">
               {% if r.es_anonimo %}Anónimo
               {% else %}
-                <a class="u-enlace-limpio u-peso-600" href="{{ url_for('ver_perfil_usuario', usuario_id=r.autor_id) if r.autor_id is defined and r.autor_id else '#' }}">{{ r.autor_nombre }}</a>
+                <a class="u-enlace-limpio u-peso-600" href="{{ url_for('social.ver_perfil_usuario', usuario_id=r.autor_id) if r.autor_id is defined and r.autor_id else '#' }}">{{ r.autor_nombre }}</a>
               {% endif %}
             </span>
             <span class="resp-tiempo">{{ r.tiempo_relativo }}</span>

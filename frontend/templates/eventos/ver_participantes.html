@@ -24,7 +24,7 @@
 
     {% if participantes %}
       {% for p in participantes %}
-        <a class="part-card" href="{{ url_for('ver_perfil_usuario', usuario_id=p.id) }}">
+        <a class="part-card" href="{{ url_for('social.ver_perfil_usuario', usuario_id=p.id) }}">
 
           <div class="part-av">
             {% if p.avatar_url %}
