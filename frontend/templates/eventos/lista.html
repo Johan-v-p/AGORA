@@ -28,10 +28,10 @@
     <!-- Filtros por categoría -->
     <div class="cat-filtros">
       <a class="cat-btn {% if cat_activa == 'todos' %}active{% endif %}"
-         href="{{ url_for('eventos') }}">Todos</a>
+         href="{{ url_for('eventos.eventos') }}">Todos</a>
       {% for cat, label in [('academico','Académico'),('cultural','Cultural'),('deportivo','Deportivo'),('bienestar','Bienestar')] %}
         <a class="cat-btn {% if cat_activa == cat %}active{% endif %}"
-           href="{{ url_for('eventos', cat=cat) }}">{{ label }}</a>
+           href="{{ url_for('eventos.eventos', cat=cat) }}">{{ label }}</a>
       {% endfor %}
     </div>
 
@@ -51,7 +51,7 @@
           <div class="evento-cat-badge {{ ev.categoria }}">
             {{ ev.categoria | upper }}
           </div>
-          <a class="evento-titulo u-enlace-limpio u-cursor-mano" href="{{ url_for('ver_evento', evento_id=ev.id) }}">{{ ev.titulo }}</a>
+          <a class="evento-titulo u-enlace-limpio u-cursor-mano" href="{{ url_for('eventos.ver_evento', evento_id=ev.id) }}">{{ ev.titulo }}</a>
           <div class="evento-meta-row">
             {% if ev.hora_inicio %}
               <span class="evento-meta-item">◷ {{ ev.hora_inicio }}{% if ev.hora_fin %} – {{ ev.hora_fin }}{% endif %}</span>
@@ -105,7 +105,7 @@
   <div class="modal-box">
     <div class="modal-titulo">Crear nuevo evento</div>
 
-    <form method="POST" action="{{ url_for('nuevo_evento') }}">
+    <form method="POST" action="{{ url_for('eventos.nuevo_evento') }}">
 
       <div class="campo">
         <label for="titulo">Título del evento *</label>

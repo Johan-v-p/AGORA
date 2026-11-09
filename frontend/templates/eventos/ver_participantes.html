@@ -12,7 +12,7 @@
   <main class="vp-main">
 
     <div class="vp-header">
-      <a class="vp-back" href="{{ url_for('ver_evento', evento_id=evento.id) }}">
+      <a class="vp-back" href="{{ url_for('eventos.ver_evento', evento_id=evento.id) }}">
         ← {{ evento.titulo }}
       </a>
       <div class="vp-titulo">Participantes inscritos</div>

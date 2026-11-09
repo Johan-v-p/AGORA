@@ -33,8 +33,8 @@
           {{ 'Cancelar inscripción' if evento.inscrito else 'Inscribirse' }}
         </button>
         {% if es_creador %}
-          <a href="{{ url_for('editar_evento', evento_id=evento.id) }}" class="btn-ev-editar">✎ Editar</a>
-          <form method="POST" action="{{ url_for('eliminar_evento', evento_id=evento.id) }}" data-confirmar="¿Eliminar este evento? Esta acción no se puede deshacer.">
+          <a href="{{ url_for('eventos.editar_evento', evento_id=evento.id) }}" class="btn-ev-editar">✎ Editar</a>
+          <form method="POST" action="{{ url_for('eventos.eliminar_evento', evento_id=evento.id) }}" data-confirmar="¿Eliminar este evento? Esta acción no se puede deshacer.">
             <button type="submit" class="btn-ev-del">✕ Eliminar</button>
           </form>
         {% endif %}

@@ -57,7 +57,7 @@
           <input type="text" name="lugar" value="{{ evento.lugar or '' }}" maxlength="120">
         </div>
         <div class="card-footer">
-          <a href="{{ url_for('ver_evento', evento_id=evento.id) }}" class="btn-secondary">Cancelar</a>
+          <a href="{{ url_for('eventos.ver_evento', evento_id=evento.id) }}" class="btn-secondary">Cancelar</a>
           <button type="submit" class="btn-primary">Guardar cambios</button>
         </div>
       </div>
