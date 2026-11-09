@@ -26,10 +26,10 @@
     <!-- Filtros por categoría -->
     <div class="cat-filtros">
       {% set categorias = foros | map(attribute='categoria') | unique | list %}
-      <a class="cat-btn active" href="{{ url_for('foros') }}">Todos</a>
+      <a class="cat-btn active" href="{{ url_for('foros.foros') }}">Todos</a>
       {% for cat in categorias %}
         {% if cat %}
-          <a class="cat-btn" href="{{ url_for('foros') }}?cat={{ cat }}">
+          <a class="cat-btn" href="{{ url_for('foros.foros') }}?cat={{ cat }}">
             {{ cat | capitalize }}
           </a>
         {% endif %}
@@ -39,7 +39,7 @@
     <!-- Lista de foros -->
     {% if foros %}
       {% for f in foros %}
-        <a class="foro-card" href="{{ url_for('foro_detalle', foro_id=f.id) }}">
+        <a class="foro-card" href="{{ url_for('foros.foro_detalle', foro_id=f.id) }}">
 
           <!-- Ícono según categoría -->
           <div class="foro-icono">

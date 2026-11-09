@@ -14,7 +14,7 @@
   <main class="preg-det-main">
 
     <!-- Botón volver al foro -->
-    <a class="btn-back" href="{{ url_for('foro_detalle', foro_id=foro.id) }}">
+    <a class="btn-back" href="{{ url_for('foros.foro_detalle', foro_id=foro.id) }}">
       ← Volver a {{ foro.nombre }}
     </a>
 
@@ -91,7 +91,7 @@
             <!-- Marcar como correcta (solo el autor de la pregunta) -->
             {% if es_autor_pregunta and not r.aceptada %}
               <form class="u-en-linea" method="POST"
-                    action="{{ url_for('aceptar_respuesta', pregunta_id=pregunta.id, respuesta_id=r.id) }}">
+                    action="{{ url_for('foros.aceptar_respuesta', pregunta_id=pregunta.id, respuesta_id=r.id) }}">
                 <button type="submit" class="btn-aceptar">✓ Marcar como correcta</button>
               </form>
             {% endif %}
@@ -109,7 +109,7 @@
 
     <!-- ══ FORMULARIO NUEVA RESPUESTA ══ -->
     <form class="resp-form" method="POST"
-          action="{{ url_for('nueva_respuesta', foro_id=foro.id, pregunta_id=pregunta.id) }}">
+          action="{{ url_for('foros.nueva_respuesta', foro_id=foro.id, pregunta_id=pregunta.id) }}">
       <textarea name="contenido" maxlength="2000" required
                 placeholder="Escribe tu respuesta…"></textarea>
       <div class="resp-form-footer">

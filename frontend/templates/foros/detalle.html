@@ -16,7 +16,7 @@
   <!-- ══ ÁREA CENTRAL ══ -->
   <main class="foro-det-main">
 
-    <a class="btn-back" href="{{ url_for('foros') }}">← Volver a foros</a>
+    <a class="btn-back" href="{{ url_for('foros.foros') }}">← Volver a foros</a>
 
     <!-- Encabezado del foro -->
     <div class="foro-header">
@@ -47,7 +47,7 @@
     {% if preguntas %}
       {% for p in preguntas %}
         <a class="pregunta-card"
-           href="{{ url_for('foro_pregunta', foro_id=foro.id, pregunta_id=p.id) }}">
+           href="{{ url_for('foros.foro_pregunta', foro_id=foro.id, pregunta_id=p.id) }}">
 
           <span class="tipo-badge {{ p.tipo }}">{{ p.tipo }}</span>
 
@@ -90,7 +90,7 @@
     <div class="modal-titulo">Nueva pregunta en "{{ foro.nombre }}"</div>
 
     <form method="POST"
-          action="{{ url_for('foro_nueva_pregunta', foro_id=foro.id) }}">
+          action="{{ url_for('foros.foro_nueva_pregunta', foro_id=foro.id) }}">
 
       <!-- Tipo -->
       <div class="campo">
