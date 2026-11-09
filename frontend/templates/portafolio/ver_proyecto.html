@@ -16,7 +16,7 @@
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-      <a href="{{ url_for('portafolio') }}">Portafolio</a>
+      <a href="{{ url_for('portafolio.portafolio') }}">Portafolio</a>
       <span>›</span>
       {{ proyecto.titulo[:50] }}{% if proyecto.titulo|length > 50 %}…{% endif %}
     </div>
