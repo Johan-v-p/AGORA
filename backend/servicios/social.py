@@ -127,7 +127,7 @@ def listar_tendencias(conn):
     return conn.execute("""
         SELECT p.id, p.titulo, p.categoria, p.creado_en,
                u.nombre AS autor,
-               COUNT(DISTINCT r.id) AS total_reacciones,
+               COUNT(DISTINCT r.usuario_id) AS total_reacciones,
                COUNT(DISTINCT c.id) AS total_comentarios
         FROM publicaciones p
         JOIN usuarios u ON u.id = p.autor_id
@@ -136,7 +136,7 @@ def listar_tendencias(conn):
         WHERE p.estado = 'publicado'
           AND p.creado_en >= datetime('now', '-7 days')
         GROUP BY p.id
-        ORDER BY (COUNT(DISTINCT r.id) + COUNT(DISTINCT c.id)) DESC
+        ORDER BY (COUNT(DISTINCT r.usuario_id) + COUNT(DISTINCT c.id)) DESC
         LIMIT 20
     """).fetchall()
 
