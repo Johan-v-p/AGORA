@@ -416,7 +416,7 @@ def post_detalle(post_id):
     cur.execute("""
         SELECT
             p.id, p.autor_id, p.titulo, p.contenido, p.categoria,
-            p.es_anonimo, p.creado_en,
+            p.es_anonimo, p.creado_en, p.imagen_url,
             u.nombre AS autor_nombre,
             (SELECT COUNT(*) FROM reacciones_publicacion r WHERE r.publicacion_id = p.id) AS total_reacciones,
             (SELECT COUNT(*) FROM comentarios c WHERE c.publicacion_id = p.id) AS total_comentarios

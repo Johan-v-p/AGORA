@@ -320,6 +320,9 @@
     </div>
 
     <div class="sep"></div>
+    {% if post.imagen_url %}
+    <img class="post-img-grande" src="{{ post.imagen_url|media }}" alt="Imagen de la publicación">
+    {% endif %}
 
     <!-- Cuerpo del post -->
     <div class="post-body">{{ post.contenido }}</div>
