@@ -155,17 +155,38 @@
 
 /* ── Zona peligrosa ─────────────────────── */
 .zona-peligrosa {
-  border-color: #3a1a1a;
+  border-color: color-mix(in srgb, var(--error) 35%, var(--borde));
 }
 
 .zona-peligrosa .seccion-titulo {
-  color: #cf6f6f;
-  border-bottom-color: #3a1a1a;
+  color: var(--error);
+  border-bottom-color: color-mix(in srgb, var(--error) 35%, var(--borde));
 }
 
 .zona-peligrosa .seccion-footer {
-  background: #1a0f0f;
-  border-top-color: #3a1a1a;
+  background: color-mix(in srgb, var(--error) 8%, var(--panel));
+  border-top-color: color-mix(in srgb, var(--error) 35%, var(--borde));
+}
+
+.tema-opciones {
+  display: grid;
+  gap: 10px;
+}
+
+.tema-opcion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  background: var(--superficie);
+  color: var(--texto);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.tema-opcion:has(input:checked) {
+  border-color: var(--texto);
 }
 
 /* Ajustes puntuales de la página */

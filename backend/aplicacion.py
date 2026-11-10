@@ -40,7 +40,14 @@ DB = CONFIGURACION['DATABASE_PATH']
 
 def get_db():
     """Abre una conexión SQLite y devuelve filas como diccionarios."""
-    return abrir_conexion(DB)
+    conn = abrir_conexion(DB)
+    columnas = conn.execute("PRAGMA table_info(usuarios)").fetchall()
+    if columnas and not any(columna['name'] == 'tema' for columna in columnas):
+        conn.execute(
+            "ALTER TABLE usuarios ADD COLUMN tema TEXT NOT NULL DEFAULT 'system'"
+        )
+        conn.commit()
+    return conn
 
 
 def obtener_cuenta(user_id):
@@ -103,7 +110,14 @@ def inyectar_avatar():
     conn = get_db()
     usuario = cuentas.obtener_por_id(conn, user_id)
     conn.close()
-    return {'mi_avatar': usuario['avatar_url'] if usuario else None}
+    tema = usuario['tema'] if usuario and 'tema' in usuario.keys() else 'system'
+    if tema not in {'light', 'dark', 'system'}:
+        tema = 'system'
+    return {
+        'mi_avatar': usuario['avatar_url'] if usuario else None,
+        'tema_usuario': tema,
+        'usuario_autenticado': bool(usuario),
+    }
 
 
 app.register_blueprint(crear_blueprint_autenticacion(get_db))

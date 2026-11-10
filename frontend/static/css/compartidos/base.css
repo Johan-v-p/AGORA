@@ -14,10 +14,27 @@
   --texto-dim:   #888888;
   --acento:      #FFFFFF;
   --acento-txt:  #0A0A0A;
+  --error:       #cf6f6f;
+  --success:     #4f9f62;
+  --warning:     #a88435;
 
   /* Tipografía */
   --fuente-body:    'Nunito', sans-serif;
   --fuente-display: Georgia, serif;
+}
+
+[data-theme="light"] {
+  --fondo:       #F6F6F4;
+  --panel:       #FFFFFF;
+  --superficie:  #EDEDEA;
+  --borde:       #D9D9D4;
+  --texto:       #111111;
+  --texto-dim:   #6B6B6B;
+  --acento:      #111111;
+  --acento-txt:  #FFFFFF;
+  --error:       #a83e3e;
+  --success:     #28733b;
+  --warning:     #795b0b;
 }
 
 /* ── RESET MÍNIMO ────────────────────────── */
@@ -86,7 +103,7 @@ a {
 }
 .btn-secondary:hover {
   background: var(--superficie);
-  border-color: #444;
+  border-color: var(--texto-dim);
 }
 
 /* ── TOASTS (mensajes flash) ─────────────── */
@@ -123,9 +140,9 @@ a {
 }
 
 /* Variantes por categoría */
-.toast--success { border-left-color: #6fcf6f; }
-.toast--error   { border-left-color: #cf6f6f; }
-.toast--warning { border-left-color: #cfb96f; }
+.toast--success { border-left-color: var(--success); }
+.toast--error   { border-left-color: var(--error); }
+.toast--warning { border-left-color: var(--warning); }
 
 /* Salida: desliza a la derecha y desaparece */
 .toast--hide {

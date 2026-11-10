@@ -20,7 +20,7 @@
 }
 
 .cat-btn:hover, .cat-btn.active {
-  background: var(--superficie); color: var(--texto); border-color: #444;
+  background: var(--superficie); color: var(--texto); border-color: var(--texto-dim);
 }
 
 .select-wrap { position: relative; }
@@ -57,15 +57,15 @@
 
 .char-count { font-size: 9px; color: var(--texto-dim); text-align: right; margin-top: 4px; }
 
-.char-count.over { color: #cf6f6f; }
+.char-count.over { color: var(--error); }
 
 .nav-item.nav-logout {
-  color: #cf6f6f;
+  color: var(--error);
   border-top: 1px solid var(--borde);
   margin-top: 4px;
 }
 
-.nav-item.nav-logout:hover { background: #2e1a1a; color: #cf6f6f; }
+.nav-item.nav-logout:hover { background: color-mix(in srgb, var(--error) 12%, var(--panel)); color: var(--error); }
 
 .perfil-layout {
   display: flex;

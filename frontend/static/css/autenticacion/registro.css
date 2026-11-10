@@ -71,7 +71,7 @@
 }
 .campo input:focus {
   border-color: var(--texto);
-  background: #222;
+  background: var(--superficie);
 }
 .campo input::placeholder {
   color: var(--texto-dim);

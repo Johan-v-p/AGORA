@@ -84,6 +84,16 @@ class AjustesCuentaTest(unittest.TestCase):
         self.assertEqual(respuesta.status_code, 302)
         self.assertTrue(check_password_hash(self._usuario()['password'], 'clave-nueva'))
 
+    def test_guarda_la_preferencia_de_tema(self):
+        respuesta = self.client.post('/ajustes/tema', data={'tema': 'light'})
+        self.assertEqual(respuesta.status_code, 204)
+        self.assertEqual(self._usuario()['tema'], 'light')
+
+    def test_rechaza_una_preferencia_de_tema_invalida(self):
+        respuesta = self.client.post('/ajustes/tema', data={'tema': 'blue'})
+        self.assertEqual(respuesta.status_code, 302)
+        self.assertEqual(self._usuario()['tema'], 'system')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -7,7 +7,7 @@
 .u-peso-700 { font-weight: 700; }
 .u-texto-tenue { color: var(--texto-dim); }
 .u-texto-vacio { font-size: 12px; color: var(--texto-dim); }
-.u-texto-peligro { color: #cf6f6f; }
+.u-texto-peligro { color: var(--error); }
 .u-nota { margin-top: 6px; color: #888; }
 .u-ayuda-campo { font-size: 10px; margin-top: 4px; display: block; }
 .u-ayuda-tenue { font-size: 10px; color: var(--texto-dim); }
@@ -21,6 +21,6 @@
 .u-cursor-mano { cursor: pointer; }
 
 /* Estados */
-.u-aviso-peligro { color: #cf6f6f; border-left-color: #cf6f6f; }
-.u-borde-alerta { border-color: #3a1a1a; }
-.u-boton-peligro { background: #8b2020; color: #fff; border: none; }
+.u-aviso-peligro { color: var(--error); border-left-color: var(--error); }
+.u-borde-alerta { border-color: color-mix(in srgb, var(--error) 35%, var(--borde)); }
+.u-boton-peligro { background: var(--error); color: var(--acento-txt); border: none; }
