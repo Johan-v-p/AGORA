@@ -62,7 +62,7 @@
 }
 .preg-cuerpo {
   font-size: 13px; line-height: 1.8;
-  color: #DDDDDD; white-space: pre-wrap;
+  color: var(--texto); white-space: pre-wrap;
   word-break: break-word;
 }
 
@@ -147,7 +147,7 @@
 }
 .resp-texto {
   font-size: 12px; line-height: 1.75;
-  color: #CCCCCC; word-break: break-word;
+  color: var(--texto); word-break: break-word;
   padding-left: 36px;
 }
 
