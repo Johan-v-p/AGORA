@@ -5,6 +5,7 @@ import sys
 from flask import Flask, flash, redirect, request, session, url_for
 from flask_socketio import SocketIO
 
+from backend.nucleo import imagenes
 from backend.nucleo.base_datos import abrir_conexion
 from backend.nucleo.configuracion import obtener_configuracion
 from backend.rutas.ajustes import crear_blueprint as crear_blueprint_ajustes
@@ -31,6 +32,8 @@ app = Flask(
 socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 CONFIGURACION = obtener_configuracion()
 app.config['SECRET_KEY'] = CONFIGURACION['SECRET_KEY']
+# Tope de la petición completa: una imagen (2 MB) más 1 MB para el resto del formulario.
+app.config['MAX_CONTENT_LENGTH'] = imagenes.MAX_BYTES + 1024 * 1024
 
 DB = CONFIGURACION['DATABASE_PATH']
 
@@ -63,6 +66,44 @@ def validar_sesion():
 
     session['rol'] = cuenta['rol']
     return None
+
+
+@app.template_filter('media')
+def filtro_media(ruta, miniatura=False):
+    """Convierte la ruta guardada en la BD en una URL usable en <img src>.
+
+    Las rutas 'uploads/...' se sirven desde static; cualquier otro valor
+    (por ejemplo una URL externa antigua) se devuelve igual.
+    """
+    if not ruta:
+        return ''
+    if ruta.startswith('uploads/'):
+        if miniatura:
+            ruta = imagenes.ruta_miniatura(ruta)
+        return url_for('static', filename=ruta)
+    return ruta
+
+
+@app.errorhandler(413)
+def archivo_demasiado_grande(_error):
+    """Avisa al usuario en lugar de mostrar la página de error cruda."""
+    flash('El archivo es demasiado grande. El máximo es 2 MB.', 'error')
+    destino = request.referrer
+    if not destino or not destino.startswith(request.host_url):
+        destino = '/'
+    return redirect(destino)
+
+
+@app.context_processor
+def inyectar_avatar():
+    """Deja la foto del usuario en sesión disponible como `mi_avatar` en todas las plantillas."""
+    user_id = session.get('user_id')
+    if not user_id:
+        return {}
+    conn = get_db()
+    usuario = cuentas.obtener_por_id(conn, user_id)
+    conn.close()
+    return {'mi_avatar': usuario['avatar_url'] if usuario else None}
 
 
 app.register_blueprint(crear_blueprint_autenticacion(get_db))

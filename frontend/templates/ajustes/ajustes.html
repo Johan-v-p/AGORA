@@ -26,14 +26,14 @@
     <section class="ajustes-seccion">
       <div class="seccion-titulo">Información de perfil</div>
 
-      <form method="POST" action="{{ url_for('ajustes.ajustes_perfil') }}">
+      <form method="POST" action="{{ url_for('ajustes.ajustes_perfil') }}" enctype="multipart/form-data">
         <div class="seccion-body">
 
           <!-- Preview del avatar actual -->
           <div class="avatar-preview-wrap">
             <div class="avatar-preview" id="avatar-preview">
               {% if usuario.avatar_url %}
-                <img src="{{ usuario.avatar_url }}" alt="Avatar" id="avatar-img" data-avatar-alterno="avatar-inicial">
+                <img src="{{ usuario.avatar_url|media }}" alt="Avatar" id="avatar-img" data-avatar-alterno="avatar-inicial">
               {% endif %}
               <span id="avatar-inicial" {% if usuario.avatar_url %}style="display:none"{% endif %}>
                 {{ session.nombre[0].upper() }}
@@ -41,17 +41,22 @@
             </div>
             <div class="avatar-preview-info">
               Foto de perfil actual.<br>
-              Pega una URL de imagen para cambiarla.
+              Sube una imagen para cambiarla.
             </div>
           </div>
 
-          <!-- URL del avatar -->
+          <!-- Foto de perfil -->
           <div class="campo">
-            <label for="avatar_url">URL de foto de perfil</label>
-            <input type="url" id="avatar_url" name="avatar_url"
-                   placeholder="https://ejemplo.com/mi-foto.jpg"
-                   value="{{ usuario.avatar_url or '' }}" data-previsualizar-avatar>
-            <div class="campo-hint">Deja vacío para usar la inicial de tu nombre.</div>
+            <label for="avatar">Foto de perfil</label>
+            <input type="file" id="avatar" name="avatar"
+                   accept="image/jpeg,image/png,image/webp"
+                   data-previsualizar-avatar data-validar-imagen>
+            <div class="campo-hint">JPG, PNG o WebP, máximo 2 MB. Sin foto se usa la inicial de tu nombre.</div>
+            {% if usuario.avatar_url %}
+              <label class="check-quitar">
+                <input type="checkbox" name="quitar_avatar" value="1"> Quitar foto actual
+              </label>
+            {% endif %}
           </div>
 
           <!-- Nombre -->

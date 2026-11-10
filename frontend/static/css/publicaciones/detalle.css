@@ -278,3 +278,12 @@
 .modal-eliminar-caja { max-width: 380px; }
 
 .modal-eliminar-texto { font-size: 11px; color: var(--texto-dim); line-height: 1.6; margin-bottom: 24px; }
+
+.post-img-grande {
+  display: block;
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border: 1px solid var(--borde);
+  margin: 16px 0;
+}

@@ -48,11 +48,14 @@ def serializar_tecnologias(texto):
     return json.dumps(lista, ensure_ascii=False) if lista else None
 
 
-def crear(conn, autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url):
+def crear(conn, autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url,
+          imagen_url=None):
     conn.execute("""
-        INSERT INTO proyectos (autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url)
-        VALUES (?,?,?,?,?,?,?,?)
-    """, (autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url))
+        INSERT INTO proyectos (autor_id, titulo, descripcion, tecnologias, materia, estado,
+                               repo_url, demo_url, imagen_url)
+        VALUES (?,?,?,?,?,?,?,?,?)
+    """, (autor_id, titulo, descripcion, tecnologias, materia, estado, repo_url, demo_url,
+          imagen_url))
     conn.commit()
 
 
