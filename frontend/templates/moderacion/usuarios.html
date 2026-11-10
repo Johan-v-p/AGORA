@@ -34,7 +34,7 @@
             <td>
               <div class="acc-form">
                 <!-- Cambiar rol -->
-                <form method="POST" action="{{ url_for('admin_cambiar_rol', uid=u.id) }}">
+                <form method="POST" action="{{ url_for('moderacion.admin_cambiar_rol', uid=u.id) }}">
                   <select name="rol">
                     <option value="estudiante" {% if u.rol=='estudiante' %}selected{% endif %}>Estudiante</option>
                     <option value="moderador" {% if u.rol=='moderador' %}selected{% endif %}>Moderador</option>
@@ -44,7 +44,7 @@
                 </form>
                 <!-- Toggle activo -->
                 {% if u.id != session.user_id %}
-                  <form method="POST" action="{{ url_for('admin_toggle_activo', uid=u.id) }}" data-confirmar="¿Cambiar estado de {{ u.nombre }}?">
+                  <form method="POST" action="{{ url_for('moderacion.admin_toggle_activo', uid=u.id) }}" data-confirmar="¿Cambiar estado de {{ u.nombre }}?">
                     <button type="submit" class="acc-btn danger">{{ '⛔ Suspender' if u.activo else '✅ Activar' }}</button>
                   </form>
                 {% endif %}

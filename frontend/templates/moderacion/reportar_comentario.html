@@ -36,7 +36,7 @@
       ⚠ Los reportes falsos o abusivos pueden resultar en acciones sobre tu propia cuenta.
     </div>
 
-    <form method="POST" action="{{ url_for('enviar_reporte') }}">
+    <form method="POST" action="{{ url_for('moderacion.enviar_reporte') }}">
       <input type="hidden" name="tipo" value="comentario">
       <input type="hidden" name="referencia_id" value="{{ comentario.id if comentario else '' }}">
 

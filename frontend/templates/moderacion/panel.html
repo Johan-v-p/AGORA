@@ -29,7 +29,7 @@
     </div>
 
     <div class="menu-grid">
-      <a href="{{ url_for('admin_usuarios') }}" class="menu-card">
+      <a href="{{ url_for('moderacion.admin_usuarios') }}" class="menu-card">
         <div class="menu-card-icon">👥</div>
         <div class="menu-card-titulo">Gestión de usuarios</div>
         <div class="menu-card-desc">Ver, buscar, suspender y cambiar roles de usuarios.</div>
@@ -39,12 +39,12 @@
         <div class="menu-card-titulo">Moderación</div>
         <div class="menu-card-desc">Revisar reportes pendientes y actuar sobre contenido.</div>
       </a>
-      <a href="{{ url_for('admin_foros') }}" class="menu-card">
+      <a href="{{ url_for('moderacion.admin_foros') }}" class="menu-card">
         <div class="menu-card-icon">💬</div>
         <div class="menu-card-titulo">Gestión de foros</div>
         <div class="menu-card-desc">Crear y eliminar foros temáticos de la plataforma.</div>
       </a>
-      <a href="{{ url_for('admin_estadisticas') }}" class="menu-card">
+      <a href="{{ url_for('moderacion.admin_estadisticas') }}" class="menu-card">
         <div class="menu-card-icon">📊</div>
         <div class="menu-card-titulo">Estadísticas</div>
         <div class="menu-card-desc">Actividad de usuarios, posts por categoría y más.</div>
