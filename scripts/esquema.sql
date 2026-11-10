@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
                          -- 'estudiante' | 'moderador' | 'admin'
     verificado   INTEGER NOT NULL DEFAULT 0,   -- 1 = verificado
     activo       INTEGER NOT NULL DEFAULT 1,   -- 0 = suspendido/baneado
+    tema         TEXT NOT NULL DEFAULT 'system'
+                         CHECK (tema IN ('light', 'dark', 'system')),
     creado_en    DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

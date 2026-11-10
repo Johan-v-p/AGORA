@@ -59,6 +59,15 @@
         <span class="nav-icon">◎</span> Ayuda
       </a>
 
+      <div class="sidebar-theme">
+        <label for="selector-tema-sidebar">Tema</label>
+        <select id="selector-tema-sidebar" data-selector-tema aria-label="Seleccionar tema">
+          <option value="light">Claro</option>
+          <option value="dark">Oscuro</option>
+          <option value="system">Sistema</option>
+        </select>
+      </div>
+
       {% if session.rol in ('admin', 'moderador') %}
         <a class="nav-item {% if pagina_activa == 'moderacion' %}active{% endif %} sidebar-enlace-separado"
            href="{{ url_for('moderacion.moderacion') }}">

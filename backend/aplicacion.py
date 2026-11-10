@@ -1,6 +1,8 @@
 """Crea la aplicación de ÁGORA y registra sus módulos."""
 
+import sqlite3
 import sys
+import threading
 
 from flask import Flask, flash, redirect, request, session, url_for
 from flask_socketio import SocketIO
@@ -36,11 +38,39 @@ app.config['SECRET_KEY'] = CONFIGURACION['SECRET_KEY']
 app.config['MAX_CONTENT_LENGTH'] = imagenes.MAX_BYTES + 1024 * 1024
 
 DB = CONFIGURACION['DATABASE_PATH']
+_migraciones_tema = set()
+_bloqueo_migraciones = threading.Lock()
+
+
+def _asegurar_columna_tema(conn):
+    """Agrega la preferencia de tema una sola vez por base de datos."""
+    ruta_db = str(DB)
+    if ruta_db in _migraciones_tema:
+        return
+
+    with _bloqueo_migraciones:
+        if ruta_db in _migraciones_tema:
+            return
+        columnas = conn.execute("PRAGMA table_info(usuarios)").fetchall()
+        if not columnas:
+            return
+        if not any(columna['name'] == 'tema' for columna in columnas):
+            try:
+                conn.execute(
+                    "ALTER TABLE usuarios ADD COLUMN tema TEXT NOT NULL DEFAULT 'system'"
+                )
+                conn.commit()
+            except sqlite3.OperationalError as error:
+                if 'duplicate column name' not in str(error).lower():
+                    raise
+        _migraciones_tema.add(ruta_db)
 
 
 def get_db():
     """Abre una conexión SQLite y devuelve filas como diccionarios."""
-    return abrir_conexion(DB)
+    conn = abrir_conexion(DB)
+    _asegurar_columna_tema(conn)
+    return conn
 
 
 def obtener_cuenta(user_id):
@@ -103,7 +133,14 @@ def inyectar_avatar():
     conn = get_db()
     usuario = cuentas.obtener_por_id(conn, user_id)
     conn.close()
-    return {'mi_avatar': usuario['avatar_url'] if usuario else None}
+    tema = usuario['tema'] if usuario and 'tema' in usuario.keys() else 'system'
+    if tema not in {'light', 'dark', 'system'}:
+        tema = 'system'
+    return {
+        'mi_avatar': usuario['avatar_url'] if usuario else None,
+        'tema_usuario': tema,
+        'usuario_autenticado': bool(usuario),
+    }
 
 
 app.register_blueprint(crear_blueprint_autenticacion(get_db))

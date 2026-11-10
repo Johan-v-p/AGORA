@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script>
+    (() => {
+      const serverTheme = {{ tema_usuario|default('', true)|tojson }};
+      const storedTheme = localStorage.getItem('agora-theme');
+      const preference = serverTheme || storedTheme || 'system';
+      const theme = preference === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        : preference;
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
 
   <title>{% block title %}Ágora{% endblock %} — La plaza de tu universidad</title>
 
@@ -44,6 +55,9 @@
 
   <!-- ══ SCRIPTS GLOBALES ══ -->
   <script src="{{ url_for('static', filename='js/compartidos/base.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/compartidos/tema.js') }}"
+          data-tema-usuario="{{ 'true' if usuario_autenticado|default(false) else 'false' }}"
+          data-tema-inicial="{{ tema_usuario|default('system', true) }}"></script>
 
   <!-- Scripts adicionales por página -->
   {% block extra_scripts %}{% endblock %}

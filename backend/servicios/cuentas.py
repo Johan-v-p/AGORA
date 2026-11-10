@@ -62,3 +62,9 @@ def actualizar_password(conn, usuario_id, password):
         (generate_password_hash(password), usuario_id),
     )
     conn.commit()
+
+
+def actualizar_tema(conn, usuario_id, tema):
+    """Guarda la preferencia de tema validada por la ruta."""
+    conn.execute("UPDATE usuarios SET tema = ? WHERE id = ?", (tema, usuario_id))
+    conn.commit()

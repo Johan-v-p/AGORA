@@ -106,6 +106,18 @@ def crear_blueprint(get_db):
         flash('Contraseña actualizada.', 'success')
         return redirect(url_for('ajustes.ajustes'))
 
+    @blueprint.route('/ajustes/tema', methods=['POST'])
+    @login_required
+    def ajustes_tema():
+        tema = request.form.get('tema', '').strip().lower()
+        if tema not in {'light', 'dark', 'system'}:
+            flash('La opción de tema no es válida.', 'error')
+            return redirect(url_for('ajustes.ajustes'))
+        conn = get_db()
+        servicio.actualizar_tema(conn, session['user_id'], tema)
+        conn.close()
+        return ('', 204)
+
     @blueprint.route('/ayuda')
     @login_required
     def ayuda():
