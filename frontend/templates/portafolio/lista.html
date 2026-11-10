@@ -41,7 +41,7 @@
           </div>
 
           <div>
-            <div class="proy-titulo">{{ p.titulo }}</div>
+            <div class="proy-titulo"><a class="proy-titulo-link" href="{{ url_for('portafolio.ver_proyecto', proy_id=p.id) }}">{{ p.titulo }}</a></div>
             {% if p.materia %}
               <div class="proy-materia">{{ p.materia }}</div>
             {% endif %}
@@ -116,7 +116,7 @@
           </div>
 
           <div>
-            <div class="proy-titulo">{{ p.titulo }}</div>
+            <div class="proy-titulo"><a class="proy-titulo-link" href="{{ url_for('portafolio.ver_proyecto', proy_id=p.id) }}">{{ p.titulo }}</a></div>
             {% if p.materia %}
               <div class="proy-materia">{{ p.materia }}</div>
             {% endif %}

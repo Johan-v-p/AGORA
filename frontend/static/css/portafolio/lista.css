@@ -237,3 +237,13 @@
   object-fit: cover;
   border: 1px solid var(--borde);
 }
+
+.proy-titulo-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.proy-titulo-link:hover,
+.proy-titulo-link:focus-visible {
+  text-decoration: underline;
+}

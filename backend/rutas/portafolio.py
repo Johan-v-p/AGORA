@@ -61,6 +61,38 @@ def crear_blueprint(get_db):
 
         return redirect(url_for('portafolio.portafolio'))
 
+    @blueprint.route('/portafolio/<int:proy_id>')
+    @login_required
+    def ver_proyecto(proy_id):
+        conn = get_db()
+        proyecto = servicio.obtener_detalle(conn, proy_id, session['user_id'])
+        if not proyecto:
+            conn.close()
+            flash('El proyecto no existe.', 'error')
+            return redirect(url_for('portafolio.portafolio'))
+        comentarios = servicio.listar_comentarios(conn, proy_id)
+        conn.close()
+        return render_template('portafolio/ver_proyecto.html', proyecto=proyecto,
+                               comentarios=comentarios, ya_aplaudi=bool(proyecto['ya_aplaudi']))
+
+    @blueprint.route('/portafolio/<int:proy_id>/comentar', methods=['POST'])
+    @login_required
+    def comentar_proyecto(proy_id):
+        contenido = request.form.get('contenido', '').strip()[:1000]
+        conn = get_db()
+        try:
+            if not servicio.existe(conn, proy_id):
+                flash('El proyecto no existe.', 'error')
+                return redirect(url_for('portafolio.portafolio'))
+            if not contenido:
+                flash('El comentario no puede estar vacío.', 'error')
+            else:
+                servicio.comentar(conn, proy_id, session['user_id'], contenido)
+                flash('Comentario publicado.', 'success')
+        finally:
+            conn.close()
+        return redirect(url_for('portafolio.ver_proyecto', proy_id=proy_id))
+
     @blueprint.route('/portafolio/<int:proy_id>/aplaudir', methods=['POST'])
     @login_required
     def aplaudir_proyecto(proy_id):

@@ -47,9 +47,22 @@ def crear_blueprint(get_db, socketio):
     @login_required
     def tendencias():
         conn = get_db()
-        posts = servicio.listar_tendencias(conn)
+        top_posts = servicio.listar_tendencias(conn)
+        top_tags = servicio.hashtags_populares(conn)
         conn.close()
-        return render_template('social/tendencias.html', posts=posts, pagina_activa='tendencias')
+        return render_template('social/tendencias.html', top_posts=top_posts, top_tags=top_tags,
+                               pagina_activa='tendencias')
+
+    @blueprint.route('/tendencias/<tag>')
+    @login_required
+    def tendencia_tag(tag):
+        etiqueta = tag.strip().lstrip('#').lower()
+        conn = get_db()
+        top_posts = servicio.listar_por_hashtag(conn, etiqueta)
+        top_tags = servicio.hashtags_populares(conn)
+        conn.close()
+        return render_template('social/tendencias.html', top_posts=top_posts, top_tags=top_tags,
+                               tag_activo=etiqueta, pagina_activa='tendencias')
 
     @blueprint.route('/seguir/<int:objetivo_id>', methods=['POST'])
     @login_required

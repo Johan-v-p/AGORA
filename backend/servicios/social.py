@@ -1,6 +1,6 @@
 """Consultas de perfiles, exploración, seguimiento y notificaciones."""
 
-from backend.nucleo.utilidades import con_tiempo_relativo
+from backend.nucleo.utilidades import con_tiempo_relativo, parsear_tecnologias
 
 TIPOS_BUSQUEDA = ('todo', 'posts', 'personas', 'foros')
 
@@ -123,22 +123,58 @@ def destacados(conn, usuario_id):
     return posts, personas, foros
 
 
-def listar_tendencias(conn):
-    return conn.execute("""
-        SELECT p.id, p.titulo, p.categoria, p.creado_en,
-               u.nombre AS autor,
-               COUNT(DISTINCT r.usuario_id) AS total_reacciones,
-               COUNT(DISTINCT c.id) AS total_comentarios
-        FROM publicaciones p
-        JOIN usuarios u ON u.id = p.autor_id
-        LEFT JOIN reacciones_publicacion r ON r.publicacion_id = p.id
-        LEFT JOIN comentarios c ON c.publicacion_id = p.id
-        WHERE p.estado = 'publicado'
-          AND p.creado_en >= datetime('now', '-7 days')
-        GROUP BY p.id
-        ORDER BY (COUNT(DISTINCT r.usuario_id) + COUNT(DISTINCT c.id)) DESC
-        LIMIT 20
-    """).fetchall()
+def _hashtags(texto):
+    """Convierte el JSON guardado (["#ia", "#python"]) en etiquetas sin '#', en minúscula."""
+    etiquetas = []
+    for etiqueta in parsear_tecnologias(texto):
+        etiqueta = str(etiqueta).strip().lstrip('#').lower()
+        if etiqueta and etiqueta not in etiquetas:
+            etiquetas.append(etiqueta)
+    return etiquetas
+
+
+def _con_hashtags(filas):
+    posts = con_tiempo_relativo(filas)
+    for post in posts:
+        post['hashtags_lista'] = _hashtags(post.get('hashtags'))
+    return posts
+
+
+_CONSULTA_TENDENCIAS = """
+    SELECT p.id, p.titulo, p.categoria, p.creado_en, p.hashtags,
+           CASE WHEN p.es_anonimo THEN 'Anónimo' ELSE u.nombre END AS autor_nombre,
+           COUNT(DISTINCT r.usuario_id) AS total_reacciones,
+           COUNT(DISTINCT c.id) AS total_comentarios
+    FROM publicaciones p
+    JOIN usuarios u ON u.id = p.autor_id
+    LEFT JOIN reacciones_publicacion r ON r.publicacion_id = p.id
+    LEFT JOIN comentarios c ON c.publicacion_id = p.id
+    WHERE p.estado = 'publicado'
+      AND p.creado_en >= datetime('now', '-7 days')
+    GROUP BY p.id
+    ORDER BY (COUNT(DISTINCT r.usuario_id) + COUNT(DISTINCT c.id)) DESC, p.creado_en DESC
+"""
+
+
+def listar_tendencias(conn, limite=20):
+    """Publicaciones con más reacciones y comentarios de los últimos 7 días."""
+    return _con_hashtags(conn.execute(_CONSULTA_TENDENCIAS + " LIMIT ?", (limite,)).fetchall())
+
+
+def hashtags_populares(conn, limite=10):
+    """Devuelve [(etiqueta, usos)] de las publicaciones de los últimos 7 días."""
+    conteo = {}
+    for post in _con_hashtags(conn.execute(_CONSULTA_TENDENCIAS).fetchall()):
+        for etiqueta in post['hashtags_lista']:
+            conteo[etiqueta] = conteo.get(etiqueta, 0) + 1
+    return sorted(conteo.items(), key=lambda par: (-par[1], par[0]))[:limite]
+
+
+def listar_por_hashtag(conn, etiqueta, limite=20):
+    """Publicaciones de los últimos 7 días que llevan la etiqueta, las más populares primero."""
+    etiqueta = etiqueta.strip().lstrip('#').lower()
+    posts = _con_hashtags(conn.execute(_CONSULTA_TENDENCIAS).fetchall())
+    return [post for post in posts if etiqueta in post['hashtags_lista']][:limite]
 
 
 def contar_seguidores(conn, usuario_id):

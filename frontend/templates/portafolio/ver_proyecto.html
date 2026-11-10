@@ -95,8 +95,8 @@
 
       <!-- Botón reportar (sólo si no es el propio autor) -->
       {% if session.user_id != proyecto.autor_id %}
-        <a class="proyecto-reportar" href="{{ url_for('reportar_publicacion', post_id=proyecto.id) }}">
-          ⚑ Reportar
+        <a class="proyecto-reportar" href="{{ url_for('moderacion.reportar_usuario', usuario_id=proyecto.autor_id) }}">
+          ⚑ Reportar autor
         </a>
       {% endif %}
     </div>
@@ -124,7 +124,7 @@
     <!-- Nuevo comentario -->
     <div class="vp-nuevo-com">
       <label>Añadir comentario</label>
-      <form method="POST" action="{{ url_for('comentar_proyecto', proy_id=proyecto.id) }}">
+      <form method="POST" action="{{ url_for('portafolio.comentar_proyecto', proy_id=proyecto.id) }}">
         <textarea name="contenido"
                   placeholder="¿Qué te parece este proyecto? Deja tu retroalimentación…"
                   maxlength="1000"
